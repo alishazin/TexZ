@@ -1,0 +1,20 @@
+.bottom-textlink-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bottom-textlink-container > .text {
+    font-size: 14px;
+    color: rgb(255, 255, 255, 0.9);
+    margin-right: 5px;
+}
+
+.bottom-textlink-container > a {
+    text-decoration: none;
+    color: #FD7753;
+}
+
+.bottom-textlink-container > a:hover {
+    opacity: 0.8;
+}

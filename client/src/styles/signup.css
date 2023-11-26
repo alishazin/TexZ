@@ -1,9 +1,18 @@
+body {
+    overflow-x: hidden;
+}
+
+#root {
+    overflow: hidden;
+}
+
 .signup-page {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100vw;
-    height: 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
+    overflow: auto;
 }
 
 .signup-page > .container {
@@ -11,7 +20,7 @@
     min-height: 600px;
     height: 600px;
     background-color: #231E1C;
-    margin: 10px;
+    margin: 20px 0;
     border-radius: 5px;
 
     display: flex;
@@ -72,9 +81,52 @@
     margin-top: 35px;
 }
 
+.right-content > .logo-container {
+    display: none;
+    margin-bottom: 20px;
+    margin-top: 50px;
+}
+
+.right-content > .bottom-textlink-container {
+    display: none;
+    margin-bottom: 50px;
+    margin-top: 30px;
+}
+
 .signup-page > .container > .separator {
     width: 2px;
     height: 400px;
     background-color: rgb(255, 255, 255, 0.3);
     border-radius: 1px;
+}
+
+@media (max-width: 1000px) {
+    .signup-page > .container > .left-content, .signup-page > .container > .separator {
+        display: none;
+    }
+    .signup-page > .container {
+        width: 499px;
+        height: fit-content;
+    }
+    .right-content > .logo-container {
+        display: block;
+    }
+    .signup-page > .container > .right-content {
+        padding: 0 20px 10px;
+    }
+    .right-content > .bottom-textlink-container {
+        display: flex;
+    }
+}
+
+@media (max-width: 500px) {
+    .signup-page > .container {
+        min-width: 100vw;
+        min-height: 100vh;
+        margin: 0;
+        border-radius: 0;
+    }
+    .right-content > .logo-container {
+        margin-top: 30px;
+    }
 }

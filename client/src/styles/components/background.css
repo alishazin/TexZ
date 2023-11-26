@@ -6,6 +6,7 @@
     width: 100vw;
     height: 100vh;
     background-color: #2E2A29;
+    overflow: hidden;
 }
 
 .background-container > .ellipse {
