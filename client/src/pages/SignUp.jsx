@@ -27,9 +27,9 @@ function SignUp() {
                 <div className="right-content">
                     <Logo />
                     <Textfield type="text" label="Email" placeholder="Enter email" icon_cls="fa-solid fa-envelope" />
-                    <Textfield type="text" label="Username" placeholder="Enter username" icon_cls="fa-solid fa-envelope" />
-                    <Textfield type="text" label="Password" placeholder="Enter password" icon_cls="fa-solid fa-envelope" />
-                    <Textfield type="text" label="Repeat Password" placeholder="Repeat password" icon_cls="fa-solid fa-envelope" />
+                    <Textfield type="text" label="Username" placeholder="Enter username" icon_cls="fa-solid fa-user" />
+                    <Textfield type="text" label="Password" placeholder="Enter password" icon_cls="fa-solid fa-lock" />
+                    <Textfield type="text" label="Repeat Password" placeholder="Repeat password" icon_cls="fa-solid fa-lock" />
                     <PrimaryButton text="SIGN UP" />
                     <ORSeparator />
                     <GoogleButton url="#" />

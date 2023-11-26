@@ -1,0 +1,74 @@
+body {
+    overflow-x: hidden;
+}
+
+#root {
+    overflow: hidden;
+}
+
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 100vw;
+    min-height: 100vh;
+    overflow: auto;
+}
+
+.login-page > .container {
+    width: 499px;
+    min-height: 630px;
+    height: 630px;
+    background-color: #231E1C;
+    margin: 20px 0;
+    border-radius: 5px;
+    padding: 0 40px;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-page > .container > .logo-container {
+    margin-bottom: 30px;
+}
+
+.login-page > .container > .textfield-container {
+    margin-bottom: 30px;
+}
+
+.login-page > .container > .textfield-container.last {
+    margin-bottom: 0px;
+}
+
+.login-page > .container > a.forgot-pass {
+    text-decoration: none;
+    max-width: 350px;
+    width: 100%;
+    text-align: right;
+    color: rgb(255, 255, 255, 0.7);
+    font-size: 13px;
+    margin: 20px 0 25px;
+}
+
+.login-page > .container > a.forgot-pass:hover {
+    text-decoration: underline;
+}
+
+.login-page > .container > .bottom-textlink-container {
+    margin: 30px 0 10px;
+}
+
+@media (max-width: 500px) {
+    .login-page > .container {
+        min-width: 100vw;
+        min-height: 100vh;
+        margin: 0;
+        border-radius: 0;
+        padding: 0 20px;
+    }
+    .right-content > .logo-container {
+        margin-top: 30px;
+    }
+}
