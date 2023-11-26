@@ -5,10 +5,14 @@ function initialize() {
     const userSchema = mongoose.Schema({
         email: {
             type: String,
+            trim: true,
+            lowercase: true,
             required: true,
         },
         username: {
             type: String,
+            trim: true,
+            lowercase: true,
             required: true,
         },
         password: {
@@ -17,7 +21,7 @@ function initialize() {
         },
         token: {
             type: String,
-            required: true,
+            required: false,
         },
         verified: {
             type: Boolean,
@@ -27,6 +31,14 @@ function initialize() {
             type: String,
             enum: ['local', 'google'],
             required: true,
+        },
+        verification_token: {
+            type: String,
+            required: false
+        },
+        verification_timestamp: {
+            type: Date,
+            required: false
         }
     })
 

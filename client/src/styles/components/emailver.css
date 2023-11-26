@@ -1,0 +1,23 @@
+.emailver-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    max-width: 350px;
+    width: 100%;
+}
+
+.emailver-container > .email-icon {
+    background: url('https://api.iconify.design/ic/baseline-email.svg?color=white') no-repeat center center / contain;
+    height: 220px;
+    width: 220px;
+    color: white;
+    opacity: 0.1;
+}
+
+.emailver-container > p {
+    font-size: 14px;
+    color: rgb(255, 255, 255, 0.8);
+    line-height: 20px;
+    text-align: center;
+}

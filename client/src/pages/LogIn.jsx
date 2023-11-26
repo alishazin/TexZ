@@ -20,7 +20,7 @@ function LogIn() {
                     <PrimaryButton text="LOG IN" />
                     <ORSeparator />
                     <GoogleButton url="#" />
-                    <BottomTextLink text="Don't have an account?" link_text="Sign Up" url="#" />
+                    <BottomTextLink text="Don't have an account?" link_text="Sign Up" url="/signup" />
                 </div>
             </div>
         </>

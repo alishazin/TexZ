@@ -73,21 +73,40 @@ body {
     align-items: center;
 }
 
-.signup-page > .container > .right-content > .textfield-container:not(:first-of-type) {
+.signup-page > .container > .right-content form {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.signup-page > .container > .right-content .textfield-container:not(:first-of-type) {
     margin-top: 25px;
 }
 
-.signup-page > .container > .right-content > .pri-but {
-    margin-top: 35px;
+.signup-page > .container > .right-content .pri-but {
+    margin-top: 25px;
 }
 
-.right-content > .logo-container {
+.signup-page > .container > .right-content .error-text {
+    margin-top: 10px;
+    width: 100%;
+    max-width: 350px;
+    text-align: left;
+    color: red;
+    font-size: 13px;
+}
+
+.right-content .logo-container {
     display: none;
     margin-bottom: 20px;
     margin-top: 50px;
 }
 
-.right-content > .bottom-textlink-container {
+.right-content .bottom-textlink-container {
     display: none;
     margin-bottom: 50px;
     margin-top: 30px;
@@ -108,7 +127,7 @@ body {
         width: 499px;
         height: fit-content;
     }
-    .right-content > .logo-container {
+    .right-content .logo-container {
         display: block;
     }
     .signup-page > .container > .right-content {
@@ -126,7 +145,7 @@ body {
         margin: 0;
         border-radius: 0;
     }
-    .right-content > .logo-container {
+    .right-content .logo-container {
         margin-top: 30px;
     }
 }

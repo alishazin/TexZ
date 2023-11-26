@@ -26,8 +26,15 @@
     padding-left: 40px;
     outline: none;
     border: none;
-
     color: rgb(255, 255, 255, 0.8);
+}
+
+.textfield-container .field input:-webkit-autofill,
+.textfield-container .field input:-webkit-autofill:hover, 
+.textfield-container .field input:-webkit-autofill:focus, 
+.textfield-container .field input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px #2E2A29 inset !important;
+    -webkit-text-fill-color: rgb(255, 255, 255, 0.8) !important;
 }
 
 .textfield-container .field i {

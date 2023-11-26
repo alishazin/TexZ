@@ -1,9 +1,9 @@
 import "../styles/components/primarybutton.css"
 
-function PrimaryButton({ text }) {
+function PrimaryButton({ text, disabled }) {
 
     return (
-        <div className="pri-but">{text}</div>
+        <button className={`pri-but ${disabled ? "disabled" : ""}`}>{text}</button>
     )
 }
 

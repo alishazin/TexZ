@@ -8,17 +8,25 @@
     color: white;
     font-size: 14px;
     font-weight: 700;
+    outline: none;
+    border: none;
     cursor: pointer;
+    transition: background-color 0.1s;
 
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.pri-but:hover {
+.pri-but.disabled {
+    background-color: #2E2A29;
+    cursor: default;
+}
+
+.pri-but:not(.disabled):hover {
     background-color: rgb(255, 137, 105);
 }
 
-.pri-but:active {
+.pri-but:not(.disabled):active {
     background-color: rgb(253, 120, 83, 0.8);
 }
