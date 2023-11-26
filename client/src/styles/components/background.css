@@ -1,0 +1,20 @@
+.background-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+    background-color: #2E2A29;
+}
+
+.background-container > .ellipse {
+    width: calc(100vw + 100px);
+    height: 100vh;
+    position: absolute;
+    bottom: -40vh;
+    left: -50px;
+    background-color: #4E2A21;
+    border-radius: 50% 50% 0 0;
+    /* border-radius: 50%; */
+}

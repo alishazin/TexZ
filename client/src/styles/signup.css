@@ -1,0 +1,80 @@
+.signup-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.signup-page > .container {
+    width: 1000px;
+    min-height: 600px;
+    height: 600px;
+    background-color: #231E1C;
+    margin: 10px;
+    border-radius: 5px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.signup-page > .container > .left-content {
+    width: 499px;
+    min-height: 100%;
+    /* background-color: red; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-content > .logo-container {
+    margin-bottom: 20px;
+}
+
+.left-content > p.text {
+    font-size: 14px;
+    font-family: "Inter";
+    font-style: italic;
+    font-weight: 200;
+    color: rgb(255, 255, 255, 0.7);
+}
+
+.left-content > p.text > span {
+    color: rgb(255, 255, 255, 0.5);
+    font-size: 32px;
+    font-weight: 100;
+}
+
+.left-content > p {
+    font-weight: 400;
+    color: rgb(255, 255, 255, 0.8);
+    font-size: 14px;
+}
+
+.signup-page > .container > .right-content {
+    width: 499px;
+    min-height: 100%;
+    padding: 0 40px;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.signup-page > .container > .right-content > .textfield-container:not(:first-of-type) {
+    margin-top: 25px;
+}
+
+.signup-page > .container > .right-content > .pri-but {
+    margin-top: 35px;
+}
+
+.signup-page > .container > .separator {
+    width: 2px;
+    height: 400px;
+    background-color: rgb(255, 255, 255, 0.3);
+    border-radius: 1px;
+}

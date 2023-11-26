@@ -1,0 +1,24 @@
+
+.pri-but {
+    width: 100%;
+    max-width: 350px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: #FD7753;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pri-but:hover {
+    background-color: rgb(255, 137, 105);
+}
+
+.pri-but:active {
+    background-color: rgb(253, 120, 83, 0.8);
+}

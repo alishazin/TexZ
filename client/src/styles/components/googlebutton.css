@@ -1,0 +1,30 @@
+.google-but-container {
+    text-decoration: none;
+    max-width: 350px;
+    width: 100%;
+    height: 40px;
+    border: 1px solid rgb(255, 255, 255, 0.5);
+    background-color: #2E2A29;
+    border-radius: 5px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.google-but-container:hover {
+    background-color: #383433;
+}
+
+.google-but-container > .google-icon {
+    width: 20px;
+    height: 20px;
+    background: url('https://api.iconify.design/flat-color-icons/google.svg') no-repeat center center / contain;
+    margin-right: 10px;
+}
+
+.google-but-container > .text {
+    color: rgb(255, 255, 255, 0.9);
+    font-weight: 500;
+    font-size: 13px;
+}

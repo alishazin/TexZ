@@ -1,0 +1,14 @@
+.text-logo-container {
+    color: #FD7753;
+    font-size: 32px;
+}
+
+.text-logo-container span:first-of-type {
+    font-family: 'Tourney', sans-serif;
+    font-weight: 500;
+}
+
+.text-logo-container span:last-of-type {
+    font-family: 'Tourney', sans-serif;
+    font-weight: 900;
+}

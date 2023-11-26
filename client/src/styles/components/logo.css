@@ -1,0 +1,61 @@
+@keyframes rotate-box {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(45deg) translateX(0px) translateY(0px);
+    }
+}
+
+.logo-container {
+    width: 180px;
+    height: 100px;
+    /* overflow: hidden; */
+    /* background-color: red; */
+    position: relative;
+}
+
+.logo-container > .left-box {
+    width: 60px;
+    height: 60px;
+    border: 5px solid #FD7753;
+    background-color: #231E1C;
+    animation-name: rotate-box;
+    animation-delay: 1s;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    z-index: 0;
+    position: absolute;
+    left: 15px;
+    top: 20px;
+}
+
+.logo-container > .middle-box {
+    width: 70px;
+    height: 70px;
+    border: 5px solid #FD7753;
+    background-color: #231E1C;
+    animation-name: rotate-box;
+    animation-delay: 1s;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    z-index: 1;
+    position: absolute;
+    left: 55px;
+    top: 15px;
+}
+
+.logo-container > .right-box {
+    width: 60px;
+    height: 60px;
+    border: 5px solid #FD7753;
+    background-color: #231E1C;
+    animation-name: rotate-box;
+    animation-delay: 1s;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    z-index: 0;
+    position: absolute;
+    left: 105px;
+    top: 20px;
+}
