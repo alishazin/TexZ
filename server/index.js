@@ -6,6 +6,9 @@ const path = require("path");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
+const userModel = require(`${__dirname}/models/user.js`);
+const authViews = require(`${__dirname}/views/auth.js`);
+
 // Initializing Database
 mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.gzebqbn.mongodb.net/?retryWrites=true&w=majority`);
 
@@ -14,9 +17,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-    res.send("Hello");
-})
+// Initializing Models
+const UserModel = userModel.initialize()
+
+// Initializing Endpoints
+authViews.initialize(app, UserModel)
 
 // 404 Endpoint (Add at last)
 app.use((req, res) => {
