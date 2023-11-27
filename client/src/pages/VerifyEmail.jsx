@@ -1,7 +1,6 @@
 import "../styles/verifyemail.css"
 import { useState, useEffect } from "react"
 import { useCookies } from "react-cookie"
-import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom"
 import axios from "axios"
 import SecondaryButton from "../components/SecondaryButton"
@@ -11,8 +10,6 @@ function VerifyEmail() {
     const { verification_token } = useParams()
     const [verified, setVerified] = useState(null)
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
-    console.log(cookies);
-    let navigate = useNavigate()
 
     useEffect(() => {
         document.title = "Verify Account"
