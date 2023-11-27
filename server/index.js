@@ -5,7 +5,6 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const ejs = require("ejs");
 
 const userModel = require(`${__dirname}/models/user.js`);
 const authViews = require(`${__dirname}/endpoints/auth.js`);
@@ -15,9 +14,7 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASS
 
 // Initializing Express App
 const app = express();
-app.set("view engine", "ejs")
 app.use(cors());
-app.use(express.static(`${__dirname}/templates`))
 app.use(express.json());
 
 // Initializing Models
