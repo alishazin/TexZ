@@ -11,6 +11,7 @@ function initialize(app, UserModel) {
     verifyEmailEndpoint(app, UserModel);
     logInEndpoint(app, UserModel);
     ChangePasswordEndpoint(app, UserModel);
+    ResetPasswordEndpoint(app, UserModel);
 
 }
 
@@ -186,13 +187,40 @@ function ChangePasswordEndpoint(app, UserModel) {
         if (!utils.checkType(new_password, String) || new_password.length < 8) {
             return res.status(400).send({err_msg: "New Password must be 8 characters long"})
         }
-        
+
         const hash = await bcrypt.hash(new_password, 10);
 
         user.password = hash
         await user.save()
 
         return res.status(200).send()
+
+    })
+
+}
+
+function ResetPasswordEndpoint(app, UserModel) {
+
+    app.post("/api/auth/forgot-password", async (req, res) => {
+
+        const { email } = req.body
+
+        const user = await UserModel.findOne({email: email?.toLowerCase(), verified: true})
+
+        if (!user) {
+            return res.status(400).send({err_msg: "Account with the given email does not exist"})
+        }
+        
+        const resetpass_token = new mongoose.Types.ObjectId().toString()
+        
+        user.resetpass_token = resetpass_token
+        await user.save()
+
+        emailClient.sendResetPasswordEmail(user.email, _.startCase(user.username), resetpass_token)
+
+        return res.status(200).send({
+            email: user.email
+        })
 
     })
 

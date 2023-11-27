@@ -36,6 +36,10 @@ function initialize() {
             type: String,
             required: false
         },
+        resetpass_token: {
+            type: String,
+            required: false
+        },
         verification_timestamp: {
             type: Date,
             required: false
