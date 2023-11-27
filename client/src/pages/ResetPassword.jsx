@@ -58,13 +58,13 @@ function ResetPassword() {
                 new_password: password
             })
             removeCookie("session_token")
-            navigate("/login")
+            navigate("/login?i=2")
         } catch(err) {
             if (err.response.status === 400) {
                 setErrorMsg(err.response.data.err_msg)
             }
             else if (err.response.status === 401) {
-                navigate("/login")
+                navigate("/login?i=3")
             }
             console.log(err);
         }

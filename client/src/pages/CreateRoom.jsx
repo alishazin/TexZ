@@ -17,7 +17,7 @@ function CreateRoom() {
 
     const validateSession = async function() {
         if (!session_token) {
-            navigate("/login")
+            navigate("/login?i=0")
             return;
         }
         
@@ -29,7 +29,7 @@ function CreateRoom() {
         } catch(err) {
             if (err.response.status === 400) {
                 removeCookie("session_token")
-                navigate("/login")
+                navigate("/login?i=0")
             }
             console.log(err);
         }

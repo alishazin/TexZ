@@ -8,17 +8,26 @@ import BottomTextLink from "../components/BottomTextLink"
 import Logo from "../components/Logo"
 import { useState, useEffect } from "react"
 import axios from "axios"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 
+const instanceText = {
+    "0": "Session expired.",
+    "1": "Password changed successfully.",
+    "2": "Password resetted successfully.",
+    "3": "Reset password link expired.",
+}
+
 function LogIn() {
+    
+    const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
+    const [searchParams] = useSearchParams();
+    const instance = searchParams.get('i')
 
     const [buttonDisabled, setButtonDisabled] = useState(true)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [errorMsg, setErrorMsg] = useState("")
-
-    const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
 
     let navigate = useNavigate()
 
@@ -60,6 +69,7 @@ function LogIn() {
                     <Logo />
                     <Textfield onChange={handleChange} name="email" value={email} type="text" label="Email" placeholder="Enter email" icon_cls="fa-solid fa-envelope" />
                     <Textfield className="last" onChange={handleChange} name="password" value={password} type="password" label="Password" placeholder="Enter password" icon_cls="fa-solid fa-lock" />
+                    {instance && instanceText[instance] && <div className="help-text">{instanceText[instance]}</div>}
                     <div className="error-text">{errorMsg}</div>
                     <a className="forgot-pass" href="/forgot-password">Forgot Password?</a>
                     <PrimaryButton text="LOG IN" disabled={buttonDisabled} />

@@ -35,7 +35,7 @@ function ChangePassword() {
 
     const validateSession = async function() {
         if (!session_token) {
-            navigate("/login")
+            navigate("/login?i=0")
             return;
         }
         
@@ -47,7 +47,7 @@ function ChangePassword() {
         } catch(err) {
             if (err.response.status === 400) {
                 removeCookie("session_token")
-                navigate("/login")
+                navigate("/login?i=0")
             }
             console.log(err);
         }
@@ -69,14 +69,14 @@ function ChangePassword() {
                 new_password: passwordNew,
             })
             removeCookie("session_token")
-            navigate("/login")
+            navigate("/login?i=1")
         } catch(err) {
             if (err.response.status === 400) {
                 setErrorMsg(err.response.data.err_msg)
             }
             else if (err.response.status === 401) {
                 removeCookie("session_token")
-                navigate("/login")
+                navigate("/login?i=0")
             }
             console.log(err);
         }
