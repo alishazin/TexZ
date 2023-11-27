@@ -2,10 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import { CookiesProvider } from 'react-cookie';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-	<React.StrictMode>
+	// <React.StrictMode>
+	// </React.StrictMode>
+	<CookiesProvider defaultSetOptions={{ path: '/' }}>
 		<App />
-	</React.StrictMode>
+	</CookiesProvider>
 );

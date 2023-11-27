@@ -17,7 +17,7 @@ function sendVerificationEmail(toEmail, username, token) {
         from: process.env.MAIL_CLIENT_EMAIL,
         to: toEmail,
         subject: 'Account Verification',
-        html: `<p>Hi ${username}, verify your TexZ account here:</p><a href=${process.env.PROTOCOL}://${process.env.DOMAIN}/api/auth/verify-account/${token}/>Verify Account</a><p>Verification link will expire in 10 minutes.</p>`
+        html: `<p>Hi ${username}, verify your TexZ account here:</p><a href=${process.env.PROTOCOL}://${process.env.DOMAIN}/verify-email/${token}/>Verify Account</a><p>Verification link will expire in 10 minutes.</p>`
     };
     
     transporter.sendMail(mailData, function (err, info) {

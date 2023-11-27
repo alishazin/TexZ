@@ -42,6 +42,15 @@ body {
     margin-bottom: 0px;
 }
 
+.login-page > .container > .error-text {
+    margin-top: 10px;
+    width: 100%;
+    max-width: 350px;
+    text-align: left;
+    color: red;
+    font-size: 13px;
+}
+
 .login-page > .container > a.forgot-pass {
     text-decoration: none;
     max-width: 350px;

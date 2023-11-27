@@ -19,7 +19,7 @@ function initialize() {
             type: String,
             required: true,
         },
-        token: {
+        session_token: {
             type: String,
             required: false,
         },

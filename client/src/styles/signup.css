@@ -133,7 +133,7 @@ body {
     .signup-page > .container > .right-content {
         padding: 0 20px 10px;
     }
-    .right-content > .bottom-textlink-container {
+    .right-content .bottom-textlink-container {
         display: flex;
     }
 }
