@@ -59,22 +59,27 @@ function ChangePassword() {
     }
 
     const sendPostReq = async function (e) {
-        // e.preventDefault()
-        // if (buttonDisabled) return
+        e.preventDefault()
+        if (buttonDisabled) return
         
-        // try {
-        //     const response = await axios.post("http://localhost:3000/api/auth/login", {
-        //         email: email.trim(),
-        //         password
-        //     })
-        //     setCookie("session_token", response.data.session_token)
-
-        // } catch(err) {
-        //     if (err.response.status === 400) {
-        //         setErrorMsg(err.response.data.err_msg)
-        //     }
-        //     console.log(err);
-        // }
+        try {
+            const response = await axios.post("http://localhost:3000/api/auth/change-password", {
+                session_token: session_token,
+                old_password: passwordOld,
+                new_password: passwordNew,
+            })
+            removeCookie("session_token")
+            navigate("/login")
+        } catch(err) {
+            if (err.response.status === 400) {
+                setErrorMsg(err.response.data.err_msg)
+            }
+            else if (err.response.status === 401) {
+                removeCookie("session_token")
+                navigate("/login")
+            }
+            console.log(err);
+        }
     }
 
     return (

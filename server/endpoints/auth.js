@@ -10,6 +10,7 @@ function initialize(app, UserModel) {
     signUpEndpoint(app, UserModel);
     verifyEmailEndpoint(app, UserModel);
     logInEndpoint(app, UserModel);
+    ChangePasswordEndpoint(app, UserModel);
 
 }
 
@@ -160,6 +161,38 @@ function logInEndpoint(app, UserModel) {
             email: user.email,
             username: user.username
         })
+
+    })
+
+}
+
+function ChangePasswordEndpoint(app, UserModel) {
+
+    app.post("/api/auth/change-password", async (req, res) => {
+
+        const { session_token, old_password, new_password } = req.body
+
+        const user = await UserModel.findOne({session_token: session_token, verified: true})
+        console.log(user);
+        if (!user) {
+            return res.status(401).send({err_msg: "Invalid session_token"})
+        }
+        
+        const result = await bcrypt.compare(old_password, user.password);
+        if (!result) {
+            return res.status(400).send({err_msg: "Invalid old password"})
+        }
+
+        if (!utils.checkType(new_password, String) || new_password.length < 8) {
+            return res.status(400).send({err_msg: "New Password must be 8 characters long"})
+        }
+        
+        const hash = await bcrypt.hash(new_password, 10);
+
+        user.password = hash
+        await user.save()
+
+        return res.status(200).send()
 
     })
 
