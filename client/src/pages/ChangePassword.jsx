@@ -1,5 +1,5 @@
 import "../styles/login.css"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { useCookies } from "react-cookie"
 import Textfield from "../components/Textfield"
@@ -14,7 +14,8 @@ function ChangePassword() {
     const navigate = useNavigate()
     
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
-    const userObj = useRef(null)
+    const [userObj, setUserObj] = useState(null)
+    console.log(userObj);
 
     const [buttonDisabled, setButtonDisabled] = useState(true)
     const [passwordOld, setPasswordOld] = useState("")
@@ -42,8 +43,7 @@ function ChangePassword() {
             const response = await axios.post("http://localhost:3000/api/auth/validate-session", {
                 session_token: session_token
             })
-            userObj.current = response.data
-            console.log(userObj);
+            setUserObj(response.data)
         } catch(err) {
             if (err.response.status === 400) {
                 removeCookie("session_token")
@@ -84,16 +84,19 @@ function ChangePassword() {
 
     return (
         <>
+        {userObj && <>
             <Background />
             <div className="login-page">
                 <form className="container" onSubmit={sendPostReq} style={{height: "450px"}}>
                     <TextLogo />
+                    <input type="text" name="email" autoComplete="email" defaultValue={userObj.email} hidden/>
                     <Textfield onChange={handleChange} name="old-password" value={passwordOld} type="password" label="Old Password" placeholder="Enter old password" icon_cls="fa-solid fa-lock" />
                     <Textfield className="last" onChange={handleChange} name="new-password" value={passwordNew} type="password" label="New Password" placeholder="Repeat new password" icon_cls="fa-solid fa-lock" />
                     <div className="error-text" style={{margin: "10px 0 30px"}}>{errorMsg}</div>
                     <PrimaryButton text="CHANGE PASSWORD" disabled={buttonDisabled} />
                 </form>
             </div>
+        </>}
         </>
     )
 }
