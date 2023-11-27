@@ -9,7 +9,8 @@ import Logo from "../components/Logo"
 import { useState, useEffect } from "react"
 import axios from "axios"
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useCookies } from 'react-cookie';
+import { useCookies } from 'react-cookie'
+import { jwtDecode } from "jwt-decode"
 
 const instanceText = {
     "0": "Session expired.",
@@ -38,6 +39,18 @@ function LogIn() {
 
     useEffect(() => {
         document.title = "Log In"
+
+        window.google.accounts.id.initialize({
+            client_id: "63200987513-snm9rc8r2j3bb7mgeiv28hu6kn68q3nt.apps.googleusercontent.com",
+            callback: (res) => {
+                console.log(jwtDecode(res.credential));
+            }
+        })
+
+        window.google.accounts.id.renderButton(
+            document.querySelector(".google-but-container"),
+            {theme: "outline", width: "250"}
+        )
     }, [])
 
     const handleChange = function (event) {

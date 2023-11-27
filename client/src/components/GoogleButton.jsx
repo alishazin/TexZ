@@ -1,12 +1,11 @@
 import "../styles/components/googlebutton.css"
 
-function GoogleButton({ url }) {
-
+function GoogleButton() {
     return (
-        <a className="google-but-container" href="#">
-            <div className="google-icon"></div>
-            <div className="text">Continue with Google</div>
-        </a>
+        <div className="google-but-container">
+            {/* <div className="google-icon"></div>
+            <div className="text">Continue with Google</div> */}
+        </div>
     )
 }
 

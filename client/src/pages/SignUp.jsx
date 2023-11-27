@@ -11,6 +11,9 @@ import BottomTextLink from "../components/BottomTextLink"
 import EmailVer from "../components/EmailVer"
 import { useState, useEffect } from "react"
 import axios from "axios"
+import { jwtDecode } from "jwt-decode"
+
+var client;
 
 function SignUp() {
     
@@ -31,6 +34,19 @@ function SignUp() {
 
     useEffect(() => {
         document.title = "Sign Up"
+
+        window.google.accounts.id.initialize({
+            client_id: "63200987513-snm9rc8r2j3bb7mgeiv28hu6kn68q3nt.apps.googleusercontent.com",
+            callback: (res) => {
+                console.log(jwtDecode(res.credential));
+            }
+        })
+
+        window.google.accounts.id.renderButton(
+            document.querySelector(".google-but-container"),
+            {theme: "outline", width: "300"}
+        )
+
     }, [])
 
     const handleChange = function (event) {
@@ -85,7 +101,7 @@ function SignUp() {
                             <div className="error-text">{errorMsg}</div>
                             <PrimaryButton onClick={sendPostReq} text="SIGN UP" disabled={buttonDisabled} />
                             <ORSeparator />
-                            <GoogleButton url="#" />
+                            <GoogleButton onClick={() => window.google.accounts.id.prompt()} />
                             <BottomTextLink text="Already have an account?" link_text="Log In" url="/login" />
                         </form>
                     </>}
