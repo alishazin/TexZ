@@ -9,7 +9,6 @@ function CreateRoom() {
     const userObj = useRef(null)
 
     const navigate = useNavigate()
-    console.log(cookies);
     const session_token = cookies.session_token
 
     useEffect(() => {

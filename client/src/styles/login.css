@@ -17,7 +17,6 @@ body {
 
 .login-page > .container {
     width: 499px;
-    min-height: 630px;
     height: 630px;
     background-color: #231E1C;
     margin: 20px 0;
@@ -32,6 +31,19 @@ body {
 
 .login-page > .container > .logo-container {
     margin-bottom: 30px;
+}
+
+/* for forgot-password */
+.login-page > .container > .text-logo-container {
+    margin-bottom: 30px;
+}
+
+/* for forgot-password */
+.login-page > .container > .help-text {
+    max-width: 350px;
+    color: rgb(255, 255, 255, 0.4);
+    font-size: 12px;
+    margin-top: 8px;
 }
 
 .login-page > .container > .textfield-container {

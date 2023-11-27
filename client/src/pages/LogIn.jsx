@@ -61,7 +61,7 @@ function LogIn() {
                     <Textfield onChange={handleChange} name="email" value={email} type="text" label="Email" placeholder="Enter email" icon_cls="fa-solid fa-envelope" />
                     <Textfield className="last" onChange={handleChange} name="password" value={password} type="password" label="Password" placeholder="Enter password" icon_cls="fa-solid fa-lock" />
                     <div className="error-text">{errorMsg}</div>
-                    <a className="forgot-pass" href="#">Forgot Password?</a>
+                    <a className="forgot-pass" href="/forgot-password">Forgot Password?</a>
                     <PrimaryButton text="LOG IN" disabled={buttonDisabled} />
                     <ORSeparator />
                     <GoogleButton url="#" />
