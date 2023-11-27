@@ -36,6 +36,10 @@ function LogIn() {
         else setButtonDisabled(true)
     }, [email, password])
 
+    useEffect(() => {
+        document.title = "Log In"
+    }, [])
+
     const handleChange = function (event) {
         if (event.target.name === "email") setEmail(event.target.value)
         else if (event.target.name === "password") setPassword(event.target.value)

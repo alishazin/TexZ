@@ -20,6 +20,10 @@ function ForgotPassword() {
         else setButtonDisabled(true)
     }, [email])
 
+    useEffect(() => {
+        document.title = "Forgot Password"
+    }, [])
+
     const handleChange = function (event) {
         if (event.target.name === "email") setEmail(event.target.value)
     }

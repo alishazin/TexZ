@@ -26,6 +26,7 @@ function ResetPassword() {
     }, [password, passwordRepeat])
 
     useEffect(() => {
+        document.title = "Reset Password"
         verifyToken();
     }, [])
 

@@ -29,6 +29,10 @@ function SignUp() {
         else setButtonDisabled(true)
     }, [email, username, password, passwordRepeat])
 
+    useEffect(() => {
+        document.title = "Sign Up"
+    }, [])
+
     const handleChange = function (event) {
         if (event.target.name === "email") setEmail(event.target.value)
         else if (event.target.name === "name") setUsername(event.target.value)

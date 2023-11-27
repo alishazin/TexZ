@@ -15,6 +15,7 @@ function VerifyEmail() {
     let navigate = useNavigate()
 
     useEffect(() => {
+        document.title = "Verify Account"
         verifyEmail()
     }, [])
 

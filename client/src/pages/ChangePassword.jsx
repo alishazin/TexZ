@@ -30,6 +30,7 @@ function ChangePassword() {
     }, [passwordOld, passwordNew])
 
     useEffect(() => {
+        document.title = "Change Password"
         validateSession()
     }, [])
 
