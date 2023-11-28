@@ -4,10 +4,12 @@ const utils = require(`../utils/utils.js`)
 const emailClient = require(`../utils/email.js`) 
 const bcrypt = require("bcrypt")
 const _ = require("lodash")
+const jwtDecode = require("jwt-decode").jwtDecode
 
 function initialize(app, UserModel) {
 
     signUpEndpoint(app, UserModel);
+    signUpGoogleEndpoint(app, UserModel);
     verifyEmailEndpoint(app, UserModel);
     logInEndpoint(app, UserModel);
     ChangePasswordEndpoint(app, UserModel);
@@ -91,6 +93,64 @@ function signUpEndpoint(app, UserModel) {
 
 }
 
+function signUpGoogleEndpoint(app, UserModel) {
+
+    app.post("/api/auth/signin/google", async (req, res) => {
+
+        const { jwt_encoded } = req.body
+        const jwt_decoded = jwtDecode(jwt_encoded)
+
+        if (!jwt_decoded.email_verified) {
+            return res.status(400).send({err_msg: "Email is not verified"})
+        }
+
+        const session_token = new mongoose.Types.ObjectId().toString();
+
+        const obj = await UserModel.findOne({email: jwt_decoded.email, provider: "google", google_id: jwt_decoded.sub})
+        if (obj) {
+
+            obj.session_token = session_token
+            await obj.save()
+
+        } else {
+
+            // check if local account exist
+
+            const localUser = await UserModel.findOne({email: jwt_decoded.email, provider: "local"})
+            if (localUser) {
+                if (localUser.verified) {
+                    return res.status(400).send({err_msg: "Use password to log in"})
+                }
+                
+                if (utils.checkIfExpired(localUser.verification_timestamp)) {
+                    await UserModel.findByIdAndDelete(localUser._id)
+                } else {
+                    return res.status(400).send({err_msg: "Verify your account using the link sent to you"})
+                }
+            }
+
+            // if not, create google account
+            
+            const newUser = new UserModel({
+                email: jwt_decoded.email,
+                username: jwt_decoded.name,
+                verified: true,
+                provider: "google",
+                google_id: jwt_decoded.sub,
+                session_token: session_token
+            })
+            await newUser.save()
+
+        }
+
+        return res.status(200).send({
+            session_token: session_token
+        })
+
+    })
+
+}
+
 function verifyEmailEndpoint(app, UserModel) {
 
     app.post("/api/auth/verify-account/", async (req, res) => {
@@ -130,6 +190,10 @@ function logInEndpoint(app, UserModel) {
 
         if (!user) {
             return res.status(400).send({err_msg: "Invalid credentials"})
+        }
+        
+        if (user.provider === "google") {
+            return res.status(400).send({err_msg: "Use sign in with google"})
         }
         
         const result = await bcrypt.compare(password, user.password);

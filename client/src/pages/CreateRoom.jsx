@@ -7,6 +7,7 @@ function CreateRoom() {
 
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
     const [userObj, setUserObj] = useState(null)
+    console.log(userObj);
 
     const navigate = useNavigate()
     const session_token = cookies.session_token

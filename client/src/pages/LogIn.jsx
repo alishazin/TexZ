@@ -10,7 +10,6 @@ import { useState, useEffect } from "react"
 import axios from "axios"
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCookies } from 'react-cookie'
-import { jwtDecode } from "jwt-decode"
 
 const instanceText = {
     "0": "Session expired.",
@@ -21,6 +20,7 @@ const instanceText = {
 
 function LogIn() {
     
+    let navigate = useNavigate()
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
     const [searchParams] = useSearchParams();
     const instance = searchParams.get('i')
@@ -29,8 +29,6 @@ function LogIn() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [errorMsg, setErrorMsg] = useState("")
-
-    let navigate = useNavigate()
 
     useEffect(() => {
         if (password.length >= 8 && email.trim().length > 0) setButtonDisabled(false)
@@ -42,9 +40,19 @@ function LogIn() {
 
         window.google.accounts.id.initialize({
             client_id: "63200987513-snm9rc8r2j3bb7mgeiv28hu6kn68q3nt.apps.googleusercontent.com",
-            callback: (res) => {
-                console.log(res.credential);
-                console.log(jwtDecode(res.credential));
+            callback: async (res) => {
+                try {
+                    const response = await axios.post("http://localhost:3000/api/auth/signin/google", {
+                        jwt_encoded: res.credential
+                    })
+                    setCookie("session_token", response.data.session_token)
+                    navigate("/create-room")
+                } catch(err) {
+                    if (err.response.status === 400) {
+                        setErrorMsg(err.response.data.err_msg)
+                    }
+                    console.log(err);
+                }
             }
         })
 

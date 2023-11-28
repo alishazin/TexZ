@@ -10,11 +10,15 @@ import GoogleButton from "../components/GoogleButton"
 import BottomTextLink from "../components/BottomTextLink"
 import EmailVer from "../components/EmailVer"
 import { useState, useEffect } from "react"
+import { useCookies } from "react-cookie"
+import { useNavigate } from "react-router-dom"
 import axios from "axios"
-import { jwtDecode } from "jwt-decode"
 
 function SignUp() {
     
+    const navigate = useNavigate()
+    const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
+
     const [buttonDisabled, setButtonDisabled] = useState(true)
     const [accountCreated, setAccountCreated] = useState(false)
 
@@ -35,9 +39,19 @@ function SignUp() {
         
         window.google.accounts.id.initialize({
             client_id: "63200987513-snm9rc8r2j3bb7mgeiv28hu6kn68q3nt.apps.googleusercontent.com",
-            callback: (res) => {
-                console.log(res.credential);
-                console.log(jwtDecode(res.credential));
+            callback: async (res) => {
+                try {
+                    const response = await axios.post("http://localhost:3000/api/auth/signin/google", {
+                        jwt_encoded: res.credential
+                    })
+                    setCookie("session_token", response.data.session_token)
+                    navigate("/create-room")
+                } catch(err) {
+                    if (err.response.status === 400) {
+                        setErrorMsg(err.response.data.err_msg)
+                    }
+                    console.log(err);
+                }
             }
         })
 

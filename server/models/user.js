@@ -17,7 +17,7 @@ function initialize() {
         },
         password: {
             type: String,
-            required: true,
+            required: false,
         },
         session_token: {
             type: String,
@@ -42,6 +42,10 @@ function initialize() {
         },
         verification_timestamp: {
             type: Date,
+            required: false
+        },
+        google_id: {
+            type: String,
             required: false
         }
     })

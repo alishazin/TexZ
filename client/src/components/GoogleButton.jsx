@@ -1,6 +1,5 @@
 import "../styles/components/googlebutton.css"
 import axios from "axios"
-import { jwtDecode } from "jwt-decode"
 
 function GoogleButton() {
 
