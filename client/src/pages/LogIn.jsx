@@ -39,6 +39,19 @@ function LogIn() {
 
     useEffect(() => {
         document.title = "Log In"
+
+        window.google.accounts.id.initialize({
+            client_id: "63200987513-snm9rc8r2j3bb7mgeiv28hu6kn68q3nt.apps.googleusercontent.com",
+            callback: (res) => {
+                console.log(res.credential);
+                console.log(jwtDecode(res.credential));
+            }
+        })
+
+        window.google.accounts.id.renderButton(
+            document.querySelector(".google-but-container"),
+            {theme: "outline", width: "300"}
+        )
     }, [])
 
     const handleChange = function (event) {
@@ -79,7 +92,7 @@ function LogIn() {
                     <a className="forgot-pass" href="/forgot-password">Forgot Password?</a>
                     <PrimaryButton text="LOG IN" disabled={buttonDisabled} />
                     <ORSeparator />
-                    <GoogleButton url="#" />
+                    <GoogleButton />
                     <BottomTextLink text="Don't have an account?" link_text="Sign Up" url="/signup" />
                 </form>
             </div>
