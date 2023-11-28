@@ -34,19 +34,6 @@ function SignUp() {
 
     useEffect(() => {
         document.title = "Sign Up"
-
-        window.google.accounts.id.initialize({
-            client_id: "63200987513-snm9rc8r2j3bb7mgeiv28hu6kn68q3nt.apps.googleusercontent.com",
-            callback: (res) => {
-                console.log(jwtDecode(res.credential));
-            }
-        })
-
-        window.google.accounts.id.renderButton(
-            document.querySelector(".google-but-container"),
-            {theme: "outline", width: "300"}
-        )
-
     }, [])
 
     const handleChange = function (event) {

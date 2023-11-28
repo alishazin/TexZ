@@ -1,4 +1,4 @@
-/* .google-but-container {
+.google-but-container {
     text-decoration: none;
     max-width: 350px;
     width: 100%;
@@ -11,9 +11,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-} */
+}
 
-/* .google-but-container:hover {
+.google-but-container:hover {
     background-color: #383433;
 }
 
@@ -28,4 +28,4 @@
     color: rgb(255, 255, 255, 0.9);
     font-weight: 500;
     font-size: 13px;
-} */
+}
