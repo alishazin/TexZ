@@ -17,6 +17,7 @@ function ChangePassword() {
     const [userObj, setUserObj] = useState(null)
     console.log(userObj);
 
+    const [allDisabled, setAllDisabled] = useState(false)
     const [buttonDisabled, setButtonDisabled] = useState(true)
     const [passwordOld, setPasswordOld] = useState("")
     const [passwordNew, setPasswordNew] = useState("")
@@ -25,8 +26,10 @@ function ChangePassword() {
     const session_token = cookies.session_token
 
     useEffect(() => {
-        if (passwordOld.length >= 8 && passwordNew.length >= 8) setButtonDisabled(false)
-        else setButtonDisabled(true)
+        if (!allDisabled) {
+            if (passwordOld.length >= 8 && passwordNew.length >= 8) setButtonDisabled(false)
+            else setButtonDisabled(true)
+        }
     }, [passwordOld, passwordNew])
 
     useEffect(() => {
@@ -44,6 +47,10 @@ function ChangePassword() {
             const response = await axios.post("http://localhost:3000/api/auth/validate-session", {
                 session_token: session_token
             })
+            if (response.data.provider == "google") {
+                setErrorMsg("Account with the given email is authenticated using google")
+                setAllDisabled(true)
+            }
             setUserObj(response.data)
         } catch(err) {
             if (err.response.status === 400) {

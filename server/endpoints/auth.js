@@ -224,7 +224,8 @@ function logInEndpoint(app, UserModel) {
 
         return res.status(200).send({
             email: user.email,
-            username: user.username
+            username: user.username,
+            provider: user.provider
         })
 
     })
@@ -243,6 +244,10 @@ function ChangePasswordEndpoint(app, UserModel) {
             return res.status(401).send({err_msg: "Invalid session_token"})
         }
         
+        if (user.provider === "google") {
+            return res.status(400).send({err_msg: "Account with the given email is authenticated using google"})
+        }
+
         const result = await bcrypt.compare(old_password, user.password);
         if (!result) {
             return res.status(400).send({err_msg: "Invalid old password"})
@@ -273,6 +278,10 @@ function ResetPasswordEndpoint(app, UserModel) {
 
         if (!user) {
             return res.status(400).send({err_msg: "Account with the given email does not exist"})
+        }
+        
+        if (user.provider === "google") {
+            return res.status(400).send({err_msg: "Account with the given email is authenticated using google"})
         }
         
         const resetpass_token = new mongoose.Types.ObjectId().toString()
