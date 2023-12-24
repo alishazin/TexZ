@@ -2,6 +2,8 @@ import { useState, useEffect } from "react"
 import { useCookies } from "react-cookie"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
+import NavBar from "../components/NavBar"
+import "../styles/navbarpage.css"
 
 function CreateRoom() {
 
@@ -38,11 +40,21 @@ function CreateRoom() {
     }
 
     return (
-        <>
-        {userObj && <>
-            <p>Dashboard</p>
-        </>}
-        </>
+        <div className="navbar-page-container">
+            <div className="top-bar">
+
+            </div>
+            <div className="content">
+                <div className="navbar-container">
+                    <NavBar />
+                </div>
+                <div className="navbar-page-content-container">
+                    {userObj && <>
+                        <p>Dashboard</p>
+                    </>}
+                </div>
+            </div>
+        </div>
     )
 }
 
