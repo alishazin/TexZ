@@ -1,0 +1,94 @@
+.navbar-container .top-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;  
+    height: 70px;
+    padding: 0 22px;
+}
+
+.navbar-container .top-content .text-logo {
+    width: 60px;
+}
+
+.navbar-container .top-content .logo {
+    width: 60px;
+    margin-left: auto;
+}
+
+.navbar-container .separator {
+    background-color: rgb(255, 255, 255, 0.1);
+    width: 80%;
+    margin: 0 auto;
+    height: 2px;
+    margin-bottom: 5px;
+}
+
+.navbar-container .nav-item-container {
+    width: 100%;
+    padding: 0 22px;
+    height: 60px;
+    /* background-color: red;
+    border-bottom: 1px solid black; */
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.navbar-container .nav-item-container .icon {
+    color: rgb(255, 255, 255, 0.8);
+    font-size: 22px;
+    margin-right: 12px;
+}
+
+.navbar-container .nav-item-container .icon.flip {
+    transform: rotateY(180deg);
+}
+
+.navbar-container .nav-item-container span {
+    color: rgb(255, 255, 255, 0.8);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.navbar-container .nav-item-container.active .icon, .navbar-container .nav-item-container.active span {
+    color: #FD7753;
+}
+
+.navbar-container .sub-nav-item-container {
+    width: 100%;
+    padding: 0 22px;
+    height: 35px;
+    /* background-color: red;
+    border-bottom: 1px solid black; */
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.navbar-container .sub-nav-item-container .side-bar {
+    height: 100%;
+    width: 4px;
+    background-color: #FFF;
+    opacity: 0.2;
+    margin-right: 20px;
+    margin-left: 2px;
+}
+
+.navbar-container .sub-nav-item-container span {
+    color: rgb(255, 255, 255, 0.5);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.navbar-container .sub-nav-item-container.active .side-bar {
+    background-color: #FD7753;
+    opacity: 0.6;
+}
+
+.navbar-container .sub-nav-item-container.active span {
+    color: #FD7753;
+    opacity: 0.7;
+}
