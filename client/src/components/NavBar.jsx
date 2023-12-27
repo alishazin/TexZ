@@ -21,7 +21,7 @@ function NavBar({ instance }) {
             <div className="side-bar"></div>
             <span>Create a Room</span>
         </Link>
-        <Link className={`sub-nav-item-container ${instance === 3 ? "active" : ""}`} to="/login">
+        <Link className={`sub-nav-item-container ${instance === 3 ? "active" : ""}`} to="/join-room">
             <div className="side-bar"></div>
             <span>Join a Room</span>
         </Link>
