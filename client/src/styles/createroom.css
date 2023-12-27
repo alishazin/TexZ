@@ -1,0 +1,18 @@
+.navbar-page-content-container {
+    padding: 30px;
+}
+
+.navbar-page-content-container .error-text {
+    margin-top: 10px;
+    width: 100%;
+    max-width: 350px;
+    text-align: left;
+    color: red;
+    font-size: 13px;
+}
+
+@media (max-width:800px) {
+    .navbar-page-content-container {
+        padding: 20px 15px;
+    }
+}

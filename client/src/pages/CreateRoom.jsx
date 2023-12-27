@@ -6,15 +6,22 @@ import NavBar from "../components/NavBar"
 import TextLogoImg from "../images/text-logo.png"
 import LogoImg from "../images/logo.png"
 import "../styles/navbarpage.css"
+import "../styles/createroom.css"
 import { Icon } from '@iconify/react'
 import useScreenSize from "../hooks/useScreenSize"
+import SecondaryButton from "../components/SecondaryButton"
+import Textfield2 from "../components/Textfield2"
+import Checkbox from "../components/Checkbox"
 
 function CreateRoom() {
 
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
     const [userObj, setUserObj] = useState(null)
-    console.log(userObj);
     const [navbarState, setNavbarState] = useState(false)
+    const [roomName, setRoomName] = useState("")
+    const [roomDescription, setRoomDescription] = useState("")
+    const [allowJoin, setAllowjoin] = useState(false)
+    const [errorMsg, setErrorMsg] = useState("")    
     
     const screenSize = useScreenSize();
     const navigate = useNavigate()
@@ -45,8 +52,17 @@ function CreateRoom() {
         }
     }
 
-    function handleMenuIconClick() {
+    const handleMenuIconClick = () => {
         setNavbarState(prevValue => !prevValue)
+    }
+
+    const handleChange = (event) => {
+        if (event.target.name === "room_name") setRoomName(event.target.value)
+        else if (event.target.name === "room_description") setRoomDescription(event.target.value)
+    }
+
+    const sendPostReq = (e) => {
+        e.preventDefault()
     }
 
     return (
@@ -65,9 +81,13 @@ function CreateRoom() {
                     <NavBar instance={2} />
                 </div>
                 <div className="navbar-page-content-container">
-                    {userObj && <>
-                        <p>Dashboardadasdjahsdjsahdjashdjahsdjashjdhsajdhsajdhsadashj</p>
-                    </>}
+                    <form onSubmit={sendPostReq}>
+                        <Textfield2 value={roomName} onChange={handleChange} style={{marginBottom: "30px"}} type="text" label="Room Name" name="room_name" placeholder="Give a name to your room" />
+                        <Textfield2 value={roomDescription} onChange={handleChange} instance={1} className="instance-1" style={{marginBottom: "30px"}} type="text" label="Description" name="room_description" placeholder="Describe the room here.." />
+                        <Checkbox checkboxState={allowJoin} setCheckboxState={setAllowjoin} style={{marginBottom: "50px"}} label="Allow participants joining" subLabel="( can be changed later )" name="allow_join" />
+                        <div style={{marginBottom: "10px"}} className="error-text">{errorMsg}</div>
+                        <SecondaryButton type="btn2" text="CREATE ROOM" />
+                    </form>
                 </div>
             </div>
         </div>

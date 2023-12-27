@@ -1,0 +1,35 @@
+.checkbox-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.checkbox-container label {
+    font-size: 13px;
+    color: rgb(255, 255, 255, 0.8);
+    font-weight: 500;
+    display: block;
+    margin-right: 20px;
+    width: 160px;
+}
+
+.checkbox-container label .sub-label {
+    font-size: 13px;
+    color: rgb(255, 255, 255, 0.5);
+    font-weight: 200;
+    margin-top: 2px;
+}
+
+.checkbox-container .box {
+    font-size: 25px;
+}
+
+.checkbox-container .box.off {
+    color: rgb(255, 255, 255, 0.5);
+}
+
+.checkbox-container .box.on {
+    color: #FD7753;
+    opacity: 0.8;
+}

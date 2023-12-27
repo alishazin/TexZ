@@ -1,0 +1,62 @@
+.textfield2-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.textfield2-container label {
+    font-size: 13px;
+    color: rgb(255, 255, 255, 0.8);
+    font-weight: 500;
+    display: block;
+    min-width: 100px;
+}
+
+.textfield2-container.instance-1 label {
+    align-self: flex-start;
+    margin-top: 10px;
+}
+
+.textfield2-container input {
+    position: relative;
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    overflow: hidden;
+    max-width: 350px;
+    background-color: #2E2A29;
+    padding: 0 15px;
+    outline: none;
+    border: none;
+    color: rgb(255, 255, 255, 0.8);
+}
+
+.textfield2-container textarea {
+    resize: none;
+    position: relative;
+    width: 100%;
+    height: 180px;
+    border-radius: 5px;
+    overflow: hidden;
+    max-width: 350px;
+    background-color: #2E2A29;
+    padding: 15px;
+    outline: none;
+    border: none;
+    color: rgb(255, 255, 255, 0.8);
+}
+
+.textfield2-container input:-webkit-autofill,
+.textfield2-container input:-webkit-autofill:hover, 
+.textfield2-container input:-webkit-autofill:focus, 
+.textfield2-container input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #2E2A29 inset !important;
+    -webkit-text-fill-color: rgb(255, 255, 255, 0.8) !important;
+}
+
+@media (max-width:800px) {
+    .textfield2-container label {
+        min-width: 85px;
+    }
+}

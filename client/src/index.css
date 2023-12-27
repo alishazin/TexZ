@@ -10,3 +10,7 @@ body {
 	padding: 0;
 	background-color: #231E1C;
 }
+
+a {
+	text-decoration: none;
+}

@@ -11,6 +11,7 @@ a.sec-but {
     color: #FD7753;
     font-size: 14px;
     font-weight: 400;
+    background-color: transparent;
     cursor: pointer;
 
     display: flex;
