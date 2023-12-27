@@ -2,8 +2,9 @@ import "../styles/components/navbar.css"
 import TextLogoImg from "../images/text-logo.png"
 import LogoImg from "../images/logo.png"
 import { Icon } from '@iconify/react';
+import { Link } from "react-router-dom";
 
-function NavBar() {
+function NavBar({ instance }) {
 
     return (
         <>
@@ -12,22 +13,22 @@ function NavBar() {
             <img className="logo" src={LogoImg} />
         </div>
         <div className="separator"></div>
-        <div className="nav-item-container active">
+        <Link className={`nav-item-container ${[1,2,3].includes(instance) ? "active" : ""}`} to="/login">
             <Icon className="icon flip" icon="lets-icons:chat" />
             <span>Rooms</span>
-        </div>
-        <div className="sub-nav-item-container active">
+        </Link>
+        <Link className={`sub-nav-item-container ${instance === 2 ? "active" : ""}`} to="/create-room">
             <div className="side-bar"></div>
             <span>Create a Room</span>
-        </div>
-        <div className="sub-nav-item-container">
+        </Link>
+        <Link className={`sub-nav-item-container ${instance === 3 ? "active" : ""}`} to="/login">
             <div className="side-bar"></div>
             <span>Join a Room</span>
-        </div>
-        <div className="nav-item-container">
+        </Link>
+        <Link className={`nav-item-container ${instance === 4 ? "active" : ""}`} to="/login">
             <Icon className="icon" icon="line-md:cog" />
             <span>Settings</span>
-        </div>
+        </Link>
         </>
     )
 }

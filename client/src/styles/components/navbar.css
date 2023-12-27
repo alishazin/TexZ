@@ -92,3 +92,13 @@
     color: #FD7753;
     opacity: 0.7;
 }
+
+@media (max-width: 800px) {
+    .navbar-container .top-content {
+        display: none;
+    }
+    .navbar-container .separator {
+        height: 1px;
+        width: 100%;
+    }
+}
