@@ -217,7 +217,6 @@ function logInEndpoint(app, UserModel) {
 
         const user = await UserModel.findOne({session_token: session_token, verified: true})
         if (!user) {
-            console.log("invalid");
             return res.status(400).send({err_msg: "Invalid session_token"})
         }
 

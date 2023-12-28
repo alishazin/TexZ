@@ -64,8 +64,32 @@ function JoinRoom() {
         if (event.target.name === "room_code") setRoomCode(event.target.value)
     }
 
-    const sendPostReq = (e) => {
+    const sendPostReq = async (e) => {
         e.preventDefault()
+
+        if (buttonDisabled) return
+        
+        try {
+            setButtonDisabled(true)
+            const response = await axios.post("http://localhost:3000/api/room/join", {
+                session_token: session_token,
+                room_code: roomCode
+            })
+            console.log(response.data);
+            setButtonDisabled(false)
+            setRoomCode("")
+            setErrorMsg("")
+            
+        } catch(err) {
+            if (err.response.status === 400) {
+                setErrorMsg(err.response.data.err_msg)
+            }
+            else if (err.response.status === 401) {
+                removeCookie("session_token")
+                navigate("/login?i=0")
+            }
+            console.log(err);
+        }
     }
 
     return (

@@ -77,7 +77,7 @@ function roomEndpoint(app, UserModel, RoomModel) {
 
         // room_code validation
         
-        const room = await RoomModel.findOne({room_id: room_code})
+        const room = await RoomModel.findOne({room_id: room_code, allow_join: true})
         if (!room) {
             return res.status(400).send({err_msg: "Room code is invalid"})
         }
