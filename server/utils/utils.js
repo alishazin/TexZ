@@ -4,8 +4,13 @@ const typeOf = (obj) => {
 
 function checkType(value, type) {
 
-    if (typeOf(value) === type) return true
-    return false
+    try {
+        if (typeOf(value) === type) return true
+        return false
+    } catch(err) {
+        // null will return false
+        return false
+    }
     
 }
 

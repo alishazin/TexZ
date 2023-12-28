@@ -1,12 +1,12 @@
 import "../styles/components/secondarybutton.css"
 
-function SecondaryButton({ type, text, url }) {
+function SecondaryButton({ type, text, url, disabled }) {
 
     return (
         <>
-            {type === "url" && <a href={url} className="sec-but">{text}</a>}
-            {type === "btn" && <div className="sec-but">{text}</div>}
-            {type === "btn2" && <button className="sec-but">{text}</button>}
+            {type === "url" && <a href={url} className={`sec-but ${disabled ? "disabled" : ""}`}>{text}</a>}
+            {type === "btn" && <div className={`sec-but ${disabled ? "disabled" : ""}`}>{text}</div>}
+            {type === "btn2" && <button className={`sec-but ${disabled ? "disabled" : ""}`}>{text}</button>}
         </>
     )
 }

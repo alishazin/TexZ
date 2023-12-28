@@ -22,6 +22,7 @@ function CreateRoom() {
     const [roomDescription, setRoomDescription] = useState("")
     const [allowJoin, setAllowjoin] = useState(false)
     const [errorMsg, setErrorMsg] = useState("")    
+    const [buttonDisabled, setButtonDisabled] = useState(true)
     
     const screenSize = useScreenSize();
     const navigate = useNavigate()
@@ -31,6 +32,11 @@ function CreateRoom() {
         document.title = "Create Room"
         validateSession()
     }, [])
+
+    useEffect(() => {
+        if (roomName.trim().length >= 3 && roomDescription.trim().length >= 3) setButtonDisabled(false)
+        else setButtonDisabled(true)
+    }, [roomName, roomDescription, allowJoin])
 
     const validateSession = async function() {
         if (!session_token) {
@@ -61,8 +67,36 @@ function CreateRoom() {
         else if (event.target.name === "room_description") setRoomDescription(event.target.value)
     }
 
-    const sendPostReq = (e) => {
+    const sendPostReq = async (e) => {
         e.preventDefault()
+        if (buttonDisabled) return
+        
+        try {
+            setButtonDisabled(true)
+            const response = await axios.post("http://localhost:3000/api/room/create", {
+                session_token: session_token,
+                name: roomName,
+                description: roomName,
+                allow_join: allowJoin,
+            })
+            console.log(response.data);
+            setButtonDisabled(false)
+            setRoomName("")
+            setRoomDescription("")
+            setErrorMsg("")
+            setAllowjoin(false)
+            
+        } catch(err) {
+            if (err.response.status === 400) {
+                setErrorMsg(err.response.data.err_msg)
+            }
+            else if (err.response.status === 401) {
+                removeCookie("session_token")
+                navigate("/login?i=0")
+            }
+            console.log(err);
+        }
+
     }
 
     return (
@@ -86,7 +120,7 @@ function CreateRoom() {
                         <Textfield2 value={roomDescription} onChange={handleChange} instance={1} className="instance-1" style={{marginBottom: "30px"}} type="text" label="Description" name="room_description" placeholder="Describe the room here.." />
                         <Checkbox checkboxState={allowJoin} setCheckboxState={setAllowjoin} style={{marginBottom: "50px"}} label="Allow participants joining" subLabel="( can be changed later )" name="allow_join" />
                         <div style={{marginBottom: "10px"}} className="error-text">{errorMsg}</div>
-                        <SecondaryButton type="btn2" text="CREATE ROOM" />
+                        <SecondaryButton type="btn2" text="CREATE ROOM" disabled={buttonDisabled} />
                     </form>
                 </div>
             </div>

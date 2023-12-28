@@ -13,16 +13,22 @@ a.sec-but {
     font-weight: 400;
     background-color: transparent;
     cursor: pointer;
-
+    
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.sec-but:hover {
+.sec-but.disabled {
+    border-color: rgb(255, 255, 255, 0.5);
+    color: rgb(255, 255, 255, 0.5);
+    cursor: context-menu;;
+}
+
+.sec-but:not(.disabled):hover {
     background-color: rgb(255, 255, 255, 0.02);
 }
 
-.sec-but:active {
+.sec-but:not(.disabled):active {
     background-color: rgb(255, 255, 255, 0.05);
 }

@@ -23,6 +23,7 @@
 
 .checkbox-container .box {
     font-size: 25px;
+    cursor: pointer;
 }
 
 .checkbox-container .box.off {
