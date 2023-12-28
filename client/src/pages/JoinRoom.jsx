@@ -19,7 +19,8 @@ function JoinRoom() {
     const [userObj, setUserObj] = useState(null)
     const [navbarState, setNavbarState] = useState(false)
     const [roomCode, setRoomCode] = useState("")
-    const [errorMsg, setErrorMsg] = useState("")    
+    const [errorMsg, setErrorMsg] = useState("")  
+    const [buttonDisabled, setButtonDisabled] = useState(true)  
     
     const screenSize = useScreenSize();
     const navigate = useNavigate()
@@ -29,6 +30,11 @@ function JoinRoom() {
         document.title = "Create Room"
         validateSession()
     }, [])
+
+    useEffect(() => {
+        if (roomCode.trim().length >= 1) setButtonDisabled(false)
+        else setButtonDisabled(true)
+    }, [roomCode])
 
     const validateSession = async function() {
         if (!session_token) {
@@ -81,7 +87,7 @@ function JoinRoom() {
                     <form onSubmit={sendPostReq}>
                         <Textfield2 value={roomCode} onChange={handleChange} style={{marginBottom: "30px"}} type="text" label="Room Code" name="room_code" placeholder="Enter the code shared by your friend" />
                         <div style={{marginBottom: "10px"}} className="error-text">{errorMsg}</div>
-                        <SecondaryButton type="btn2" text="JOIN ROOM" />
+                        <SecondaryButton type="btn2" text="JOIN ROOM" disabled={buttonDisabled} />
                     </form>
                 </div>
             </div>

@@ -47,6 +47,9 @@ function initialize() {
         google_id: {
             type: String,
             required: false
+        },
+        rooms: {
+            type: [mongoose.Types.ObjectId]
         }
     })
 

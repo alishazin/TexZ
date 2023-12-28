@@ -76,7 +76,7 @@ function CreateRoom() {
             const response = await axios.post("http://localhost:3000/api/room/create", {
                 session_token: session_token,
                 name: roomName,
-                description: roomName,
+                description: roomDescription,
                 allow_join: allowJoin,
             })
             console.log(response.data);

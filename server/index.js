@@ -13,7 +13,8 @@ const authViews = require(`${__dirname}/endpoints/auth.js`);
 const roomViews = require(`${__dirname}/endpoints/room.js`);
 
 // Initializing Database
-mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.gzebqbn.mongodb.net/?retryWrites=true&w=majority`);
+// mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.gzebqbn.mongodb.net/?retryWrites=true&w=majority`);
+mongoose.connect(`mongodb://127.0.0.1:27017/TexZ`);
 
 // Initializing Express App
 const app = express();

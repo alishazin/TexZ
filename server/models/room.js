@@ -21,6 +21,10 @@ function initialize() {
             type: String,
             required: true
         },
+        admin: {
+            type: mongoose.Types.ObjectId,
+            required: true
+        }, // not added in participants
         participants: {
             type: [mongoose.Types.ObjectId]
         }
