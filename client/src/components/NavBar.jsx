@@ -13,7 +13,7 @@ function NavBar({ instance }) {
             <img className="logo" src={LogoImg} />
         </div>
         <div className="separator"></div>
-        <Link className={`nav-item-container ${[1,2,3].includes(instance) ? "active" : ""}`} to="/login">
+        <Link className={`nav-item-container ${[1,2,3].includes(instance) ? "active" : ""}`} to="/rooms">
             <Icon className="icon flip" icon="lets-icons:chat" />
             <span>Rooms</span>
         </Link>

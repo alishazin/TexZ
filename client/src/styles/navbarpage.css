@@ -62,11 +62,11 @@
 .navbar-page-container > .content > .navbar-container {
     background-color: #2E2A29;
     width: 200px;
-    min-height: 100%;
+    min-height: 100vh;
     z-index: 1;
 }
 
-.navbar-page-container > .content > .navbar-page-content-container {
+.navbar-page-container > .content > .navbar-page-content-container:not(.three) {
     width: calc(100% - 200px);
     min-height: 100vh;
 }
@@ -75,7 +75,7 @@
     .navbar-page-container > .top-bar {  
         display: flex;
     }
-    .navbar-page-container > .content > .navbar-page-content-container {
+    .navbar-page-container > .content > .navbar-page-content-container:not(.three) {
         width: 100%;
         min-height: calc(100vh - 60px);
     }
@@ -87,5 +87,6 @@
         position: fixed;
         left: 0;
         top: 60px;
+        min-height: calc(100vh - 60px);
     }
 }
