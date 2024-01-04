@@ -1,0 +1,25 @@
+.navbar-page-content-container.three .chat-container .msg-container .info-container {
+    width: fit-content;
+    max-width: 90%;
+    margin: auto;
+    background-color: #363231;
+    padding: 5px 8px;
+    border-radius: 5px;
+    border-bottom: 1px solid #E0F6CA;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-page-content-container.three .chat-container .msg-container .info-container .icon {
+    color: #E0F6CA;
+    font-size: 12px;
+    margin-right: 5px;
+}
+
+.navbar-page-content-container.three .chat-container .msg-container .info-container span {
+    color: #E0F6CA;
+    font-size: 10px;
+    font-weight: 300;
+}

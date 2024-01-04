@@ -10,6 +10,8 @@ import "../styles/rooms.css"
 import { Icon } from '@iconify/react'
 import useScreenSize from "../hooks/useScreenSize"
 import ChatRoomItem from "../components/ChatRoomItem"
+import MessageContainer from "../components/MessageContainer"
+import InfoContainer from "../components/InfoContainer"
 
 function Rooms() {
 
@@ -82,101 +84,10 @@ function Rooms() {
                     </div>
                     <div className="chat-container">
                         <div className="msg-container">
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
-                            <div>asdasdsa</div>
+                            <MessageContainer side="right" msg="asdasdasd sad asdasdasdasdasdasdasd asdasdasd asdasdasd asdsa" name="You" date="2/01/2023" time="22:59" />
+                            <MessageContainer side="left" msg="asdasdasd sad asdasdasdasdasdasdasd asdasdasd asdasdasd asdsa asdas dasd asdasd asdasdas dasdasdasdas dasdasdasdsd" name="Ali Shazin" date="Yesterday" time="02:01" />
+                            <InfoContainer content={"John Doe left the room"} />
+                            <MessageContainer side="right" msg="Hi" name="Ali Shazin" date="Yesterday" time="02:05" />
                         </div>
                         <div className="send-msg-here-container">
                             <form className="send-msg-here-box">
