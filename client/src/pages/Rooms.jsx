@@ -12,6 +12,7 @@ import useScreenSize from "../hooks/useScreenSize"
 import ChatRoomItem from "../components/ChatRoomItem"
 import MessageContainer from "../components/MessageContainer"
 import InfoContainer from "../components/InfoContainer"
+import DateContainer from "../components/DateContainer"
 
 function Rooms() {
 
@@ -84,7 +85,9 @@ function Rooms() {
                     </div>
                     <div className="chat-container">
                         <div className="msg-container">
+                            <DateContainer day="THU" date="02" month="Jan" />
                             <MessageContainer side="right" msg="asdasdasd sad asdasdasdasdasdasdasd asdasdasd asdasdasd asdsa" name="You" date="2/01/2023" time="22:59" />
+                            <DateContainer day="MON" date="26" month="Dec" />
                             <MessageContainer side="left" msg="asdasdasd sad asdasdasdasdasdasdasd asdasdasd asdasdasd asdsa asdas dasd asdasd asdasdas dasdasdasdas dasdasdasdsd" name="Ali Shazin" date="Yesterday" time="02:01" />
                             <InfoContainer content={"John Doe left the room"} />
                             <MessageContainer side="right" msg="Hi" name="Ali Shazin" date="Yesterday" time="02:05" />
