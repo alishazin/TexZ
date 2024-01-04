@@ -1,0 +1,98 @@
+.chatroomitem-container {
+    min-height: 70px;
+    width: 100%;
+    position: relative;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    border-bottom: 1px solid rgb(255, 255, 255, 0.3);
+}
+
+.chatroomitem-container:not(.current):hover {
+    background-color: rgb(255, 255, 255, 0.04);
+}
+
+.chatroomitem-container.current {
+    background-color: rgb(255, 255, 255, 0.04);
+}
+
+.chatroomitem-container .current-div {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background-color: #FD7753;
+    display: none;
+}
+
+.chatroomitem-container.current .current-div {
+    display: block;
+}
+
+.chatroomitem-container .left {
+    padding: 0 20px;
+    width: calc(100% - 60px);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.chatroomitem-container .left .room-name {
+    color: rgb(255, 255, 255, 0.9);
+    font-weight: 500;
+    font-size: 13px;
+    margin-top: 2px;
+    margin-bottom: 7px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.chatroomitem-container .left .room-description {
+    color: rgb(255, 255, 255, 0.3);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 300;
+    font-size: 12px;
+    width: 100%;
+}
+
+.chatroomitem-container .right {
+    width: 60px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.chatroomitem-container .right .time-last-msg {
+    margin-top: 12px;
+    font-size: 11px;
+    font-weight: 300;
+    color: rgb(255, 255, 255, 0.6);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.chatroomitem-container .right .unread-msg-count {
+    margin-top: 5px;
+    font-size: 11px;
+    font-weight: 500;
+    width: 18px;
+    height: 18px;
+    background-color: #FD7753;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    border-radius: 50%;
+}

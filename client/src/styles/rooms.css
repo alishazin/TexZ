@@ -64,28 +64,118 @@
     min-height: 70px;
     background-color: #2E2A29;
     border-bottom: 1.5px solid #171514;
+    padding: 0 25px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.navbar-page-content-container.three .top-area .room-name {
+    color: #fff;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.navbar-page-content-container.three .top-area .room-name:hover {
+    text-decoration: underline;
+}
+
+.navbar-page-content-container.three .top-area .room-description {
+    color: rgb(255, 255, 255, 0.3);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 300;
+    font-size: 13px;
+    width: 100%;
 }
 
 .navbar-page-content-container.three .chat-container {
     width: 100%;
-    min-height: calc(100vh - 70px);
-    padding: 30px;
+    height: calc(100vh - 70px);
     position: relative;
     background-color: transparent;
     z-index: 0;
-}
-
-.navbar-page-content-container.three .chat-container .chat-bg {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    background: url("../images/chat-bg.png");
-    opacity: 0.1;
-    z-index: -1;
+    background: url("../images/chat-bg-dim.png");
     background-size: 50%;
     background-repeat: repeat;
+}
+
+.navbar-page-content-container.three .chat-container .msg-container {
+    background: transparent;
+    height: calc(100% - 70px);
+    overflow: auto;
+}
+
+.navbar-page-content-container.three .chat-container .msg-container {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+.navbar-page-content-container.three .chat-container .msg-container::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+}
+
+.navbar-page-content-container.three .chat-container .send-msg-here-container {
+    height: 70px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-page-content-container.three .chat-container .send-msg-here-container .send-msg-here-box {
+    width: calc(100% - 60px);
+    height: 50px;
+    background-color: #2E2A29;
+    border-radius: 8px;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+.navbar-page-content-container.three .chat-container .send-msg-here-container .send-msg-here-box input {
+    width: calc(100% - 50px);
+    background-color: #2E2A29;
+    outline: none;
+    border: none;
+    padding: 0 20px;
+    font-size: 14px;
+    color: rgb(255, 255, 255, 0.8);
+}
+
+.navbar-page-content-container.three .chat-container .send-msg-here-container .send-msg-here-box .send-icon-container {
+    width: 50px;
+    background-color: #FD7753;
+    cursor: pointer;
+    border: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar-page-content-container.three .chat-container .send-msg-here-container .send-msg-here-box .send-icon-container .icon {
+    font-size: 24px;
+    color: #fff;
+    transition: transform 0.2s;
+}
+
+.navbar-page-content-container.three .chat-container .send-msg-here-container .send-msg-here-box .send-icon-container:hover .icon {
+    transform: translateX(2px) translateY(-2px);
+}
+
+.navbar-page-content-container.three .chat-container .send-msg-here-container .send-msg-here-box .send-icon-container:active {
+    opacity: 0.9;
 }
 
 @media (max-width:1000px) {
@@ -135,6 +225,21 @@
         border-top: 1.5px solid rgb(255, 255, 255, 0.1);
     }
     .navbar-page-content-container.three .chat-container {
-        min-height: calc(100% - 70px);
+        height: calc(100vh - 130px);
+    }
+}
+
+@media (max-width:500px) {
+    .navbar-page-content-container.three .chat-container .msg-container {
+        height: calc(100% - 50px);
+    }
+
+    .navbar-page-content-container.three .chat-container .send-msg-here-container {
+        height: 50px;
+    }
+    
+    .navbar-page-content-container.three .chat-container .send-msg-here-container .send-msg-here-box {
+        width: 100%;
+        border-radius: 0;
     }
 }

@@ -9,9 +9,7 @@ import "../styles/navbarpage.css"
 import "../styles/rooms.css"
 import { Icon } from '@iconify/react'
 import useScreenSize from "../hooks/useScreenSize"
-import SecondaryButton from "../components/SecondaryButton"
-import Textfield2 from "../components/Textfield2"
-import Checkbox from "../components/Checkbox"
+import ChatRoomItem from "../components/ChatRoomItem"
 
 function Rooms() {
 
@@ -79,10 +77,115 @@ function Rooms() {
                 </div>
                 <div className="navbar-page-content-container three">
                     <div className="top-area">
-
+                        <div className="room-name">Culers</div>
+                        <div className="room-description">Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups.</div>
                     </div>
                     <div className="chat-container">
-                        <div className="chat-bg"></div>
+                        <div className="msg-container">
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                            <div>asdasdsa</div>
+                        </div>
+                        <div className="send-msg-here-container">
+                            <form className="send-msg-here-box">
+                                <input name="message" placeholder="Type your message here" />
+                                <button className="send-icon-container">
+                                    <Icon icon="tabler:send" className="icon" />
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <div className={`right-container ${rightSwiperState ? "open" : "close"}`}>
@@ -90,7 +193,11 @@ function Rooms() {
                         {rightSwiperState && <Icon className="icon" icon="line-md:arrow-right-circle" />}
                         {!rightSwiperState && <Icon className="icon" icon="line-md:arrow-left-circle" />}
                     </div>
-                    <div className="content-container"></div>
+                    <div className="content-container">
+                        <ChatRoomItem roomName={"CSE-A Students Group"} roomDescription={"Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups."} timeLastMsg={"1 hour"} unreadMsgCount={5} />
+                        <ChatRoomItem current={true} roomName={"Culers"} roomDescription={"Barcelona Fans."} timeLastMsg={"1 day"} unreadMsgCount={0} />
+                        <ChatRoomItem roomName={"Totspur"} roomDescription={"Tottenham Fans."} timeLastMsg={"1 week"} unreadMsgCount={0} />
+                    </div>
                 </div>
             </div>
         </div>
