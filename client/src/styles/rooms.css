@@ -219,12 +219,6 @@
     .content .right-container {
         top: 0;
     }
-    .navbar-page-content-container.three .top-area {
-        /* width: 100%;
-        min-height: 70px;
-        background-color: #2E2A29; */
-        border-top: 1.5px solid rgb(255, 255, 255, 0.1);
-    }
     .navbar-page-content-container.three .chat-container {
         height: calc(100vh - 130px);
     }

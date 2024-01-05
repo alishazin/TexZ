@@ -74,6 +74,7 @@
 @media (max-width: 800px) {
     .navbar-page-container > .top-bar {  
         display: flex;
+        border-bottom: 1.5px solid rgb(255, 255, 255, 0.1);
     }
     .navbar-page-container > .content > .navbar-page-content-container:not(.three) {
         width: 100%;

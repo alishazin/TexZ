@@ -1,0 +1,27 @@
+
+.ter-but {
+    background-color: #2E2A29;
+    border: 0.5px solid #FD7753;
+    color: #FD7753;
+    font-size: 13px;
+    font-weight: 500;
+    outline: none;
+    padding: 6px 12px;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ter-but.disabled {
+    opacity: 0.6;
+}
+
+.ter-but:not(.disabled):hover {
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+.ter-but:not(.disabled):active {
+    opacity: 0.6;
+}

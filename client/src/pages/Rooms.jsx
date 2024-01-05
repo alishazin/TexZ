@@ -13,8 +13,9 @@ import ChatRoomItem from "../components/ChatRoomItem"
 import MessageContainer from "../components/MessageContainer"
 import InfoContainer from "../components/InfoContainer"
 import DateContainer from "../components/DateContainer"
+import RoomDetailsContainer from "../components/RoomDetailsContainer"
 
-function Rooms() {
+function Rooms({ instance }) {
 
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
     const [userObj, setUserObj] = useState(null)
@@ -23,6 +24,7 @@ function Rooms() {
     const [roomCode, setRoomCode] = useState("")
     const [errorMsg, setErrorMsg] = useState("")  
     const [buttonDisabled, setButtonDisabled] = useState(true)  
+    const [detailsWidget, setDetailsWidget] = useState(false)  
     
     const screenSize = useScreenSize();
     const navigate = useNavigate()
@@ -79,8 +81,9 @@ function Rooms() {
                     <NavBar instance={1} />
                 </div>
                 <div className="navbar-page-content-container three">
+                    {!detailsWidget && <>
                     <div className="top-area">
-                        <div className="room-name">Culers</div>
+                        <div className="room-name" onClick={() => setDetailsWidget(true)}>Culers</div>
                         <div className="room-description">Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups.</div>
                     </div>
                     <div className="chat-container">
@@ -101,6 +104,10 @@ function Rooms() {
                             </form>
                         </div>
                     </div>
+                    </>}
+                    {detailsWidget && 
+                        <RoomDetailsContainer setDetailsWidget={setDetailsWidget} roomName={"CSE-A Students Group"} roomDescription={"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."} />
+                    }
                 </div>
                 <div className={`right-container ${rightSwiperState ? "open" : "close"}`}>
                     <div className="swiper-container" onClick={handleSwiperClick}>
