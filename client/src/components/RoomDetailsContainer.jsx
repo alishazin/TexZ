@@ -1,13 +1,17 @@
 import "../styles/roomdetails.css"
 import { Icon } from '@iconify/react'
-import { useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import TertiaryButton from "./TertiaryButton"
+import ParticipantItem from "./ParticipantItem"
+import ToggleButton from "./ToggleButton"
 
 function RoomDetailsContainer({ setDetailsWidget, roomName, roomDescription }) {
 
     const [editState, setEditState] = useState(false)
     const [editedRoomName, setEditedRoomName] = useState(roomName)
     const [editedRoomDescription, setEditedRoomDescription] = useState(roomDescription)
+    const allowParicipantsPrev = useRef(null)
+    const [allowParicipants, setAllowParicipants] = useState(false)
 
     const handleChange = function (event) {
         if (event.target.name === "room-name") setEditedRoomName(event.target.value)
@@ -23,6 +27,12 @@ function RoomDetailsContainer({ setDetailsWidget, roomName, roomDescription }) {
     const handleSubmit = function (e) {
         e.preventDefault()
     }
+
+    useEffect(() => {
+        if (allowParicipantsPrev.current !== null) {
+            console.log("change allow participants", allowParicipants);
+        }
+    }, [allowParicipants])
 
     return (
         <div className="room-details-container">
@@ -43,6 +53,40 @@ function RoomDetailsContainer({ setDetailsWidget, roomName, roomDescription }) {
                     <TertiaryButton text="Confirm" disabled={false} />
                 </form>
                 }
+            </div>
+            <div className="participants-container">
+                <h2>Participants</h2>
+                <ParticipantItem name="Ali Shazin" />
+                <ParticipantItem name="John Doe" />
+                <ParticipantItem name="Vitor Roque" />
+            </div>
+            <div className="roomcode-container">
+                <h2>Room Code</h2>
+                <div className="content-box">
+                    <div className="left-area">
+                        <span>fea926be-d7c9-4a68-b1fc-557a90ef6564</span>
+                        <Icon className="copy-icon" icon="fluent:copy-32-regular" />
+                    </div>
+                    <div className="right-area">
+                        <TertiaryButton text={"Generate New"} disabled={false} /> 
+                    </div>
+                </div>
+                <div className="info">Generating a new room code will result in making the older one invalid. Previously shared room code will no longer be valid.</div>
+            </div>
+            <div className="dangerzone-container">
+                <h2>Danger Zone <Icon className="icon" icon="solar:danger-triangle-outline" /></h2>
+                <div className="dismiss-container">
+                    <div className="text">Dismiss the room<br/><span>( this change is irreversible )</span></div>
+                    <div className="btn-area">
+                        <TertiaryButton text={"Dismiss"} disabled={false} />
+                    </div>
+                </div>
+                <div className="allow-container">
+                    <div className="text">Allow participants joining</div>
+                    <div className="toggle-area">
+                        <ToggleButton prevValue={allowParicipantsPrev} disabled={false} state={allowParicipants} setState={setAllowParicipants} />
+                    </div>
+                </div>
             </div>
         </div>
     )

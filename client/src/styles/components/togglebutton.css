@@ -1,0 +1,94 @@
+@keyframes animate-on {
+    0% {
+        left: 3px;
+    }
+    50% {
+        width: 54px;
+        left: 3px;
+    }
+    100% {
+        background-color: rgb(255, 255, 255, 1);
+        left: calc(100% - 30px);
+        top: 0;
+        border-radius: 15px;
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@keyframes animate-off {
+    0% {
+        background-color: rgb(255, 255, 255, 1);
+        left: calc(100% - 30px);
+        top: 0;
+        border-radius: 15px;
+        width: 30px;
+        height: 30px;
+    }
+    50% {
+        width: 54px;
+        left: 3px;
+    }
+    100% {
+        left: 3px;
+    }
+}
+
+.toggle-button {
+    height: 30px;
+    width: 60px;
+    border-radius: 20px;
+    position: relative;
+    transition: background-color 0.5s;
+}
+
+.toggle-button.disabled {
+    opacity: 0.6;
+}
+
+.toggle-button:not(.disabled):hover {
+    cursor: pointer;
+}
+
+.toggle-button .toggle-div {
+    width: 100%;
+    height: 100%;
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    position: absolute;
+    left: 3px;
+    top: 3px;
+}
+
+.toggle-button.disabled.off {
+    background-color: rgb(255, 255, 255, 0.1);
+}
+
+.toggle-button.disabled.off .toggle-div {
+    background-color: rgb(255, 255, 255, 1);
+}
+
+.toggle-button:not(.disabled).off {
+    background-color: rgb(255, 255, 255, 0.1);
+}
+
+.toggle-button:not(.disabled).off .toggle-div {
+    background-color: rgb(255, 255, 255, 1);
+}
+
+.toggle-button:not(.disabled).on {
+    background-color: #FD7753;
+}
+
+.toggle-button:not(.disabled).on .toggle-div {
+    animation-name: animate-on;
+    animation-fill-mode: forwards;
+    animation-duration: 0.5s;
+}
+
+.toggle-button:not(.disabled).off .toggle-div {
+    animation-name: animate-off;
+    animation-fill-mode: forwards;
+    animation-duration: 0.5s;
+}

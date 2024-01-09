@@ -1,0 +1,22 @@
+
+.quaternary-but {
+    color: #FD7753;
+    background-color: transparent;
+    font-size: 13px;
+    font-weight: 300;
+    outline: none;
+    border: none;
+}
+
+.quaternary-but.disabled {
+    opacity: 0.5;
+}
+
+.quaternary-but:not(.disabled):hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.quaternary-but:not(.disabled):active {
+    transform: translateY(1px);
+}

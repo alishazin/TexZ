@@ -1,0 +1,18 @@
+.participants-container .participant-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    height: 60px;
+    border-bottom: 1px solid rgb(255, 255, 255, 0.3);
+}
+
+.participants-container .participant-item .name {
+    color: rgb(255, 255, 255, 1);
+    font-size: 14px;
+    font-weight: 300;
+    width: calc(100% - 70px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
