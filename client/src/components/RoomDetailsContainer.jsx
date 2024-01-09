@@ -7,6 +7,7 @@ import ToggleButton from "./ToggleButton"
 
 function RoomDetailsContainer({ setDetailsWidget, roomName, roomDescription }) {
 
+    const isAdmin = true
     const [editState, setEditState] = useState(false)
     const [editedRoomName, setEditedRoomName] = useState(roomName)
     const [editedRoomDescription, setEditedRoomDescription] = useState(roomDescription)
@@ -42,11 +43,11 @@ function RoomDetailsContainer({ setDetailsWidget, roomName, roomDescription }) {
                 </div>
                 {!editState && 
                 <div className="right-area">
-                    <div className="room-name">{roomName} <Icon onClick={() => setEditState(true)} className="edit-button" icon="material-symbols:edit-outline" /></div>
+                    <div className="room-name">{roomName} {isAdmin && <Icon onClick={() => setEditState(true)} className="edit-button" icon="material-symbols:edit-outline" />}</div>
                     <div className="room-description">{roomDescription}</div>
                 </div>
                 }
-                {editState && 
+                {(editState && isAdmin) && 
                 <form className="right-area-edit" onSubmit={handleSubmit}>
                     <input onChange={handleChange} name="room-name" className="room-name" value={editedRoomName} /> <Icon onClick={cancelEdit} className="cancel-btn" icon="material-symbols:cancel-outline" /><br/>
                     <textarea className="room-description" onChange={handleChange} name="room-description">{editedRoomDescription}</textarea>
@@ -56,16 +57,17 @@ function RoomDetailsContainer({ setDetailsWidget, roomName, roomDescription }) {
             </div>
             <div className="participants-container">
                 <h2>Participants</h2>
-                <ParticipantItem name="Ali Shazin" />
-                <ParticipantItem name="John Doe" />
-                <ParticipantItem name="Vitor Roque" />
+                <ParticipantItem name="Ali Shazin" isAdmin={isAdmin} />
+                <ParticipantItem name="John Doe" isAdmin={isAdmin} />
+                <ParticipantItem name="Vitor Roque" isAdmin={isAdmin} />
             </div>
+            {isAdmin && <>
             <div className="roomcode-container">
                 <h2>Room Code</h2>
                 <div className="content-box">
                     <div className="left-area">
                         <span>fea926be-d7c9-4a68-b1fc-557a90ef6564</span>
-                        <Icon className="copy-icon" icon="fluent:copy-32-regular" />
+                        <Icon onClick={() => navigator.clipboard.writeText("fea926be-d7c9-4a68-b1fc-557a90ef6564")} className="copy-icon" icon="fluent:copy-32-regular" />
                     </div>
                     <div className="right-area">
                         <TertiaryButton text={"Generate New"} disabled={false} /> 
@@ -88,6 +90,7 @@ function RoomDetailsContainer({ setDetailsWidget, roomName, roomDescription }) {
                     </div>
                 </div>
             </div>
+            </>}
         </div>
     )
 }
