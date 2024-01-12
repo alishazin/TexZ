@@ -103,11 +103,11 @@ function chatEndpoint(app, UserModel, RoomModel) {
         const user = res.locals.user
 
         const result = await RoomModel.find({ 'admin': user._id })
-            .select("name description admin participants room_id")
+            .select("name description admin participants room_id messages")
 
         result.push(
             ...await RoomModel.find({ 'participants': [user._id] })
-            .select("name description admin participants")
+            .select("name description admin participants messages")
         )
 
         const returnResult = []
@@ -125,9 +125,26 @@ function chatEndpoint(app, UserModel, RoomModel) {
                 })
             }
 
+            const messageDetails = []
+
+            if (roomObj.messages) {
+                for (let messageObj of roomObj.messages) {
+                    const msgUserObj = await utils.getUserWithId(messageObj.from, UserModel)
+                    messageDetails.push({
+                        text: messageObj.text,
+                        from: {
+                            _id: msgUserObj._id.toString(),
+                            username: _.startCase(msgUserObj.username),
+                            email: msgUserObj.email,
+                        }
+                    })
+                }
+            }
+
             const adminUserObj = await utils.getUserWithId(roomObj.admin, UserModel)
 
             returnResult.push({
+                _id: roomObj._id.toString(),
                 name: roomObj.name,
                 description: roomObj.description,
                 admin: {
@@ -136,11 +153,17 @@ function chatEndpoint(app, UserModel, RoomModel) {
                     email: adminUserObj.email,
                 },
                 participants: participantsDetails,
+                messages: messageDetails,
                 room_id: roomObj.room_id ? roomObj.room_id : null
             })
         }
 
-        return res.status(200).send(returnResult)
+        return res.status(200).send({roomData: returnResult, userData: {
+            _id: user._id,
+            email: user.email,
+            username: user.username,
+            provider: user.provider
+        }})
 
     })
 

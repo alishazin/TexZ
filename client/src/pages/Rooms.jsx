@@ -17,6 +17,9 @@ import DateContainer from "../components/DateContainer"
 import RoomDetailsContainer from "../components/RoomDetailsContainer"
 import LoadingChatRoomItem from "../components/LoadingChatRoomItem"
 import Popup from "../components/Popup"
+import io from "socket.io-client"
+
+var socket;
 
 function Rooms({ instance }) {
 
@@ -27,6 +30,7 @@ function Rooms({ instance }) {
     const [navbarState, setNavbarState] = useState(false)
     const [rightSwiperState, setRightSwiperState] = useState(false)
     const [detailsWidget, setDetailsWidget] = useState(false)  
+    const [sendMsgField, setSendMsgField] = useState("")  
     const [popupObj, setPopupObj] = useState({
         state: false,
         text: "",
@@ -38,14 +42,30 @@ function Rooms({ instance }) {
     const screenSize = useScreenSize();
     const navigate = useNavigate()
     const session_token = cookies.session_token
+    
+    useEffect(() => {
+        document.title = "Rooms"
+        socket = io.connect("http://localhost:3000", {query: `session_token=${session_token}`})
+    }, [])
 
     useEffect(() => {
-        (async () => {
-            document.title = "Rooms"
-            await validateSession()
-            await getRoomData()
-        })()
-    }, [])
+        
+        socket.on("fetch_data", response => {
+			if (response.status === "invalid_session_token") {
+                removeCookie("session_token")
+                navigate("/login?i=0")
+            } else if (response.status === "success") {
+                setUserObj(response.userData)
+                setRoomData(response.roomData)
+            }
+		})
+        
+        socket.on("refresh_data", async (response) => {
+            console.log("REFRESH");
+			await getRoomData()
+		})
+    
+	}, [socket])
 
     const validateSession = async function() {
         if (!session_token) {
@@ -67,6 +87,22 @@ function Rooms({ instance }) {
         }
     }
 
+    const handleSendMsg = async (e) => {
+        e.preventDefault()
+
+        socket.emit("send_message", { 
+            userId: userObj._id,
+            roomId: roomData[selectedRoomCount-1]._id,
+            text: sendMsgField
+        }, async function (data) {
+            console.log("SEND")
+            await getRoomData()
+        })
+        
+        setSendMsgField("")
+
+    }
+
     const getRoomData = async function() {
         if (!session_token) {
             navigate("/login?i=0")
@@ -79,8 +115,8 @@ function Rooms({ instance }) {
                     "session-token": session_token
                 }
             })
-            console.log(response.data)
-            setRoomData(response.data)
+            setUserObj(response.data.userData)
+            setRoomData(response.data.roomData)
         } catch(err) {
             if (err.response.status === 401) {
                 removeCookie("session_token")
@@ -124,16 +160,19 @@ function Rooms({ instance }) {
                         </div>
                         <div className="chat-container">
                             <div className="msg-container">
-                                <DateContainer day="THU" date="02" month="Jan" />
+                                {roomData[selectedRoomCount-1].messages.map((messageObj, _index) => (
+                                    <MessageContainer key={_index} side={messageObj.from._id === userObj._id ? "right" : "left"} msg={messageObj.text} name={messageObj.from._id === userObj._id ? "You" : messageObj.from.username} date="2/01/2023" time="22:59" />
+                                ))}
+                                {/* <DateContainer day="THU" date="02" month="Jan" />
                                 <MessageContainer side="right" msg="asdasdasd sad asdasdasdasdasdasdasd asdasdasd asdasdasd asdsa" name="You" date="2/01/2023" time="22:59" />
                                 <DateContainer day="MON" date="26" month="Dec" />
                                 <MessageContainer side="left" msg="asdasdasd sad asdasdasdasdasdasdasd asdasdasd asdasdasd asdsa asdas dasd asdasd asdasdas dasdasdasdas dasdasdasdsd" name="Ali Shazin" date="Yesterday" time="02:01" />
                                 <InfoContainer content={"John Doe left the room"} />
-                                <MessageContainer side="right" msg="Hi" name="Ali Shazin" date="Yesterday" time="02:05" />
+                                <MessageContainer side="right" msg="Hi" name="Ali Shazin" date="Yesterday" time="02:05" /> */}
                             </div>
                             <div className="send-msg-here-container">
-                                <form className="send-msg-here-box">
-                                    <input name="message" placeholder="Type your message here" />
+                                <form className="send-msg-here-box" onSubmit={handleSendMsg}>
+                                    <input autoComplete="off" onChange={e => setSendMsgField(e.target.value)} name="message" placeholder="Type your message here" value={sendMsgField} />
                                     <button className="send-icon-container">
                                         <Icon icon="tabler:send" className="icon" />
                                     </button>

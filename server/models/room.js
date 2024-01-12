@@ -2,6 +2,18 @@ const mongoose = require("mongoose");
 
 function initialize() {
 
+    const messageSchema = mongoose.Schema({
+        text: {
+            type: String,
+            trim: true,
+            required: true,
+        },
+        from: {
+            type: mongoose.Types.ObjectId,
+            required: true
+        }
+    })
+
     const roomSchema = mongoose.Schema({
         name: {
             type: String,
@@ -27,6 +39,10 @@ function initialize() {
         }, // not added in participants
         participants: {
             type: [mongoose.Types.ObjectId]
+        },
+        messages: {
+            type: [messageSchema],
+            required: true
         }
         
     })

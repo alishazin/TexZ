@@ -1,3 +1,6 @@
+
+const _ = require("lodash")
+
 const typeOf = (obj) => {
     return Object.getPrototypeOf(obj).constructor;
 }
@@ -32,9 +35,89 @@ async function getUserWithId(id, UserModel) {
 
 }
 
+async function getRoomWithId(id, RoomModel) {
+
+    return await RoomModel.findOne({ _id: id })
+
+}
+
+async function getUsersChatData(UserModel, RoomModel, session_token) {
+
+    // session_token validation
+    const user = await UserModel.findOne({session_token: session_token, verified: true})
+    if (!user) {
+        return {status: "invalid_session_token", roomData: null, userData: null}
+    }
+
+    const result = await RoomModel.find({ 'admin': user._id })
+        .select("name description admin participants room_id messages")
+
+    result.push(
+        ...await RoomModel.find({ 'participants': [user._id] })
+        .select("name description admin participants messages")
+    )
+
+    const returnResult = []
+
+    for (let roomObj of result) {
+        
+        const participantsDetails = []
+
+        for (let participant_id of roomObj.participants) {
+            const userObj = await getUserWithId(participant_id, UserModel)
+            participantsDetails.push({
+                _id: userObj._id.toString(),
+                username: _.startCase(userObj.username),
+                email: userObj.email,
+            })
+        }
+        
+        const messageDetails = []
+        
+        if (roomObj.messages) {
+            for (let messageObj of roomObj.messages) {
+                const msgUserObj = await getUserWithId(messageObj.from, UserModel)
+                messageDetails.push({
+                    text: messageObj.text,
+                    from: {
+                        _id: msgUserObj._id.toString(),
+                        username: _.startCase(msgUserObj.username),
+                        email: msgUserObj.email,
+                    }
+                })
+            }
+        }
+
+        const adminUserObj = await getUserWithId(roomObj.admin, UserModel)
+
+        returnResult.push({
+            _id: roomObj._id.toString(),
+            name: roomObj.name,
+            description: roomObj.description,
+            admin: {
+                _id: adminUserObj._id,
+                username: _.startCase(adminUserObj.username),
+                email: adminUserObj.email,
+            },
+            participants: participantsDetails,
+            messages: messageDetails,
+            room_id: roomObj.room_id ? roomObj.room_id : null
+        })
+    }
+
+    return {status: "success", roomData: returnResult, userData: {
+        _id: user._id,
+        email: user.email,
+        username: user.username,
+        provider: user.provider
+    }}
+}
+
 module.exports = {
     checkType: checkType, 
     validateEmail: validateEmail, 
     checkIfExpired: checkIfExpired,
-    getUserWithId: getUserWithId
+    getUserWithId: getUserWithId,
+    getRoomWithId: getRoomWithId,
+    getUsersChatData: getUsersChatData
 }
