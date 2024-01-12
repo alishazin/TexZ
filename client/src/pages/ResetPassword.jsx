@@ -16,6 +16,7 @@ function ResetPassword() {
     
     const [userEmail, setUserEmail] = useState(null)
     const [buttonDisabled, setButtonDisabled] = useState(true)
+    const [buttonLoading, setButtonLoading] = useState(false)
     const [password, setPassword] = useState("")
     const [passwordRepeat, setPasswordRepeat] = useState("")
     const [errorMsg, setErrorMsg] = useState("")
@@ -54,11 +55,13 @@ function ResetPassword() {
         if (buttonDisabled) return
         
         try {
+            setButtonLoading(true)
             const response = await axios.post("http://localhost:3000/api/auth/reset-password", {
                 resetpass_token: resetpass_token,
                 new_password: password
             })
             removeCookie("session_token")
+            setButtonLoading(false)
             navigate("/login?i=2")
         } catch(err) {
             if (err.response.status === 400) {
@@ -67,6 +70,7 @@ function ResetPassword() {
             else if (err.response.status === 401) {
                 navigate("/login?i=3")
             }
+            setButtonLoading(false)
             console.log(err);
         }
     }
@@ -82,7 +86,7 @@ function ResetPassword() {
                     <Textfield onChange={handleChange} name="password" value={password} type="password" label="Password" placeholder="Enter new password" icon_cls="fa-solid fa-lock" />
                     <Textfield className="last" onChange={handleChange} name="repeat-password" value={passwordRepeat} type="password" label="Repeat Password" placeholder="Repeat new password" icon_cls="fa-solid fa-lock" />
                     <div className="error-text" style={{margin: "10px 0 30px"}}>{errorMsg}</div>
-                    <PrimaryButton text="RESET PASSWORD" disabled={buttonDisabled} />
+                    <PrimaryButton text="RESET PASSWORD" disabled={buttonDisabled} loading={buttonLoading} />
                 </form>
             </div>
         </>

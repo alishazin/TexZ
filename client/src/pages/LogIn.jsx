@@ -26,6 +26,7 @@ function LogIn() {
     const instance = searchParams.get('i')
 
     const [buttonDisabled, setButtonDisabled] = useState(true)
+    const [buttonLoading, setButtonLoading] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [errorMsg, setErrorMsg] = useState("")
@@ -72,17 +73,20 @@ function LogIn() {
         if (buttonDisabled) return
         
         try {
+            setButtonLoading(true)
             const response = await axios.post("http://localhost:3000/api/auth/login", {
                 email: email.trim(),
                 password
             })
             setCookie("session_token", response.data.session_token)
+            setButtonLoading(false)
             navigate("/create-room")
 
         } catch(err) {
             if (err.response.status === 400) {
                 setErrorMsg(err.response.data.err_msg)
             }
+            setButtonLoading(false)
             console.log(err);
         }
     }
@@ -98,7 +102,7 @@ function LogIn() {
                     {instance && instanceText[instance] && <div className="help-text">{instanceText[instance]}</div>}
                     <div className="error-text">{errorMsg}</div>
                     <a className="forgot-pass" href="/forgot-password">Forgot Password?</a>
-                    <PrimaryButton text="LOG IN" disabled={buttonDisabled} />
+                    <PrimaryButton text="LOG IN" disabled={buttonDisabled} loading={buttonLoading} />
                     <ORSeparator />
                     <GoogleButton />
                     <BottomTextLink text="Don't have an account?" link_text="Sign Up" url="/signup" />

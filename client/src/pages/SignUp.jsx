@@ -20,6 +20,7 @@ function SignUp() {
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
 
     const [buttonDisabled, setButtonDisabled] = useState(true)
+    const [buttonLoading, setButtonLoading] = useState(false)
     const [accountCreated, setAccountCreated] = useState(false)
 
     const [email, setEmail] = useState("")
@@ -73,6 +74,7 @@ function SignUp() {
         if (buttonDisabled) return
         
         try {
+            setButtonLoading(true)
             const response = await axios.post("http://localhost:3000/api/auth/signup", {
                 email: email.trim(),
                 username: username.trim(),
@@ -80,11 +82,13 @@ function SignUp() {
             })
             setErrorMsg("")
             setEmail(response.data.email)
+            setButtonLoading(false)
             setAccountCreated(true)
         } catch(err) {
             if (err.response.status === 400) {
                 setErrorMsg(err.response.data.err_msg)
             }
+            setButtonLoading(false)
             console.log(err);
         }
     }
@@ -111,7 +115,7 @@ function SignUp() {
                             <Textfield onChange={handleChange} name="password" value={password} type="password" label="Password" placeholder="Enter password" icon_cls="fa-solid fa-lock" />
                             <Textfield onChange={handleChange} name="repeat-password" value={passwordRepeat} type="password" label="Repeat Password" placeholder="Repeat password" icon_cls="fa-solid fa-lock" />
                             <div className="error-text">{errorMsg}</div>
-                            <PrimaryButton onClick={sendPostReq} text="SIGN UP" disabled={buttonDisabled} />
+                            <PrimaryButton onClick={sendPostReq} text="SIGN UP" disabled={buttonDisabled} loading={buttonLoading} />
                             <ORSeparator />
                             <GoogleButton />
                             <BottomTextLink text="Already have an account?" link_text="Log In" url="/login" />

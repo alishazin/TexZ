@@ -50,7 +50,7 @@ function CreateRoom() {
             })
             setUserObj(response.data)
         } catch(err) {
-            if (err.response.status === 400) {
+            if (err.response.status === 401) {
                 removeCookie("session_token")
                 navigate("/login?i=0")
             }
@@ -74,10 +74,14 @@ function CreateRoom() {
         try {
             setButtonDisabled(true)
             const response = await axios.post("http://localhost:3000/api/room/create", {
-                session_token: session_token,
                 name: roomName,
                 description: roomDescription,
                 allow_join: allowJoin,
+            },
+            {
+                headers: {
+                    "session-token": session_token
+                }
             })
             console.log(response.data);
             setButtonDisabled(false)

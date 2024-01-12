@@ -17,6 +17,14 @@
     white-space: nowrap;
 }
 
+.participants-container .participant-item .name .admin-icon {
+    font-size: 16px;
+    margin-right: 4px;
+    color: #FD7753;
+    opacity: 0.9;
+    transform: translateY(2px);
+}
+
 .participants-container .participant-item.single .name {
     width: 100%;
 }

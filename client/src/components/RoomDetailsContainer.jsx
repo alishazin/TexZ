@@ -5,9 +5,8 @@ import TertiaryButton from "./TertiaryButton"
 import ParticipantItem from "./ParticipantItem"
 import ToggleButton from "./ToggleButton"
 
-function RoomDetailsContainer({ setDetailsWidget, roomName, roomDescription }) {
+function RoomDetailsContainer({ setDetailsWidget, roomName, roomDescription, roomCode, isAdmin, participants, adminUser, setPopupObj, getRoomData }) {
 
-    const isAdmin = true
     const [editState, setEditState] = useState(false)
     const [editedRoomName, setEditedRoomName] = useState(roomName)
     const [editedRoomDescription, setEditedRoomDescription] = useState(roomDescription)
@@ -50,24 +49,25 @@ function RoomDetailsContainer({ setDetailsWidget, roomName, roomDescription }) {
                 {(editState && isAdmin) && 
                 <form className="right-area-edit" onSubmit={handleSubmit}>
                     <input onChange={handleChange} name="room-name" className="room-name" value={editedRoomName} /> <Icon onClick={cancelEdit} className="cancel-btn" icon="material-symbols:cancel-outline" /><br/>
-                    <textarea className="room-description" onChange={handleChange} name="room-description">{editedRoomDescription}</textarea>
+                    <textarea className="room-description" onChange={handleChange} name="room-description" value={editedRoomDescription}></textarea>
                     <TertiaryButton text="Confirm" disabled={false} />
                 </form>
                 }
             </div>
             <div className="participants-container">
                 <h2>Participants</h2>
-                <ParticipantItem name="Ali Shazin" isAdmin={isAdmin} />
-                <ParticipantItem name="John Doe" isAdmin={isAdmin} />
-                <ParticipantItem name="Vitor Roque" isAdmin={isAdmin} />
+                <ParticipantItem name={adminUser.username} isAdmin={isAdmin} adminIcon={true} />
+                {participants.map((participantObj, _index) => (
+                    <ParticipantItem key={_index} name={participantObj.username} isAdmin={isAdmin} setPopupObj={setPopupObj} getRoomData={getRoomData} />
+                ))}
             </div>
             {isAdmin && <>
             <div className="roomcode-container">
                 <h2>Room Code</h2>
                 <div className="content-box">
                     <div className="left-area">
-                        <span>fea926be-d7c9-4a68-b1fc-557a90ef6564</span>
-                        <Icon onClick={() => navigator.clipboard.writeText("fea926be-d7c9-4a68-b1fc-557a90ef6564")} className="copy-icon" icon="fluent:copy-32-regular" />
+                        <span>{roomCode}</span>
+                        <Icon onClick={() => navigator.clipboard.writeText(roomCode)} className="copy-icon" icon="fluent:copy-32-regular" />
                     </div>
                     <div className="right-area">
                         <TertiaryButton text={"Generate New"} disabled={false} /> 

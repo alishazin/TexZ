@@ -10,6 +10,7 @@ import EmailVer from "../components/EmailVer"
 function ForgotPassword() {
 
     const [buttonDisabled, setButtonDisabled] = useState(true)
+    const [buttonLoading, setButtonLoading] = useState(false)
     const [tokenCreated, setTokenCreated] = useState(false)
 
     const [email, setEmail] = useState("")
@@ -33,16 +34,19 @@ function ForgotPassword() {
         if (buttonDisabled || tokenCreated) return
         
         try {
+            setButtonLoading(true)
             const response = await axios.post("http://localhost:3000/api/auth/forgot-password", {
                 email: email.trim(),
             })
             setErrorMsg("")
             setEmail(response.data.email)
+            setButtonLoading(false)
             setTokenCreated(true)
         } catch(err) {
             if (err.response.status === 400) {
                 setErrorMsg(err.response.data.err_msg)
             }
+            setButtonLoading(false)
             console.log(err);
         }
     }
@@ -57,7 +61,7 @@ function ForgotPassword() {
                         <Textfield className="last" onChange={handleChange} name="email" value={email} type="text" label="Email" placeholder="Enter registered email" icon_cls="fa-solid fa-envelope" />
                         <div className="help-text">You will recieve a link through your email to reset your password.</div>
                         <div className="error-text" style={{margin: "10px 0 20px"}}>{errorMsg}</div>
-                        <PrimaryButton text="REQUEST LINK" disabled={buttonDisabled} />
+                        <PrimaryButton text="REQUEST LINK" disabled={buttonDisabled} loading={buttonLoading} />
                     </>}
                     {tokenCreated && <>
                         <EmailVer text={`Check your email '${email}' for password reset link.`} />

@@ -2,10 +2,10 @@ import "../styles/components/chatroomitem.css"
 import { Icon } from '@iconify/react'
 import { useState } from "react"
 
-function ChatRoomItem({ className, style, roomName, roomDescription, timeLastMsg, unreadMsgCount, current = false }) {
+function ChatRoomItem({ className, style, roomName, roomDescription, timeLastMsg, unreadMsgCount, onClick, current = false }) {
 
     return (
-        <div className={`chatroomitem-container ${current ? "current" : ""} ${className ? className : ""}`} style={style}>
+        <div onClick={onClick} className={`chatroomitem-container ${current ? "current" : ""} ${className ? className : ""}`} style={style}>
             <div className="current-div"></div>
             <div className="left">
                 <div className="room-name">{roomName}</div>

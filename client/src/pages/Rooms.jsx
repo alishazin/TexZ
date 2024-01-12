@@ -5,6 +5,7 @@ import axios from "axios"
 import NavBar from "../components/NavBar"
 import TextLogoImg from "../images/text-logo.png"
 import LogoImg from "../images/logo.png"
+import LogoImg2 from "../images/logo2.png"
 import "../styles/navbarpage.css"
 import "../styles/rooms.css"
 import { Icon } from '@iconify/react'
@@ -14,25 +15,36 @@ import MessageContainer from "../components/MessageContainer"
 import InfoContainer from "../components/InfoContainer"
 import DateContainer from "../components/DateContainer"
 import RoomDetailsContainer from "../components/RoomDetailsContainer"
+import LoadingChatRoomItem from "../components/LoadingChatRoomItem"
+import Popup from "../components/Popup"
 
 function Rooms({ instance }) {
 
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
+    const [roomData, setRoomData] = useState(null)
+    const [selectedRoomCount, setSelectedRoomCount] = useState(null)
     const [userObj, setUserObj] = useState(null)
     const [navbarState, setNavbarState] = useState(false)
     const [rightSwiperState, setRightSwiperState] = useState(false)
-    const [roomCode, setRoomCode] = useState("")
-    const [errorMsg, setErrorMsg] = useState("")  
-    const [buttonDisabled, setButtonDisabled] = useState(true)  
     const [detailsWidget, setDetailsWidget] = useState(false)  
+    const [popupObj, setPopupObj] = useState({
+        state: false,
+        text: "",
+        confirmation_text: "",
+        button_text: "",
+        callback: async () => {}
+    }) 
     
     const screenSize = useScreenSize();
     const navigate = useNavigate()
     const session_token = cookies.session_token
 
     useEffect(() => {
-        document.title = "Rooms"
-        validateSession()
+        (async () => {
+            document.title = "Rooms"
+            await validateSession()
+            await getRoomData()
+        })()
     }, [])
 
     const validateSession = async function() {
@@ -47,7 +59,30 @@ function Rooms({ instance }) {
             })
             setUserObj(response.data)
         } catch(err) {
-            if (err.response.status === 400) {
+            if (err.response.status === 401) {
+                removeCookie("session_token")
+                navigate("/login?i=0")
+            }
+            console.log(err);
+        }
+    }
+
+    const getRoomData = async function() {
+        if (!session_token) {
+            navigate("/login?i=0")
+            return;
+        }
+        
+        try {
+            const response = await axios.get("http://localhost:3000/api/chat/get-all", {
+                headers: {
+                    "session-token": session_token
+                }
+            })
+            console.log(response.data)
+            setRoomData(response.data)
+        } catch(err) {
+            if (err.response.status === 401) {
                 removeCookie("session_token")
                 navigate("/login?i=0")
             }
@@ -67,6 +102,7 @@ function Rooms({ instance }) {
 
     return (
         <div className="navbar-page-container">
+            {popupObj.state && <Popup popupObj={popupObj} setPopupObj={setPopupObj} />}
             <div className="top-bar">
                 {navbarState && <Icon onClick={handleMenuIconClick} className="menu-icon" icon="line-md:menu-to-close-transition"/>}
                 {!navbarState && <Icon onClick={handleMenuIconClick} className="menu-icon" icon="line-md:close-to-menu-transition"/>}
@@ -81,32 +117,49 @@ function Rooms({ instance }) {
                     <NavBar instance={1} />
                 </div>
                 <div className="navbar-page-content-container three">
-                    {!detailsWidget && <>
-                    <div className="top-area">
-                        <div className="room-name" onClick={() => setDetailsWidget(true)}>Culers</div>
-                        <div className="room-description">Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups.</div>
-                    </div>
-                    <div className="chat-container">
-                        <div className="msg-container">
-                            <DateContainer day="THU" date="02" month="Jan" />
-                            <MessageContainer side="right" msg="asdasdasd sad asdasdasdasdasdasdasd asdasdasd asdasdasd asdsa" name="You" date="2/01/2023" time="22:59" />
-                            <DateContainer day="MON" date="26" month="Dec" />
-                            <MessageContainer side="left" msg="asdasdasd sad asdasdasdasdasdasdasd asdasdasd asdasdasd asdsa asdas dasd asdasd asdasdas dasdasdasdas dasdasdasdsd" name="Ali Shazin" date="Yesterday" time="02:01" />
-                            <InfoContainer content={"John Doe left the room"} />
-                            <MessageContainer side="right" msg="Hi" name="Ali Shazin" date="Yesterday" time="02:05" />
+                    {(!detailsWidget && selectedRoomCount) && <>
+                        <div className="top-area">
+                            <div className="room-name" onClick={() => setDetailsWidget(true)}>{roomData[selectedRoomCount-1].name}</div>
+                            <div className="room-description">{roomData[selectedRoomCount-1].description}</div>
                         </div>
-                        <div className="send-msg-here-container">
-                            <form className="send-msg-here-box">
-                                <input name="message" placeholder="Type your message here" />
-                                <button className="send-icon-container">
-                                    <Icon icon="tabler:send" className="icon" />
-                                </button>
-                            </form>
+                        <div className="chat-container">
+                            <div className="msg-container">
+                                <DateContainer day="THU" date="02" month="Jan" />
+                                <MessageContainer side="right" msg="asdasdasd sad asdasdasdasdasdasdasd asdasdasd asdasdasd asdsa" name="You" date="2/01/2023" time="22:59" />
+                                <DateContainer day="MON" date="26" month="Dec" />
+                                <MessageContainer side="left" msg="asdasdasd sad asdasdasdasdasdasdasd asdasdasd asdasdasd asdsa asdas dasd asdasd asdasdas dasdasdasdas dasdasdasdsd" name="Ali Shazin" date="Yesterday" time="02:01" />
+                                <InfoContainer content={"John Doe left the room"} />
+                                <MessageContainer side="right" msg="Hi" name="Ali Shazin" date="Yesterday" time="02:05" />
+                            </div>
+                            <div className="send-msg-here-container">
+                                <form className="send-msg-here-box">
+                                    <input name="message" placeholder="Type your message here" />
+                                    <button className="send-icon-container">
+                                        <Icon icon="tabler:send" className="icon" />
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
+                    </>}
+                    {(!detailsWidget && !selectedRoomCount) && <>
+                        <div className="empty-selected-container">
+                            <img className="logo" src={LogoImg2} />
+                            <div className="text"><span>"</span>Create a room and start texzing<span>"</span></div>
+                            {!roomData && <Icon icon="eos-icons:bubble-loading" className="loading-icon" />}
+                        </div>
                     </>}
                     {detailsWidget && 
-                        <RoomDetailsContainer setDetailsWidget={setDetailsWidget} roomName={"CSE-A Students Group"} roomDescription={"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."} />
+                        <RoomDetailsContainer 
+                            isAdmin={roomData[selectedRoomCount-1].admin._id === userObj._id} 
+                            setDetailsWidget={setDetailsWidget} 
+                            roomName={roomData[selectedRoomCount-1].name} 
+                            roomDescription={roomData[selectedRoomCount-1].description}
+                            roomCode={roomData[selectedRoomCount-1].room_id} 
+                            participants={roomData[selectedRoomCount-1].participants} 
+                            adminUser={roomData[selectedRoomCount-1].admin} 
+                            setPopupObj={setPopupObj}
+                            getRoomData={getRoomData}
+                        />
                     }
                 </div>
                 <div className={`right-container ${rightSwiperState ? "open" : "close"}`}>
@@ -114,11 +167,31 @@ function Rooms({ instance }) {
                         {rightSwiperState && <Icon className="icon" icon="line-md:arrow-right-circle" />}
                         {!rightSwiperState && <Icon className="icon" icon="line-md:arrow-left-circle" />}
                     </div>
-                    <div className="content-container">
-                        <ChatRoomItem roomName={"CSE-A Students Group"} roomDescription={"Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups."} timeLastMsg={"1 hour"} unreadMsgCount={5} />
-                        <ChatRoomItem current={true} roomName={"Culers"} roomDescription={"Barcelona Fans."} timeLastMsg={"1 day"} unreadMsgCount={0} />
-                        <ChatRoomItem roomName={"Totspur"} roomDescription={"Tottenham Fans."} timeLastMsg={"1 week"} unreadMsgCount={0} />
-                    </div>
+                    {roomData ? <>
+                        <div className="content-container">
+                            {roomData.map((obj, _index) => (
+                                <ChatRoomItem 
+                                    key={_index} 
+                                    current={selectedRoomCount === _index + 1} 
+                                    onClick={() => {
+                                        setSelectedRoomCount(_index + 1);
+                                        setDetailsWidget(false)}
+                                    } 
+                                    roomName={obj.name} 
+                                    roomDescription={obj.description} 
+                                    timeLastMsg={"1 hour"} 
+                                    unreadMsgCount={5} 
+                                />
+                            ))}
+                        </div>
+                    </> : <>
+                        <div className="loading-content-container">
+                            <LoadingChatRoomItem />
+                            <LoadingChatRoomItem />
+                            <LoadingChatRoomItem />
+                            <LoadingChatRoomItem />
+                        </div>
+                    </>}
                 </div>
             </div>
         </div>

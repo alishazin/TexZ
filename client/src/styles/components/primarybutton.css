@@ -1,4 +1,14 @@
 
+/* Loading button animation */
+@keyframes load {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-1.75rem);
+    }
+}
+
 .pri-but {
     width: 100%;
     max-width: 350px;
@@ -18,15 +28,39 @@
     align-items: center;
 }
 
-.pri-but.disabled {
+.pri-but.loading {
+    background-color: transparent;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+}
+
+.pri-but.loading::before {
+    z-index: 0;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150%;
+    height: 100%;
+    background: repeating-linear-gradient(60deg, 
+        transparent, 
+        transparent 0.75rem, 
+        rgb(253, 120, 83, 0.2) 0.75rem, 
+        rgb(253, 120, 83, 0.2) 1.5rem
+    );
+    animation: load 1s infinite linear;
+}
+
+.pri-but:not(.loading).disabled {
     background-color: #2E2A29;
     cursor: default;
 }
 
-.pri-but:not(.disabled):hover {
+.pri-but:not(.disabled):not(.loading):hover {
     background-color: rgb(255, 137, 105);
 }
 
-.pri-but:not(.disabled):active {
+.pri-but:not(.disabled)::not(.laoding):active {
     background-color: rgb(253, 120, 83, 0.8);
 }

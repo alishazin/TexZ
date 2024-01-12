@@ -19,6 +19,7 @@ function ChangePassword() {
 
     const [allDisabled, setAllDisabled] = useState(false)
     const [buttonDisabled, setButtonDisabled] = useState(true)
+    const [buttonLoading, setButtonLoading] = useState(false)
     const [passwordOld, setPasswordOld] = useState("")
     const [passwordNew, setPasswordNew] = useState("")
     const [errorMsg, setErrorMsg] = useState("")
@@ -53,7 +54,7 @@ function ChangePassword() {
             }
             setUserObj(response.data)
         } catch(err) {
-            if (err.response.status === 400) {
+            if (err.response.status === 401) {
                 removeCookie("session_token")
                 navigate("/login?i=0")
             }
@@ -71,12 +72,20 @@ function ChangePassword() {
         if (buttonDisabled) return
         
         try {
+            setButtonLoading(true)
             const response = await axios.post("http://localhost:3000/api/auth/change-password", {
                 session_token: session_token,
                 old_password: passwordOld,
                 new_password: passwordNew,
+            },
+            {
+                headers: {
+                    "session-token": session_token
+                }
             })
+
             removeCookie("session_token")
+            setButtonLoading(false)
             navigate("/login?i=1")
         } catch(err) {
             if (err.response.status === 400) {
@@ -86,6 +95,7 @@ function ChangePassword() {
                 removeCookie("session_token")
                 navigate("/login?i=0")
             }
+            setButtonLoading(false)
             console.log(err);
         }
     }
@@ -101,7 +111,7 @@ function ChangePassword() {
                     <Textfield onChange={handleChange} name="old-password" value={passwordOld} type="password" label="Old Password" placeholder="Enter old password" icon_cls="fa-solid fa-lock" />
                     <Textfield className="last" onChange={handleChange} name="new-password" value={passwordNew} type="password" label="New Password" placeholder="Repeat new password" icon_cls="fa-solid fa-lock" />
                     <div className="error-text" style={{margin: "10px 0 30px"}}>{errorMsg}</div>
-                    <PrimaryButton text="CHANGE PASSWORD" disabled={buttonDisabled} />
+                    <PrimaryButton text="CHANGE PASSWORD" disabled={buttonDisabled} loading={buttonLoading} />
                 </form>
             </div>
         </>}
