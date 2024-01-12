@@ -5,6 +5,7 @@ const emailClient = require(`../utils/email.js`)
 const bcrypt = require("bcrypt")
 const _ = require("lodash")
 const jwtDecode = require("jwt-decode").jwtDecode
+const roomMiddlewares = require(`../middlewares/room.js`)
 
 function initialize(app, UserModel) {
 
@@ -217,7 +218,7 @@ function logInEndpoint(app, UserModel) {
 
         const user = await UserModel.findOne({session_token: session_token, verified: true})
         if (!user) {
-            return res.status(400).send({err_msg: "Invalid session_token"})
+            return res.status(401).send({err_msg: "Invalid session_token"})
         }
 
         return res.status(200).send({
@@ -232,15 +233,12 @@ function logInEndpoint(app, UserModel) {
 
 function ChangePasswordEndpoint(app, UserModel) {
 
+    app.use("/api/auth/change-password", roomMiddlewares.verifySessionToken(app, UserModel))
     app.post("/api/auth/change-password", async (req, res) => {
 
-        const { session_token, old_password, new_password } = req.body
+        const { old_password, new_password } = req.body
 
-        const user = await UserModel.findOne({session_token: session_token, verified: true})
-        console.log(user);
-        if (!user) {
-            return res.status(401).send({err_msg: "Invalid session_token"})
-        }
+        const user = res.locals.user
         
         if (user.provider === "google") {
             return res.status(400).send({err_msg: "Account with the given email is authenticated using google"})

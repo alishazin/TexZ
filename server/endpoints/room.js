@@ -4,25 +4,23 @@ const utils = require(`../utils/utils.js`)
 const emailClient = require(`../utils/email.js`) 
 const bcrypt = require("bcrypt")
 const _ = require("lodash")
+const roomMiddlewares = require(`../middlewares/room.js`)
 
 function initialize(app, UserModel, RoomModel) {
 
     roomEndpoint(app, UserModel, RoomModel);
+    chatEndpoint(app, UserModel, RoomModel);
 
 }
 
 function roomEndpoint(app, UserModel, RoomModel) {
 
+    app.use("/api/room/create", roomMiddlewares.verifySessionToken(app, UserModel))
     app.post("/api/room/create", async (req, res) => {
         
-        const { session_token, name, description, allow_join } = req.body
+        const user = res.locals.user
 
-        // session_token validation
-
-        const user = await UserModel.findOne({session_token: session_token, verified: true})
-        if (!user) {
-            return res.status(401).send({err_msg: "Invalid session_token"})
-        }
+        const { name, description, allow_join } = req.body
 
         // name validation
         
@@ -64,16 +62,12 @@ function roomEndpoint(app, UserModel, RoomModel) {
         })
     })
     
+    app.use("/api/room/join", roomMiddlewares.verifySessionToken(app, UserModel))
     app.post("/api/room/join", async (req, res) => {
         
-        const { session_token, room_code } = req.body
+        const user = res.locals.user
 
-        // session_token validation
-
-        const user = await UserModel.findOne({session_token: session_token, verified: true})
-        if (!user) {
-            return res.status(401).send({err_msg: "Invalid session_token"})
-        }
+        const { room_code } = req.body
 
         // room_code validation
         
@@ -96,7 +90,28 @@ function roomEndpoint(app, UserModel, RoomModel) {
         user.markModified("rooms")
         await user.save()
 
-        res.status(200).send()
+        return res.status(200).send()
+    })
+
+}
+
+function chatEndpoint(app, UserModel, RoomModel) {
+
+    app.use("/api/chat/get-all", roomMiddlewares.verifySessionToken(app, UserModel))
+    app.get("/api/chat/get-all", async (req, res) => {
+
+        const user = res.locals.user
+
+        const result = await RoomModel.find({ 'admin': user._id })
+            .select("name description admin participants room_id")
+
+        result.push(
+            ...await RoomModel.find({ 'participants': [user._id] })
+            .select("name description admin participants")
+        )
+
+        return res.status(200).send(result)
+
     })
 
 }
