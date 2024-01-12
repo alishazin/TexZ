@@ -222,6 +222,7 @@ function logInEndpoint(app, UserModel) {
         }
 
         return res.status(200).send({
+            _id: user._id,
             email: user.email,
             username: user.username,
             provider: user.provider

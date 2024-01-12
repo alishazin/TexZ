@@ -110,7 +110,37 @@ function chatEndpoint(app, UserModel, RoomModel) {
             .select("name description admin participants")
         )
 
-        return res.status(200).send(result)
+        const returnResult = []
+
+        for (let roomObj of result) {
+            
+            const participantsDetails = []
+
+            for (let participant_id of roomObj.participants) {
+                const userObj = await utils.getUserWithId(participant_id, UserModel)
+                participantsDetails.push({
+                    _id: userObj._id.toString(),
+                    username: _.startCase(userObj.username),
+                    email: userObj.email,
+                })
+            }
+
+            const adminUserObj = await utils.getUserWithId(roomObj.admin, UserModel)
+
+            returnResult.push({
+                name: roomObj.name,
+                description: roomObj.description,
+                admin: {
+                    _id: adminUserObj._id,
+                    username: _.startCase(adminUserObj.username),
+                    email: adminUserObj.email,
+                },
+                participants: participantsDetails,
+                room_id: roomObj.room_id ? roomObj.room_id : null
+            })
+        }
+
+        return res.status(200).send(returnResult)
 
     })
 

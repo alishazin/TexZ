@@ -4,7 +4,6 @@ function verifySessionToken(app, UserModel) {
     return async function (req, res, next) {
 
         const session_token = req.headers['session-token']
-        console.log(session_token)
 
         // session_token validation
 

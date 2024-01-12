@@ -26,4 +26,15 @@ function checkIfExpired(timestamp) {
     return (new Date().getTime() - timestamp.getTime()) > 10 * 60000
 }
 
-module.exports = {checkType: checkType, validateEmail: validateEmail, checkIfExpired: checkIfExpired}
+async function getUserWithId(id, UserModel) {
+
+    return await UserModel.findOne({ _id: id })
+
+}
+
+module.exports = {
+    checkType: checkType, 
+    validateEmail: validateEmail, 
+    checkIfExpired: checkIfExpired,
+    getUserWithId: getUserWithId
+}
