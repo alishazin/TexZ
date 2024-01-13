@@ -1,5 +1,6 @@
 
 const _ = require("lodash")
+const mongoose = require("mongoose")
 
 const typeOf = (obj) => {
     return Object.getPrototypeOf(obj).constructor;
@@ -41,10 +42,29 @@ async function getRoomWithId(id, RoomModel) {
 
 }
 
+async function getRoomWithIdAndUser(id, userObj, RoomModel) {
+    try {
+        const roomObj = await RoomModel.findOne({ _id: id, $or: [
+            { admin: userObj._id },
+            { participants: [userObj._id] },    
+        ]})
+
+        return roomObj
+    } catch(err) {
+        console.log(err)
+        return null
+    }
+
+}
+
+async function getUserFromSessionToken(session_token, UserModel) {
+    return await UserModel.findOne({session_token: session_token, verified: true})
+}
+
 async function getUsersChatData(UserModel, RoomModel, session_token) {
 
     // session_token validation
-    const user = await UserModel.findOne({session_token: session_token, verified: true})
+    const user = await getUserFromSessionToken(session_token, UserModel)
     if (!user) {
         return {status: "invalid_session_token", roomData: null, userData: null}
     }
@@ -119,5 +139,7 @@ module.exports = {
     checkIfExpired: checkIfExpired,
     getUserWithId: getUserWithId,
     getRoomWithId: getRoomWithId,
-    getUsersChatData: getUsersChatData
+    getUsersChatData: getUsersChatData,
+    getUserFromSessionToken: getUserFromSessionToken,
+    getRoomWithIdAndUser: getRoomWithIdAndUser
 }

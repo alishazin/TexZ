@@ -61,15 +61,21 @@ io.on("connection", async (socket) => {
 
     socket.on("send_message", async (requestData, callback) => {
         
-        const { userId, roomId, text } = requestData
+        const { session_token, userId, roomId, text } = requestData
 
-        // Do validation, and send status in callback
-        // check session_token during send_message
         // make different types of messages. Leaving group, joined group, etc..
         // date widgets are auto-generated
         // Do stuffs for removing a member from a group
-        // const userObj = utils.getUserWithId(userId, UserModel)
-        const roomObj = await utils.getRoomWithId(roomId, RoomModel)
+        
+        const user = await utils.getUserFromSessionToken(session_token, UserModel)
+        if (!user) {
+            return callback({status: "invalid_session_token"})
+        }
+        
+        const roomObj = await utils.getRoomWithIdAndUser(roomId, user, RoomModel)
+        if (!roomObj) {
+            return callback({status: "unexpected_error"})
+        }
 
         if (!roomObj.messages) roomObj.messages = []
         
@@ -83,7 +89,7 @@ io.on("connection", async (socket) => {
 
         socket.to(roomId).emit("refresh_data", {})
 
-        callback()
+        callback({status: "success"})
 
     })
 

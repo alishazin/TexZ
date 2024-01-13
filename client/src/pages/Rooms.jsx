@@ -51,6 +51,7 @@ function Rooms({ instance }) {
     useEffect(() => {
         
         socket.on("fetch_data", response => {
+            console.log(response);
 			if (response.status === "invalid_session_token") {
                 removeCookie("session_token")
                 navigate("/login?i=0")
@@ -67,36 +68,22 @@ function Rooms({ instance }) {
     
 	}, [socket])
 
-    const validateSession = async function() {
-        if (!session_token) {
-            navigate("/login?i=0")
-            return;
-        }
-        
-        try {
-            const response = await axios.post("http://localhost:3000/api/auth/validate-session", {
-                session_token: session_token
-            })
-            setUserObj(response.data)
-        } catch(err) {
-            if (err.response.status === 401) {
-                removeCookie("session_token")
-                navigate("/login?i=0")
-            }
-            console.log(err);
-        }
-    }
-
     const handleSendMsg = async (e) => {
         e.preventDefault()
 
         socket.emit("send_message", { 
+            session_token: session_token,
             userId: userObj._id,
             roomId: roomData[selectedRoomCount-1]._id,
             text: sendMsgField
         }, async function (data) {
-            console.log("SEND")
-            await getRoomData()
+            if (data.status !== "success") {
+                removeCookie("session_token")
+                navigate("/login?i=0")
+            } else {
+                console.log("SEND", data)
+                await getRoomData()
+            }
         })
         
         setSendMsgField("")
