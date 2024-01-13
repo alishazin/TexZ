@@ -16,6 +16,8 @@ const roomModel = require(`${__dirname}/models/room.js`);
 const authViews = require(`${__dirname}/endpoints/auth.js`);
 const roomViews = require(`${__dirname}/endpoints/room.js`);
 
+const roomSocket = require(`${__dirname}/socket/room.js`);
+
 // Initializing Database
 // mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.gzebqbn.mongodb.net/?retryWrites=true&w=majority`);
 mongoose.connect(`mongodb://127.0.0.1:27017/TexZ`);
@@ -43,57 +45,7 @@ const io = new Server(server, {
     }
 })
 
-io.on("connection", async (socket) => {
-
-    const session_token = socket.handshake.query.session_token
-    const userChatData = await utils.getUsersChatData(UserModel, RoomModel, session_token)
-    
-    if (userChatData.status === "success") {
-        const allRoomIds = []
-        for (let roomObj of userChatData.roomData) {
-            allRoomIds.push(roomObj._id)
-        }
-        socket.join(allRoomIds)
-    }
-
-    socket.emit("fetch_data", userChatData)
-    console.log(io.sockets.adapter.rooms);
-
-    socket.on("send_message", async (requestData, callback) => {
-        
-        const { session_token, userId, roomId, text } = requestData
-
-        // make different types of messages. Leaving group, joined group, etc..
-        // date widgets are auto-generated
-        // Do stuffs for removing a member from a group
-        
-        const user = await utils.getUserFromSessionToken(session_token, UserModel)
-        if (!user) {
-            return callback({status: "invalid_session_token"})
-        }
-        
-        const roomObj = await utils.getRoomWithIdAndUser(roomId, user, RoomModel)
-        if (!roomObj) {
-            return callback({status: "unexpected_error"})
-        }
-
-        if (!roomObj.messages) roomObj.messages = []
-        
-        roomObj.messages.push({
-            text: text,
-            from: userId
-        })
-
-        roomObj.markModified("messages")
-        await roomObj.save()
-
-        socket.to(roomId).emit("refresh_data", {})
-
-        callback({status: "success"})
-
-    })
-
-})
+roomSocket.initialize(io, UserModel, RoomModel)
 
 // 404 Endpoint (Add at last)
 app.use((req, res) => {

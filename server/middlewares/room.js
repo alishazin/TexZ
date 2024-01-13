@@ -1,4 +1,6 @@
 
+const utils = require("../utils/utils.js")
+
 function verifySessionToken(app, UserModel) {
 
     return async function (req, res, next) {
@@ -19,4 +21,25 @@ function verifySessionToken(app, UserModel) {
 
 }
 
-module.exports = {verifySessionToken: verifySessionToken}
+async function verifyRoomParticipationSocket(requestData, UserModel, RoomModel) {
+
+    const { session_token, roomId } = requestData
+
+    const user = await utils.getUserFromSessionToken(session_token, UserModel)
+    if (!user) {
+        return [null, null, {status: "invalid_session_token"}]
+    }
+    
+    const roomObj = await utils.getRoomWithIdAndUser(roomId, user, RoomModel)
+    if (!roomObj) {
+        return [null, null, {status: "unexpected_error"}]
+    }
+
+    return [user, roomObj, {status: "success"}]
+
+}
+
+module.exports = {
+    verifySessionToken: verifySessionToken, 
+    verifyRoomParticipationSocket: verifyRoomParticipationSocket
+}

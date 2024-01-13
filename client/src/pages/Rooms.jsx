@@ -73,7 +73,6 @@ function Rooms({ instance }) {
 
         socket.emit("send_message", { 
             session_token: session_token,
-            userId: userObj._id,
             roomId: roomData[selectedRoomCount-1]._id,
             text: sendMsgField
         }, async function (data) {
