@@ -1,17 +1,25 @@
 import "../styles/roomdetails.css"
 import { Icon } from '@iconify/react'
 import { useEffect, useState, useRef } from "react"
+import { useCookies } from "react-cookie"
+import { useNavigate } from "react-router-dom"
 import TertiaryButton from "./TertiaryButton"
 import ParticipantItem from "./ParticipantItem"
 import ToggleButton from "./ToggleButton"
 
-function RoomDetailsContainer({ setDetailsWidget, roomName, roomDescription, roomCode, isAdmin, participants, adminUser, setPopupObj, getRoomData }) {
-
+function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescription, roomCode, isAdmin, participants, adminUser, setPopupObj, getRoomData, socket }) {
+    
+    const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
     const [editState, setEditState] = useState(false)
     const [editedRoomName, setEditedRoomName] = useState(roomName)
     const [editedRoomDescription, setEditedRoomDescription] = useState(roomDescription)
     const allowParicipantsPrev = useRef(null)
     const [allowParicipants, setAllowParicipants] = useState(false)
+    const [editButtonLoadingState, setEditButtonLoadingState] = useState(false)
+    const [editButtonDisabledState, setEditButtonDisabledState] = useState(true)
+
+    const navigate = useNavigate()
+    const session_token = cookies.session_token
 
     const handleChange = function (event) {
         if (event.target.name === "room-name") setEditedRoomName(event.target.value)
@@ -34,6 +42,37 @@ function RoomDetailsContainer({ setDetailsWidget, roomName, roomDescription, roo
         }
     }, [allowParicipants])
 
+    useEffect(() => {
+        if (editedRoomName.trim() !== roomName.trim() || editedRoomDescription.trim() !== roomDescription.trim() )
+            setEditButtonDisabledState(false)
+        else 
+            setEditButtonDisabledState(true)
+    }, [editedRoomName, editedRoomDescription, roomName, roomDescription])
+
+    const handleEdit = (e) => {
+        e.preventDefault()
+
+        if (!editButtonLoadingState && !editButtonDisabledState) {
+            setEditButtonLoadingState(true)
+            socket.emit("edit_room_name_and_description", { 
+                session_token: session_token,
+                room_id: roomId,
+                room_name: editedRoomName,
+                room_description: editedRoomDescription
+            }, async function (data) {
+                if (data.status !== "success") {
+                    removeCookie("session_token")
+                    navigate("/login?i=0")
+                } else {
+                    console.log("EDIT", data)
+                    await getRoomData()
+                    setEditButtonLoadingState(false)
+                    setEditState(false)
+                }
+            })
+        }
+    }
+
     return (
         <div className="room-details-container">
             <div className="top-section">
@@ -48,9 +87,9 @@ function RoomDetailsContainer({ setDetailsWidget, roomName, roomDescription, roo
                 }
                 {(editState && isAdmin) && 
                 <form className="right-area-edit" onSubmit={handleSubmit}>
-                    <input onChange={handleChange} name="room-name" className="room-name" value={editedRoomName} /> <Icon onClick={cancelEdit} className="cancel-btn" icon="material-symbols:cancel-outline" /><br/>
-                    <textarea className="room-description" onChange={handleChange} name="room-description" value={editedRoomDescription}></textarea>
-                    <TertiaryButton text="Confirm" disabled={false} />
+                    <input autoComplete="off" onChange={handleChange} name="room-name" className="room-name" value={editedRoomName} /> <Icon onClick={cancelEdit} className="cancel-btn" icon="material-symbols:cancel-outline" /><br/>
+                    <textarea autoComplete="off" className="room-description" onChange={handleChange} name="room-description" value={editedRoomDescription}></textarea>
+                    <TertiaryButton onClick={handleEdit} text="Confirm" disabled={editButtonDisabledState} loading={editButtonLoadingState} />
                 </form>
                 }
             </div>

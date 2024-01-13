@@ -17,11 +17,11 @@
     opacity: 0.6;
 }
 
-.ter-but:not(.disabled):hover {
+.ter-but:not(.disabled):not(.loading):hover {
     cursor: pointer;
     opacity: 0.9;
 }
 
-.ter-but:not(.disabled):active {
+.ter-but:not(.disabled):not(.loading):active {
     opacity: 0.6;
 }

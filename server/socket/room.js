@@ -26,13 +26,13 @@ function initialize(io, UserModel, RoomModel) {
     
         socket.on("send_message", async (requestData, callback) => {
             
-            const { roomId, text } = requestData
+            const { room_id, text } = requestData
     
             // make different types of messages. Leaving group, joined group, etc..
             // date widgets are auto-generated
             // Do stuffs for removing a member from a group
 
-            const [user, roomObj, response] = await roomMiddlewares.verifyRoomParticipationSocket(requestData, UserModel, RoomModel)
+            const [user, roomObj, response] = await roomMiddlewares.verifyRoomParticipationSocket(requestData, UserModel, RoomModel, ['admin', 'participant'])
 
             if (response.status !== "success") {
                 return callback(response)
@@ -48,7 +48,7 @@ function initialize(io, UserModel, RoomModel) {
             roomObj.markModified("messages")
             await roomObj.save()
     
-            socket.to(roomId).emit("refresh_data", {})
+            socket.to(room_id).emit("refresh_data", {})
     
             callback({status: "success"})
     
@@ -56,8 +56,22 @@ function initialize(io, UserModel, RoomModel) {
     
         socket.on("edit_room_name_and_description", async (requestData, callback) => {
             
-            const { session_token, roomId, room_name, room_description } = requestData
-    
+            const { room_id, room_name, room_description } = requestData
+            
+            const [user, roomObj, response] = await roomMiddlewares.verifyRoomParticipationSocket(requestData, UserModel, RoomModel, ['admin'])
+
+            if (response.status !== "success") {
+                return callback(response)
+            }
+
+            roomObj.name = room_name
+            roomObj.description = room_description
+            await roomObj.save()
+
+            socket.to(room_id).emit("refresh_data", {})
+            
+            callback({status: "success"})
+
         })
     
     })

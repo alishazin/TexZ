@@ -42,12 +42,17 @@ async function getRoomWithId(id, RoomModel) {
 
 }
 
-async function getRoomWithIdAndUser(id, userObj, RoomModel) {
+async function getRoomWithIdAndUser(id, userObj, RoomModel, allowed_users) {
+
+    const orQuery = []
+
+    if (allowed_users.includes("admin"))
+        orQuery.push({ admin: userObj._id })
+    if (allowed_users.includes("participant"))
+        orQuery.push({ participants: [userObj._id] })
+
     try {
-        const roomObj = await RoomModel.findOne({ _id: id, $or: [
-            { admin: userObj._id },
-            { participants: [userObj._id] },    
-        ]})
+        const roomObj = await RoomModel.findOne({ _id: id, $or: orQuery})
 
         return roomObj
     } catch(err) {

@@ -21,7 +21,7 @@ import io from "socket.io-client"
 
 var socket;
 
-function Rooms({ instance }) {
+function Rooms() {
 
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
     const [roomData, setRoomData] = useState(null)
@@ -39,7 +39,6 @@ function Rooms({ instance }) {
         callback: async () => {}
     }) 
     
-    const screenSize = useScreenSize();
     const navigate = useNavigate()
     const session_token = cookies.session_token
     
@@ -73,7 +72,7 @@ function Rooms({ instance }) {
 
         socket.emit("send_message", { 
             session_token: session_token,
-            roomId: roomData[selectedRoomCount-1]._id,
+            room_id: roomData[selectedRoomCount-1]._id,
             text: sendMsgField
         }, async function (data) {
             if (data.status !== "success") {
@@ -177,6 +176,7 @@ function Rooms({ instance }) {
                         <RoomDetailsContainer 
                             isAdmin={roomData[selectedRoomCount-1].admin._id === userObj._id} 
                             setDetailsWidget={setDetailsWidget} 
+                            roomId={roomData[selectedRoomCount-1]._id}
                             roomName={roomData[selectedRoomCount-1].name} 
                             roomDescription={roomData[selectedRoomCount-1].description}
                             roomCode={roomData[selectedRoomCount-1].room_id} 
@@ -184,6 +184,8 @@ function Rooms({ instance }) {
                             adminUser={roomData[selectedRoomCount-1].admin} 
                             setPopupObj={setPopupObj}
                             getRoomData={getRoomData}
+                            socket={socket}
+                            roomData={roomData}
                         />
                     }
                 </div>

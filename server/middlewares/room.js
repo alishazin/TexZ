@@ -21,16 +21,16 @@ function verifySessionToken(app, UserModel) {
 
 }
 
-async function verifyRoomParticipationSocket(requestData, UserModel, RoomModel) {
+async function verifyRoomParticipationSocket(requestData, UserModel, RoomModel, allowed_users) {
 
-    const { session_token, roomId } = requestData
+    const { session_token, room_id } = requestData
 
     const user = await utils.getUserFromSessionToken(session_token, UserModel)
     if (!user) {
         return [null, null, {status: "invalid_session_token"}]
     }
     
-    const roomObj = await utils.getRoomWithIdAndUser(roomId, user, RoomModel)
+    const roomObj = await utils.getRoomWithIdAndUser(room_id, user, RoomModel, allowed_users)
     if (!roomObj) {
         return [null, null, {status: "unexpected_error"}]
     }
