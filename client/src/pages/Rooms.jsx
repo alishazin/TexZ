@@ -18,7 +18,7 @@ import RoomDetailsContainer from "../components/RoomDetailsContainer"
 import LoadingChatRoomItem from "../components/LoadingChatRoomItem"
 import Popup from "../components/Popup"
 import io from "socket.io-client"
-import { formatDate, formatTime } from "../utils/date.js"
+import { formatDate, formatTime, addDateStamps } from "../utils/date.js"
 
 var socket;
 
@@ -146,19 +146,29 @@ function Rooms() {
                         </div>
                         <div className="chat-container">
                             <div className="msg-container">
-                                {roomData[selectedRoomCount-1].messages.map((messageObj, _index) => (
-                                    <MessageContainer 
-                                        key={_index} 
-                                        side={messageObj.from._id === userObj._id ? "right" : "left"} 
-                                        msg={messageObj.text} 
-                                        name={messageObj.from._id === userObj._id ? "You" : messageObj.from.username} 
-                                        date={formatDate(messageObj.dateObj)}
-                                        time={formatTime(messageObj.dateObj)} 
-                                    />
-                                ))}
+                                {addDateStamps(roomData[selectedRoomCount-1].messages).map((messageOrDateObj, _index) => {
+                                    if (messageOrDateObj.type === "message") {
+                                        return (
+                                        <MessageContainer 
+                                            key={_index} 
+                                            side={messageOrDateObj.from._id === userObj._id ? "right" : "left"} 
+                                            msg={messageOrDateObj.text} 
+                                            name={messageOrDateObj.from._id === userObj._id ? "You" : messageOrDateObj.from.username} 
+                                            date={formatDate(messageOrDateObj.dateObj)}
+                                            time={formatTime(messageOrDateObj.dateObj)} 
+                                        />)
+                                    } else if (messageOrDateObj.type === "date") {
+                                        return (
+                                        <DateContainer 
+                                            key={_index} 
+                                            day={messageOrDateObj.dayName} 
+                                            date={messageOrDateObj.dateNum} 
+                                            month={messageOrDateObj.monthName}  
+                                        />)
+                                    }
+                                })}
                                 {/* <DateContainer day="THU" date="02" month="Jan" />
                                 <MessageContainer side="right" msg="asdasdasd sad asdasdasdasdasdasdasd asdasdasd asdasdasd asdsa" name="You" date="2/01/2023" time="22:59" />
-                                <DateContainer day="MON" date="26" month="Dec" />
                                 <MessageContainer side="left" msg="asdasdasd sad asdasdasdasdasdasdasd asdasdasd asdasdasd asdsa asdas dasd asdasd asdasdas dasdasdasdas dasdasdasdsd" name="Ali Shazin" date="Yesterday" time="02:01" />
                                 <InfoContainer content={"John Doe left the room"} />
                                 <MessageContainer side="right" msg="Hi" name="Ali Shazin" date="Yesterday" time="02:05" /> */}
