@@ -42,7 +42,9 @@ function initialize(io, UserModel, RoomModel) {
             
             roomObj.messages.push({
                 text: text,
-                from: user._id
+                from: user._id,
+                timestamp: new Date(),
+                read_by: []
             })
     
             roomObj.markModified("messages")

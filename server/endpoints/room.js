@@ -1,6 +1,7 @@
 
 const mongoose = require("mongoose");
 const utils = require(`../utils/utils.js`) 
+const dateUtils = require(`../utils/date.js`) 
 const emailClient = require(`../utils/email.js`) 
 const bcrypt = require("bcrypt")
 const _ = require("lodash")
@@ -136,7 +137,9 @@ function chatEndpoint(app, UserModel, RoomModel) {
                             _id: msgUserObj._id.toString(),
                             username: _.startCase(msgUserObj.username),
                             email: msgUserObj.email,
-                        }
+                        },
+                        stamp: dateUtils.getFormattedStamp(messageObj.timestamp),
+                        dateObj: messageObj.timestamp
                     })
                 }
             }

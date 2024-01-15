@@ -11,6 +11,14 @@ function initialize() {
         from: {
             type: mongoose.Types.ObjectId,
             required: true
+        },
+        timestamp: {
+            required: true,
+            type: Date,
+        },
+        read_by: {
+            required: true,
+            type: [mongoose.Types.ObjectId]
         }
     })
 

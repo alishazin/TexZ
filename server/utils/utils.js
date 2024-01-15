@@ -1,6 +1,7 @@
 
 const _ = require("lodash")
 const mongoose = require("mongoose")
+const dateUtils = require("./date.js")
 
 const typeOf = (obj) => {
     return Object.getPrototypeOf(obj).constructor;
@@ -108,7 +109,9 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
                         _id: msgUserObj._id.toString(),
                         username: _.startCase(msgUserObj.username),
                         email: msgUserObj.email,
-                    }
+                    },
+                    stamp: dateUtils.getFormattedStamp(messageObj.timestamp),
+                    dateObj: messageObj.timestamp
                 })
             }
         }

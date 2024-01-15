@@ -18,6 +18,7 @@ import RoomDetailsContainer from "../components/RoomDetailsContainer"
 import LoadingChatRoomItem from "../components/LoadingChatRoomItem"
 import Popup from "../components/Popup"
 import io from "socket.io-client"
+import { formatDate, formatTime } from "../utils/date.js"
 
 var socket;
 
@@ -146,7 +147,14 @@ function Rooms() {
                         <div className="chat-container">
                             <div className="msg-container">
                                 {roomData[selectedRoomCount-1].messages.map((messageObj, _index) => (
-                                    <MessageContainer key={_index} side={messageObj.from._id === userObj._id ? "right" : "left"} msg={messageObj.text} name={messageObj.from._id === userObj._id ? "You" : messageObj.from.username} date="2/01/2023" time="22:59" />
+                                    <MessageContainer 
+                                        key={_index} 
+                                        side={messageObj.from._id === userObj._id ? "right" : "left"} 
+                                        msg={messageObj.text} 
+                                        name={messageObj.from._id === userObj._id ? "You" : messageObj.from.username} 
+                                        date={formatDate(messageObj.dateObj)}
+                                        time={formatTime(messageObj.dateObj)} 
+                                    />
                                 ))}
                                 {/* <DateContainer day="THU" date="02" month="Jan" />
                                 <MessageContainer side="right" msg="asdasdasd sad asdasdasdasdasdasdasd asdasdasd asdasdasd asdsa" name="You" date="2/01/2023" time="22:59" />
@@ -206,7 +214,7 @@ function Rooms() {
                                     } 
                                     roomName={obj.name} 
                                     roomDescription={obj.description} 
-                                    timeLastMsg={"1 hour"} 
+                                    timeLastMsg={obj.messages.length ? obj.messages[obj.messages.length - 1].stamp : ""} 
                                     unreadMsgCount={5} 
                                 />
                             ))}
