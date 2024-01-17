@@ -111,7 +111,7 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
                     allReadByData.push({
                         _id: msgUserObj._id,
                         name: _.startCase(msgUserObj.username),
-                        timestamp: new Date()
+                        timestamp: dateUtils.getFormattedStamp(read_by_obj.timestamp)
                     })
                     readByIds.push(read_by_obj._id)
                 }

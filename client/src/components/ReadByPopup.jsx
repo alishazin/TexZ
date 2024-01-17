@@ -24,7 +24,10 @@ function ReadByPopup({ popupObj, setPopupObj, userObj }) {
                 <div className="header"><Icon icon="solar:check-read-line-duotone" className="icon" />Read By</div>
                 {popupObj.data.length > 0 ?
                 popupObj.data.map((participant_data, _index) => (
-                    <div key={_index} className="participant-item">{participant_data._id === userObj._id && <span>You</span>}{participant_data.name}</div>
+                    <div key={_index} className="participant-item">
+                        <div className="name">{participant_data._id === userObj._id && <span className="you">You</span>}{participant_data.name}</div>
+                        <div className="time">{participant_data.timestamp}</div>
+                    </div>
                 ))
                 :
                 <div className="unread-box">

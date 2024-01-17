@@ -48,15 +48,31 @@
     color: rgb(255, 255, 255, 0.8);
     font-size: 13px;
     border-bottom: 1px solid rgb(255, 255, 255, 0.3);
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.readby-popup-container .popup-content .participant-item .name {
+    width: calc(100% - 60px);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.readby-popup-container .popup-content .participant-item span {
+.readby-popup-container .popup-content .participant-item .name span.you {
     margin-right: 5px;
     font-size: 11px;
     color: #FD7753;
+}
+
+.readby-popup-container .popup-content .participant-item .time {
+    width: 60px;
+    font-size: 10px;
+    color: rgb(255, 255, 255, 0.5);
+    font-weight: 200;
+    text-align: right;
 }
 
 .readby-popup-container .popup-content .unread-box {
