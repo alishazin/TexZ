@@ -104,6 +104,7 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
             for (let messageObj of roomObj.messages) {
                 const msgUserObj = await getUserWithId(messageObj.from, UserModel)
                 messageDetails.push({
+                    _id: messageObj._id,
                     text: messageObj.text,
                     from: {
                         _id: msgUserObj._id.toString(),

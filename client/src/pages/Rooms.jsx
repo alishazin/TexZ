@@ -42,6 +42,8 @@ function Rooms() {
         callback: async () => {}
     }) 
     const lastRefresh = useRef(new Date().getTime())
+    const prevSelectedRoomCount = useRef(null)
+    const unreadMsgRecord = useRef({})
     
     const navigate = useNavigate()
     const session_token = cookies.session_token
@@ -114,6 +116,7 @@ function Rooms() {
 
     const handleSendMsg = async (e) => {
         e.preventDefault()
+        unreadMsgRecord.current[selectedRoomCount] = null
 
         socket.emit("send_message", { 
             session_token: session_token,
@@ -190,7 +193,7 @@ function Rooms() {
                         </div>
                         <div className="chat-container">
                             <div className="msg-container">
-                                {addDateStamps(roomData[selectedRoomCount-1].messages, userObj._id).map((messageOrDateObj, _index) => {
+                                {addDateStamps(roomData[selectedRoomCount-1].messages, userObj._id, unreadMsgRecord, selectedRoomCount).map((messageOrDateObj, _index) => {
                                     if (messageOrDateObj.type === "message") {
                                         return (
                                         <MessageContainer 
@@ -262,7 +265,11 @@ function Rooms() {
                                     key={_index} 
                                     current={selectedRoomCount === _index + 1} 
                                     onClick={() => {
-                                        setSelectedRoomCount(_index + 1)
+                                        unreadMsgRecord.current[prevSelectedRoomCount.current] = null
+                                        setSelectedRoomCount(prev => {
+                                            prevSelectedRoomCount.current = prev
+                                            return _index + 1
+                                        })
                                         markAsRead(obj)
                                         setDetailsWidget(false)
                                     }}

@@ -132,6 +132,7 @@ function chatEndpoint(app, UserModel, RoomModel) {
                 for (let messageObj of roomObj.messages) {
                     const msgUserObj = await utils.getUserWithId(messageObj.from, UserModel)
                     messageDetails.push({
+                        _id: messageObj._id,
                         text: messageObj.text,
                         from: {
                             _id: msgUserObj._id.toString(),

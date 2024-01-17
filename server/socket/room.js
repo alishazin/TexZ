@@ -41,7 +41,7 @@ function initialize(io, UserModel, RoomModel) {
             if (!roomObj.messages) roomObj.messages = []
 
             for (let msgObj of roomObj.messages) {
-                if (!msgObj.read_by.includes(user._id) && msgObj.from._id !== user._id)
+                if (!msgObj.read_by.includes(user._id) && msgObj.from.toString() !== user._id.toString())
                     msgObj.read_by.push(user._id)
             }
 
