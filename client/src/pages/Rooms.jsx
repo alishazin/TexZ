@@ -21,6 +21,7 @@ import io from "socket.io-client"
 import UnreadMsgContainer from "../components/UnreadMsg.jsx"
 import { formatDate, formatTime, addDateStamps } from "../utils/date.js"
 import { getUnreadMsgCount } from "../utils/utils.js"
+import ReadByPopup from "../components/ReadByPopup.jsx"
 
 var socket;
 
@@ -41,6 +42,11 @@ function Rooms() {
         button_text: "",
         callback: async () => {}
     }) 
+    const [readByPopupObj, setReadByPopupObj] = useState({
+        state: false,
+        data: null
+    })
+
     const lastRefresh = useRef(new Date().getTime())
     const prevSelectedRoomCount = useRef(null)
     const unreadMsgRecord = useRef({})
@@ -172,6 +178,7 @@ function Rooms() {
     return (
         <div className="navbar-page-container">
             {popupObj.state && <Popup popupObj={popupObj} setPopupObj={setPopupObj} />}
+            {readByPopupObj.state && <ReadByPopup userObj={userObj} popupObj={readByPopupObj} setPopupObj={setReadByPopupObj} />}
             <div className="top-bar">
                 {navbarState && <Icon onClick={handleMenuIconClick} className="menu-icon" icon="line-md:menu-to-close-transition"/>}
                 {!navbarState && <Icon onClick={handleMenuIconClick} className="menu-icon" icon="line-md:close-to-menu-transition"/>}
@@ -203,6 +210,8 @@ function Rooms() {
                                             name={messageOrDateObj.from._id === userObj._id ? "You" : messageOrDateObj.from.username} 
                                             date={formatDate(messageOrDateObj.dateObj)}
                                             time={formatTime(messageOrDateObj.dateObj)} 
+                                            read_by_data={messageOrDateObj.read_by_data} 
+                                            setPopupObj={setReadByPopupObj}
                                         />)
                                     } else if (messageOrDateObj.type === "date") {
                                         return (

@@ -27,11 +27,13 @@ async function verifyRoomParticipationSocket(requestData, UserModel, RoomModel, 
 
     const user = await utils.getUserFromSessionToken(session_token, UserModel)
     if (!user) {
+        console.log("1");
         return [null, null, {status: "invalid_session_token"}]
     }
     
     const roomObj = await utils.getRoomWithIdAndUser(room_id, user, RoomModel, allowed_users)
     if (!roomObj) {
+        console.log("2");
         return [null, null, {status: "unexpected_error"}]
     }
 

@@ -16,7 +16,7 @@ function initialize(io, UserModel, RoomModel) {
         if (userChatData.status === "success") {
             const allRoomIds = []
             for (let roomObj of userChatData.roomData) {
-                allRoomIds.push(roomObj._id)
+                allRoomIds.push(roomObj._id.toString())
             }
             socket.join(allRoomIds)
         }
@@ -27,10 +27,6 @@ function initialize(io, UserModel, RoomModel) {
         socket.on("send_message", async (requestData, callback) => {
             
             const { room_id, text } = requestData
-    
-            // make different types of messages. Leaving group, joined group, etc..
-            // date widgets are auto-generated
-            // Do stuffs for removing a member from a group
 
             const [user, roomObj, response] = await roomMiddlewares.verifyRoomParticipationSocket(requestData, UserModel, RoomModel, ['admin', 'participant'])
 
@@ -92,14 +88,14 @@ function initialize(io, UserModel, RoomModel) {
             }
 
             for (let msgObj of roomObj.messages) {
-                if (!msgObj.read_by.includes(user._id) && msgObj.from._id !== user._id)
+                if (!msgObj.read_by.includes(user._id) && msgObj.from._id.toString() !== user._id.toString())
                     msgObj.read_by.push(user._id)
             }
 
             roomObj.markModified("messages")
             await roomObj.save()
 
-            socket.to(room_id).emit("refresh_data_after_read", {exclude_id: user._id})
+            socket.to(room_id).emit("refresh_data_after_read", {})
             
             callback({status: "success"})
 

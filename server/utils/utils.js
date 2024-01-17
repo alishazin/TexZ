@@ -50,7 +50,7 @@ async function getRoomWithIdAndUser(id, userObj, RoomModel, allowed_users) {
     if (allowed_users.includes("admin"))
         orQuery.push({ admin: userObj._id })
     if (allowed_users.includes("participant"))
-        orQuery.push({ participants: [userObj._id] })
+        orQuery.push({ participants: userObj._id })
 
     try {
         const roomObj = await RoomModel.findOne({ _id: id, $or: orQuery})
@@ -79,7 +79,7 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
         .select("name description admin participants room_id messages")
 
     result.push(
-        ...await RoomModel.find({ 'participants': [user._id] })
+        ...await RoomModel.find({ 'participants': user._id })
         .select("name description admin participants messages")
     )
 
@@ -103,6 +103,16 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
         if (roomObj.messages) {
             for (let messageObj of roomObj.messages) {
                 const msgUserObj = await getUserWithId(messageObj.from, UserModel)
+                
+                const allReadByData = []
+                for (let _id of messageObj.read_by) {
+                    const msgUserObj = await getUserWithId(_id, UserModel)
+                    allReadByData.push({
+                        _id: msgUserObj._id,
+                        name: _.startCase(msgUserObj.username)
+                    })
+                }
+
                 messageDetails.push({
                     _id: messageObj._id,
                     text: messageObj.text,
@@ -113,7 +123,8 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
                     },
                     stamp: dateUtils.getFormattedStamp(messageObj.timestamp),
                     dateObj: messageObj.timestamp,
-                    read_by: messageObj.read_by
+                    read_by: messageObj.read_by,
+                    read_by_data: allReadByData
                 })
             }
         }
@@ -121,7 +132,7 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
         const adminUserObj = await getUserWithId(roomObj.admin, UserModel)
 
         returnResult.push({
-            _id: roomObj._id.toString(),
+            _id: roomObj._id,
             name: roomObj.name,
             description: roomObj.description,
             admin: {

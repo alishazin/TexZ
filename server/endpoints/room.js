@@ -107,7 +107,7 @@ function chatEndpoint(app, UserModel, RoomModel) {
             .select("name description admin participants room_id messages")
 
         result.push(
-            ...await RoomModel.find({ 'participants': [user._id] })
+            ...await RoomModel.find({ 'participants': user._id })
             .select("name description admin participants messages")
         )
 
@@ -131,6 +131,16 @@ function chatEndpoint(app, UserModel, RoomModel) {
             if (roomObj.messages) {
                 for (let messageObj of roomObj.messages) {
                     const msgUserObj = await utils.getUserWithId(messageObj.from, UserModel)
+
+                    const allReadByData = []
+                    for (let _id of messageObj.read_by) {
+                        const msgUserObj = await utils.getUserWithId(_id, UserModel)
+                        allReadByData.push({
+                            _id: msgUserObj._id,
+                            name: _.startCase(msgUserObj.username)
+                        })
+                    }
+
                     messageDetails.push({
                         _id: messageObj._id,
                         text: messageObj.text,
@@ -141,7 +151,8 @@ function chatEndpoint(app, UserModel, RoomModel) {
                         },
                         stamp: dateUtils.getFormattedStamp(messageObj.timestamp),
                         dateObj: messageObj.timestamp,
-                        read_by: messageObj.read_by
+                        read_by: messageObj.read_by,
+                        read_by_data: allReadByData
                     })
                 }
             }
