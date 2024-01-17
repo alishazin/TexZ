@@ -39,7 +39,12 @@ function initialize(io, UserModel, RoomModel) {
             }
     
             if (!roomObj.messages) roomObj.messages = []
-            
+
+            for (let msgObj of roomObj.messages) {
+                if (!msgObj.read_by.includes(user._id) && msgObj.from._id !== user._id)
+                    msgObj.read_by.push(user._id)
+            }
+
             roomObj.messages.push({
                 text: text,
                 from: user._id,
@@ -71,6 +76,30 @@ function initialize(io, UserModel, RoomModel) {
             await roomObj.save()
 
             socket.to(room_id).emit("refresh_data", {})
+            
+            callback({status: "success"})
+
+        })
+    
+        socket.on("mark_as_read", async (requestData, callback) => {
+            
+            const { room_id } = requestData
+            
+            const [user, roomObj, response] = await roomMiddlewares.verifyRoomParticipationSocket(requestData, UserModel, RoomModel, ['admin', 'participant'])
+
+            if (response.status !== "success") {
+                return callback(response)
+            }
+
+            for (let msgObj of roomObj.messages) {
+                if (!msgObj.read_by.includes(user._id) && msgObj.from._id !== user._id)
+                    msgObj.read_by.push(user._id)
+            }
+
+            roomObj.markModified("messages")
+            await roomObj.save()
+
+            socket.to(room_id).emit("refresh_data_after_read", {exclude_id: user._id})
             
             callback({status: "success"})
 

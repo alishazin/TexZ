@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useCookies } from "react-cookie"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
@@ -18,7 +18,9 @@ import RoomDetailsContainer from "../components/RoomDetailsContainer"
 import LoadingChatRoomItem from "../components/LoadingChatRoomItem"
 import Popup from "../components/Popup"
 import io from "socket.io-client"
+import UnreadMsgContainer from "../components/UnreadMsg.jsx"
 import { formatDate, formatTime, addDateStamps } from "../utils/date.js"
+import { getUnreadMsgCount } from "../utils/utils.js"
 
 var socket;
 
@@ -39,14 +41,28 @@ function Rooms() {
         button_text: "",
         callback: async () => {}
     }) 
+    const lastRefresh = useRef(new Date().getTime())
     
     const navigate = useNavigate()
     const session_token = cookies.session_token
+
     
     useEffect(() => {
         document.title = "Rooms"
         socket = io.connect("http://localhost:3000", {query: `session_token=${session_token}`})
+        
+        setInterval(async () => {
+            if (new Date().getTime() - lastRefresh.current > 60000) {
+                await getRoomData();
+            }
+        }, 5000)
+
     }, [])
+    
+    useEffect(() => {
+        console.log("ROOM DATA CHANGES");
+        lastRefresh.current = new Date().getTime()
+    }, [roomData])
 
     useEffect(() => {
         
@@ -62,11 +78,39 @@ function Rooms() {
 		})
         
         socket.on("refresh_data", async (response) => {
-            console.log("REFRESH");
-			await getRoomData()
+            console.log("REFRESH", selectedRoomCount);
+            await getRoomData()
+            
+            setSelectedRoomCount(value => {
+                if (value && roomData) {
+                    console.log("RECIEVED")
+                    markAsRead(roomData[value - 1])
+                } 
+                return value
+            })
+		})
+        
+        socket.on("refresh_data_after_read", async (response) => {
+            console.log("REFRESH AFTER READ");
+            await getRoomData()
 		})
     
 	}, [socket])
+
+    const markAsRead = (obj) => {
+        socket.emit("mark_as_read", { 
+            session_token: session_token,
+            room_id: obj._id,
+        }, async function (data) {
+            if (data.status !== "success") {
+                removeCookie("session_token")
+                navigate("/login?i=0")
+            } else {
+                console.log("MARK AS READ", data)
+                await getRoomData()
+            }
+        })
+    }
 
     const handleSendMsg = async (e) => {
         e.preventDefault()
@@ -146,7 +190,7 @@ function Rooms() {
                         </div>
                         <div className="chat-container">
                             <div className="msg-container">
-                                {addDateStamps(roomData[selectedRoomCount-1].messages).map((messageOrDateObj, _index) => {
+                                {addDateStamps(roomData[selectedRoomCount-1].messages, userObj._id).map((messageOrDateObj, _index) => {
                                     if (messageOrDateObj.type === "message") {
                                         return (
                                         <MessageContainer 
@@ -165,13 +209,12 @@ function Rooms() {
                                             date={messageOrDateObj.dateNum} 
                                             month={messageOrDateObj.monthName}  
                                         />)
+                                    } else if (messageOrDateObj.type === "unread") {
+                                        return (
+                                            <UnreadMsgContainer key={_index} />
+                                        )
                                     }
                                 })}
-                                {/* <DateContainer day="THU" date="02" month="Jan" />
-                                <MessageContainer side="right" msg="asdasdasd sad asdasdasdasdasdasdasd asdasdasd asdasdasd asdsa" name="You" date="2/01/2023" time="22:59" />
-                                <MessageContainer side="left" msg="asdasdasd sad asdasdasdasdasdasdasd asdasdasd asdasdasd asdsa asdas dasd asdasd asdasdas dasdasdasdas dasdasdasdsd" name="Ali Shazin" date="Yesterday" time="02:01" />
-                                <InfoContainer content={"John Doe left the room"} />
-                                <MessageContainer side="right" msg="Hi" name="Ali Shazin" date="Yesterday" time="02:05" /> */}
                             </div>
                             <div className="send-msg-here-container">
                                 <form className="send-msg-here-box" onSubmit={handleSendMsg}>
@@ -219,13 +262,14 @@ function Rooms() {
                                     key={_index} 
                                     current={selectedRoomCount === _index + 1} 
                                     onClick={() => {
-                                        setSelectedRoomCount(_index + 1);
-                                        setDetailsWidget(false)}
-                                    } 
+                                        setSelectedRoomCount(_index + 1)
+                                        markAsRead(obj)
+                                        setDetailsWidget(false)
+                                    }}
                                     roomName={obj.name} 
                                     roomDescription={obj.description} 
                                     timeLastMsg={obj.messages.length ? obj.messages[obj.messages.length - 1].stamp : ""} 
-                                    unreadMsgCount={5} 
+                                    unreadMsgCount={getUnreadMsgCount(obj, userObj._id)} 
                                 />
                             ))}
                         </div>

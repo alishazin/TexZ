@@ -62,11 +62,12 @@ function getFormattedTime(date) {
     
 }
 
-function addDateStamps(data) {
+function addDateStamps(data, userId) {
 
     const returnData = []
 
     let prevDateString = null
+    let unreadDivUsed = false
 
     for (let messageObj of data) {
 
@@ -79,6 +80,13 @@ function addDateStamps(data) {
                 dateNum: dateCurrent.getDate(),
                 monthName: getMonthNameShort[dateCurrent.getMonth()],
                 type: "date"
+            })
+        }
+        
+        if (messageObj.from._id !== userId && !messageObj.read_by.includes(userId) && !unreadDivUsed) {
+            unreadDivUsed = true
+            returnData.push({
+                type: "unread"
             })
         }
         

@@ -111,7 +111,8 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
                         email: msgUserObj.email,
                     },
                     stamp: dateUtils.getFormattedStamp(messageObj.timestamp),
-                    dateObj: messageObj.timestamp
+                    dateObj: messageObj.timestamp,
+                    read_by: messageObj.read_by
                 })
             }
         }

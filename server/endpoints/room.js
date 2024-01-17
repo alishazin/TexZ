@@ -139,7 +139,8 @@ function chatEndpoint(app, UserModel, RoomModel) {
                             email: msgUserObj.email,
                         },
                         stamp: dateUtils.getFormattedStamp(messageObj.timestamp),
-                        dateObj: messageObj.timestamp
+                        dateObj: messageObj.timestamp,
+                        read_by: messageObj.read_by
                     })
                 }
             }
