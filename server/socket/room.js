@@ -36,9 +36,21 @@ function initialize(io, UserModel, RoomModel) {
     
             if (!roomObj.messages) roomObj.messages = []
 
+            
             for (let msgObj of roomObj.messages) {
-                if (!msgObj.read_by.includes(user._id) && msgObj.from.toString() !== user._id.toString())
-                    msgObj.read_by.push(user._id)
+
+                const readByIds = []
+                for (let read_by_obj of msgObj.read_by) {
+                    readByIds.push(read_by_obj._id.toString())
+                }
+
+                if (!readByIds.includes(user._id.toString()) && msgObj.from.toString() !== user._id.toString()) {
+                    readByIds.push(user._id.toString())
+                    msgObj.read_by.push({
+                        _id: user._id,
+                        timestamp: new Date()
+                    })
+                }
             }
 
             roomObj.messages.push({
@@ -88,8 +100,18 @@ function initialize(io, UserModel, RoomModel) {
             }
 
             for (let msgObj of roomObj.messages) {
-                if (!msgObj.read_by.includes(user._id) && msgObj.from._id.toString() !== user._id.toString())
-                    msgObj.read_by.push(user._id)
+
+                const readByIds = []
+                for (let read_by_obj of msgObj.read_by) {
+                    readByIds.push(read_by_obj._id.toString())
+                }
+                if (!readByIds.includes(user._id.toString()) && msgObj.from.toString() !== user._id.toString()) {
+                    readByIds.push(user._id.toString())
+                    msgObj.read_by.push({
+                        _id: user._id,
+                        timestamp: new Date()
+                    })
+                }
             }
 
             roomObj.markModified("messages")

@@ -105,12 +105,15 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
                 const msgUserObj = await getUserWithId(messageObj.from, UserModel)
                 
                 const allReadByData = []
-                for (let _id of messageObj.read_by) {
-                    const msgUserObj = await getUserWithId(_id, UserModel)
+                const readByIds = []
+                for (let read_by_obj of messageObj.read_by) {
+                    const msgUserObj = await getUserWithId(read_by_obj._id, UserModel)
                     allReadByData.push({
                         _id: msgUserObj._id,
-                        name: _.startCase(msgUserObj.username)
+                        name: _.startCase(msgUserObj.username),
+                        timestamp: new Date()
                     })
+                    readByIds.push(read_by_obj._id)
                 }
 
                 messageDetails.push({
@@ -123,7 +126,7 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
                     },
                     stamp: dateUtils.getFormattedStamp(messageObj.timestamp),
                     dateObj: messageObj.timestamp,
-                    read_by: messageObj.read_by,
+                    read_by: readByIds,
                     read_by_data: allReadByData
                 })
             }
