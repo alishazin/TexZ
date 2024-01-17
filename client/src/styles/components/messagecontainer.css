@@ -1,26 +1,68 @@
 .navbar-page-content-container.three .chat-container .msg-container .single-message-container {
     width: fit-content;
     height: fit-content;
-    min-width: 160px;
+    min-width: 185px;
     max-width: 50%;
     margin-bottom: 15px;
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container .opaque-area {
+    width: fit-content;
+    height: fit-content;
+    min-width: 160px;
     border-radius: 5px;
 }
 
-.navbar-page-content-container.three .chat-container .msg-container .single-message-container.left {
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container .transparent-area {
+    opacity: 0;
+    min-width: 25px;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+}
+
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container.left .transparent-area {
+    align-items: flex-end;
+}
+
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container.right .transparent-area {
+    align-items: flex-start;
+}
+
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container .transparent-area .icon {
+    font-size: 16px;
+    color: rgb(255, 255, 255, 0.3);
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container:hover .transparent-area {
+    opacity: 1;
+}
+
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container .transparent-area .icon:hover {
+    color: rgb(255, 255, 255, 0.5);
+}
+
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container.left .opaque-area {
     background-color: #363231;
 }
 
 .navbar-page-content-container.three .chat-container .msg-container .single-message-container.right {
-    background-color: #4E2D25;
     margin-left: auto;
 }
 
-/* .navbar-page-content-container.three .chat-container .msg-container .single-message-container:first-of-type {
-    margin-top: auto !important;
-} */
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container.right .opaque-area {
+    background-color: #4E2D25;
+}
 
-.navbar-page-content-container.three .chat-container .msg-container .single-message-container .msg-area {
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container .opaque-area .msg-area {
     min-height: 40px;
     max-height: fit-content;
     
@@ -32,7 +74,7 @@
     font-weight: 400;
 }
 
-.navbar-page-content-container.three .chat-container .msg-container .single-message-container .details-area {
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container .opaque-area .details-area {
     background-color: transparent;
     height: 30px;
     border-top: 1px solid rgb(255, 255, 255, 0.1);
@@ -44,7 +86,7 @@
     align-items: center;
 }
 
-.navbar-page-content-container.three .chat-container .msg-container .single-message-container .details-area .name {
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container .opaque-area .details-area .name {
     font-weight: 500;
     font-size: 10px;
     color: rgb(255, 255, 255, 0.5);
@@ -55,7 +97,7 @@
     text-wrap: nowrap;
 }
 
-.navbar-page-content-container.three .chat-container .msg-container .single-message-container .details-area .date {
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container .opaque-area .details-area .date {
     font-weight: 300;
     font-size: 10px;
     color: rgb(255, 255, 255, 0.3);
@@ -63,7 +105,7 @@
     text-align: right;
 }
 
-.navbar-page-content-container.three .chat-container .msg-container .single-message-container .details-area .time {
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container .opaque-area .details-area .time {
     font-weight: 500;
     font-size: 10px;
     color: rgb(255, 255, 255, 0.3);
