@@ -28,6 +28,7 @@ var socket;
 function Rooms() {
 
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
+    const [visibilityState, setVisibilityState] = useState(true)
     const [roomData, setRoomData] = useState(null)
     const [selectedRoomCount, setSelectedRoomCount] = useState(null)
     const [userObj, setUserObj] = useState(null)
@@ -57,7 +58,7 @@ function Rooms() {
 
     
     useEffect(() => {
-        console.log("INITIALIZE");
+        // console.log("INITIALIZE");
         document.title = "Rooms"
         socket = io.connect("http://localhost:3000", {query: `session_token=${session_token}`})
         
@@ -67,21 +68,33 @@ function Rooms() {
             }
         }, 5000)
 
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "visible") {
+                setVisibilityState(true)
+            } else {
+                setVisibilityState(false)
+            }
+        })
+
     }, [])
 
     useEffect(() => {
-        setSelectedRoomCount(value => {
-            if (value && roomData) {
-                markAsRead(roomData[value - 1])
-            } else {
-                getRoomData()
-            }
-            return value
-        })
-    }, [document.visibilityState])
+        if (visibilityState) {
+            setSelectedRoomCount(value => {
+                if (value && roomData) {
+                    // console.log("in room")
+                    markAsRead(roomData[value - 1])
+                } else {
+                    // console.log("outside room")
+                    getRoomData()
+                }
+                return value
+            })
+        }
+    }, [visibilityState])
     
     useEffect(() => {
-        console.log("ROOM DATA CHANGES");
+        // console.log("ROOM DATA CHANGES");
         lastRefresh.current = new Date().getTime()
 
         if (readByPopupObj.state === true) {
@@ -103,7 +116,6 @@ function Rooms() {
         socket.on("fetch_data", response => {
             console.log(response);
 			if (response.status === "invalid_session_token") {
-                console.log("LOGGED OUT 1");
                 removeCookie("session_token")
                 navigate("/login?i=0")
             } else if (response.status === "success") {
@@ -113,8 +125,7 @@ function Rooms() {
 		})
         
         socket.on("refresh_data", async (response) => {
-            console.log("REFRESH");
-            if (document.visibilityState == "hidden") return
+            // console.log("REFRESH");
             await getRoomData()
             
             setSelectedRoomCount(value => {
@@ -127,7 +138,7 @@ function Rooms() {
 		})
         
         socket.on("refresh_data_after_read", async (response) => {
-            console.log("REFRESH AFTER READ");
+            // console.log("REFRESH AFTER READ");
             await getRoomData()
 		})
     
@@ -178,7 +189,6 @@ function Rooms() {
         }
         
         try {
-            console.log(session_token);
             const response = await axios.get("http://localhost:3000/api/chat/get-all", {
                 headers: {
                     "session-token": session_token
