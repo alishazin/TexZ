@@ -113,7 +113,7 @@ function chatEndpoint(app, UserModel, RoomModel) {
         const user = res.locals.user
 
         const result = await RoomModel.find({ 'admin': user._id })
-            .select("name description admin participants room_id messages")
+            .select("name description admin participants room_id allow_join messages")
 
         result.push(
             ...await RoomModel.find({ 'participants': user._id })
@@ -182,7 +182,8 @@ function chatEndpoint(app, UserModel, RoomModel) {
                 },
                 participants: participantsDetails,
                 messages: messageDetails,
-                room_id: roomObj.room_id ? roomObj.room_id : null
+                room_id: roomObj.room_id ? roomObj.room_id : null,
+                allow_join: roomObj.allow_join ? roomObj.allow_join : null
             })
         }
 

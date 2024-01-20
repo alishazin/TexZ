@@ -30,7 +30,7 @@
 
 .pri-but.loading {
     background-color: transparent;
-    cursor: default;
+    cursor: wait;
     position: relative;
     overflow: hidden;
 }

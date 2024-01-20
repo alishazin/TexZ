@@ -76,7 +76,7 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
     }
 
     const result = await RoomModel.find({ 'admin': user._id })
-        .select("name description admin participants room_id messages")
+        .select("name description admin participants room_id allow_join messages")
 
     result.push(
         ...await RoomModel.find({ 'participants': user._id })
@@ -145,7 +145,8 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
             },
             participants: participantsDetails,
             messages: messageDetails,
-            room_id: roomObj.room_id ? roomObj.room_id : null
+            room_id: roomObj.room_id ? roomObj.room_id : null,
+            allow_join: roomObj.room_id ? roomObj.allow_join : null
         })
     }
 

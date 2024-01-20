@@ -8,14 +8,14 @@ import ParticipantItem from "./ParticipantItem"
 import ToggleButton from "./ToggleButton"
 import axios from "axios"
 
-function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescription, roomCode, isAdmin, participants, adminUser, setPopupObj, getRoomData, socket }) {
+function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescription, roomCode, allowJoin, isAdmin, participants, adminUser, setPopupObj, getRoomData, socket }) {
     
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
     const [editState, setEditState] = useState(false)
     const [editedRoomName, setEditedRoomName] = useState(roomName)
     const [editedRoomDescription, setEditedRoomDescription] = useState(roomDescription)
-    const allowParicipantsPrev = useRef(null)
-    const [allowParicipants, setAllowParicipants] = useState(false)
+    const [allowParicipants, setAllowParicipants] = useState(allowJoin)
+    const [toggleDisabled, setToggleDisabled] = useState(false)
     const [editButtonLoadingState, setEditButtonLoadingState] = useState(false)
     const [editButtonDisabledState, setEditButtonDisabledState] = useState(true)
 
@@ -36,12 +36,6 @@ function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescript
     const handleSubmit = function (e) {
         e.preventDefault()
     }
-
-    useEffect(() => {
-        if (allowParicipantsPrev.current !== null) {
-            console.log("change allow participants", allowParicipants);
-        }
-    }, [allowParicipants])
 
     useEffect(() => {
         if (editedRoomName.trim() !== roomName.trim() || editedRoomDescription.trim() !== roomDescription.trim() )
@@ -93,6 +87,16 @@ function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescript
             }
             console.log(err);
         }
+    }
+
+    const toggleAllowJoin = function() {
+        if (toggleDisabled) return;
+        setToggleDisabled(true)
+        console.log("change allow participants", allowParicipants);
+        setTimeout(() => {
+            setAllowParicipants(prev => !prev)
+            setToggleDisabled(false)
+        }, 5000)
     }
 
     return (
@@ -156,7 +160,7 @@ function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescript
                 <div className="allow-container">
                     <div className="text">Allow participants joining</div>
                     <div className="toggle-area">
-                        <ToggleButton prevValue={allowParicipantsPrev} disabled={false} state={allowParicipants} setState={setAllowParicipants} />
+                        <ToggleButton disabled={toggleDisabled} state={allowParicipants} handleClick={toggleAllowJoin}  />
                     </div>
                 </div>
             </div>

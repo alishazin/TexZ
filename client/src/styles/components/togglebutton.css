@@ -43,7 +43,11 @@
 }
 
 .toggle-button.disabled {
-    opacity: 0.6;
+    opacity: 0.3;
+}
+
+.toggle-button.disabled:hover {
+    cursor: wait;
 }
 
 .toggle-button:not(.disabled):hover {
@@ -61,33 +65,25 @@
     top: 3px;
 }
 
-.toggle-button.disabled.off {
+.toggle-button.off {
     background-color: rgb(255, 255, 255, 0.1);
 }
 
-.toggle-button.disabled.off .toggle-div {
+.toggle-button.off .toggle-div {
     background-color: rgb(255, 255, 255, 1);
 }
 
-.toggle-button:not(.disabled).off {
-    background-color: rgb(255, 255, 255, 0.1);
-}
-
-.toggle-button:not(.disabled).off .toggle-div {
-    background-color: rgb(255, 255, 255, 1);
-}
-
-.toggle-button:not(.disabled).on {
+.toggle-button.on {
     background-color: #FD7753;
 }
 
-.toggle-button:not(.disabled).on .toggle-div {
+.toggle-button.on .toggle-div {
     animation-name: animate-on;
     animation-fill-mode: forwards;
     animation-duration: 0.5s;
 }
 
-.toggle-button:not(.disabled).off .toggle-div {
+.toggle-button.off .toggle-div {
     animation-name: animate-off;
     animation-fill-mode: forwards;
     animation-duration: 0.5s;

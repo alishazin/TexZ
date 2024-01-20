@@ -294,6 +294,7 @@ function Rooms() {
                             roomName={roomData[selectedRoomCount-1].name} 
                             roomDescription={roomData[selectedRoomCount-1].description}
                             roomCode={roomData[selectedRoomCount-1].room_id} 
+                            allowJoin={roomData[selectedRoomCount-1].allow_join} 
                             participants={roomData[selectedRoomCount-1].participants} 
                             adminUser={roomData[selectedRoomCount-1].admin} 
                             setPopupObj={setPopupObj}
