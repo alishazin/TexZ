@@ -6,7 +6,6 @@
     border-radius: 0 5px 5px 0;
     border-right: 1.5px solid #E0F6CA;
     margin-bottom: 15px;
-    transform: translateX(-20px);
 
     display: flex;
     flex-direction: column;
