@@ -104,10 +104,16 @@ function Rooms() {
                         ...prev,
                         data: msgObj.read_by_data,
                     }))
-                    break
+                    return 
                 }
             }
-            // if not found, it may be deleted, so turn off popup, in future
+            
+            // if ready_bu opened msg is deleted
+            setReadByPopupObj({
+                state: false,
+                data: null,
+                msg_id: null,
+            })
         }
     }, [roomData])
 
@@ -245,6 +251,7 @@ function Rooms() {
                                         return (
                                         <MessageContainer 
                                             key={_index} 
+                                            room_id={roomData[selectedRoomCount-1]._id}
                                             msg_id={messageOrDateObj._id}
                                             side={messageOrDateObj.from._id === userObj._id ? "right" : "left"} 
                                             msg={messageOrDateObj.text} 
@@ -253,6 +260,9 @@ function Rooms() {
                                             time={formatTime(messageOrDateObj.dateObj)} 
                                             read_by_data={messageOrDateObj.read_by_data} 
                                             setPopupObj={setReadByPopupObj}
+                                            setDeletePopupObj={setPopupObj}
+                                            socket={socket}
+                                            getRoomData={getRoomData}
                                         />)
                                     } else if (messageOrDateObj.type === "date") {
                                         return (

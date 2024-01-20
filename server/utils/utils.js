@@ -158,6 +158,15 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
     }}
 }
 
+function getMsgFromRoomObjById(roomObj, msgId) {
+    for (let msgObj of roomObj.messages) {
+        if (msgObj._id.toString() === msgId) {
+            return msgObj
+        }
+    }
+    return null
+}
+
 module.exports = {
     checkType: checkType, 
     validateEmail: validateEmail, 
@@ -166,5 +175,6 @@ module.exports = {
     getRoomWithId: getRoomWithId,
     getUsersChatData: getUsersChatData,
     getUserFromSessionToken: getUserFromSessionToken,
-    getRoomWithIdAndUser: getRoomWithIdAndUser
+    getRoomWithIdAndUser: getRoomWithIdAndUser,
+    getMsgFromRoomObjById: getMsgFromRoomObjById
 }

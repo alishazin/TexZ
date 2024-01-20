@@ -89,7 +89,7 @@ function initialize(io, UserModel, RoomModel) {
             callback({status: "success"})
 
         })
-    
+        
         socket.on("mark_as_read", async (requestData, callback) => {
             
             const { room_id } = requestData
@@ -99,9 +99,9 @@ function initialize(io, UserModel, RoomModel) {
             if (response.status !== "success") {
                 return callback(response)
             }
-
+            
             for (let msgObj of roomObj.messages) {
-
+                
                 const readByIds = []
                 for (let read_by_obj of msgObj.read_by) {
                     readByIds.push(read_by_obj._id.toString())
@@ -114,37 +114,52 @@ function initialize(io, UserModel, RoomModel) {
                     })
                 }
             }
-
+            
             roomObj.markModified("messages")
             await roomObj.save()
-
+            
             socket.to(room_id).emit("refresh_data_after_read", {})
             
             callback({status: "success"})
-
+            
         })
         
-        // socket.on("generate_new_roomcode", async (requestData, callback) => {
+        socket.on("delete_message", async (requestData, callback) => {
             
-        //     const { room_id } = requestData
+            const { room_id, msg_id } = requestData
             
-        //     const [user, roomObj, response] = await roomMiddlewares.verifyRoomParticipationSocket(requestData, UserModel, RoomModel, ['admin'])
+            const [user, roomObj, response] = await roomMiddlewares.verifyRoomParticipationSocket(requestData, UserModel, RoomModel, ['admin', 'participant'])
 
-        //     if (response.status !== "success") {
-        //         return callback(response)
-        //     }
+            if (response.status !== "success") {
+                return callback(response)
+            }
 
-        //     roomObj.room_id = new mongoose.Types.ObjectId()
-        //     await roomObj.save()
+            const msgObj = utils.getMsgFromRoomObjById(roomObj, msg_id)
 
-        //     socket.to(room_id).emit("refresh_data", {})
+            if (msgObj.from.toString() !== user._id.toString()) {
+                // user is not the msg sender
+                return callback({status: "unexpected_error"})
+            }
             
-        //     callback({status: "success"})
+            await RoomModel.findOneAndUpdate(
+                { _id: roomObj._id },
+                { $pull: { messages: { _id: msg_id } } },
+                { safe: true, multi: false }
+            );
+            
+            socket.to(room_id).emit("refresh_data", {})
+            return callback({status: "success"})
 
-        // })
-    
+        })
+            
     })
 
 }
+
+/*
+1. Add admin deleted msg
+2. Add loading for send msg button
+3. do the msg adding in other way, not .push
+*/
 
 module.exports = {initialize: initialize}
