@@ -89,14 +89,33 @@ function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescript
         }
     }
 
-    const toggleAllowJoin = function() {
+    const toggleAllowJoin = async function() {
         if (toggleDisabled) return;
-        setToggleDisabled(true)
-        console.log("change allow participants", allowParicipants);
-        setTimeout(() => {
-            setAllowParicipants(prev => !prev)
+
+        if (!session_token) {
+            navigate("/login?i=0")
+            return;
+        }
+        
+        try {
+            setToggleDisabled(true)
+            const response = await axios.post(`http://localhost:3000/api/room/${roomId}/toggle-allowjoin`, {
+                allow_join: !allowParicipants,
+            }, {
+                headers: {
+                    "session-token": session_token
+                }
+            })
+            await getRoomData();
             setToggleDisabled(false)
-        }, 5000)
+            setAllowParicipants(response.data.new_allow_join)
+        } catch(err) {
+            if (err.response.status === 401) {
+                removeCookie("session_token")
+                navigate("/login?i=0")
+            }
+            console.log(err);
+        }
     }
 
     return (

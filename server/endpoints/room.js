@@ -102,6 +102,19 @@ function roomEndpoint(app, UserModel, RoomModel) {
 
         return res.status(200).send()
     })
+    
+    app.use("/api/room/:room_code/toggle-allowjoin", roomMiddlewares.verifyRoomParticipation(app, UserModel, RoomModel, ['admin']))
+    app.post("/api/room/:room_code/toggle-allowjoin", async (req, res) => {
+
+        const { allow_join } = req.body
+
+        res.locals.roomObj.allow_join = allow_join
+        await res.locals.roomObj.save()
+
+        return res.status(200).send({
+            new_allow_join: allow_join
+        })
+    })
 
 }
 
