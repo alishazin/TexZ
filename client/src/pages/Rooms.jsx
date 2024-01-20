@@ -44,7 +44,8 @@ function Rooms() {
     }) 
     const [readByPopupObj, setReadByPopupObj] = useState({
         state: false,
-        data: null
+        data: null,
+        msg_id: null,
     })
 
     const lastRefresh = useRef(new Date().getTime())
@@ -56,6 +57,7 @@ function Rooms() {
 
     
     useEffect(() => {
+        console.log("INITIALIZE");
         document.title = "Rooms"
         socket = io.connect("http://localhost:3000", {query: `session_token=${session_token}`})
         
@@ -66,10 +68,34 @@ function Rooms() {
         }, 5000)
 
     }, [])
+
+    useEffect(() => {
+        setSelectedRoomCount(value => {
+            if (value && roomData) {
+                markAsRead(roomData[value - 1])
+            } else {
+                getRoomData()
+            }
+            return value
+        })
+    }, [document.visibilityState])
     
     useEffect(() => {
         console.log("ROOM DATA CHANGES");
         lastRefresh.current = new Date().getTime()
+
+        if (readByPopupObj.state === true) {
+            for (let msgObj of roomData[selectedRoomCount - 1].messages) {
+                if (msgObj._id === readByPopupObj.msg_id) {
+                    setReadByPopupObj(prev => ({
+                        ...prev,
+                        data: msgObj.read_by_data,
+                    }))
+                    break
+                }
+            }
+            // if not found, it may be deleted, so turn off popup, in future
+        }
     }, [roomData])
 
     useEffect(() => {
@@ -77,6 +103,7 @@ function Rooms() {
         socket.on("fetch_data", response => {
             console.log(response);
 			if (response.status === "invalid_session_token") {
+                console.log("LOGGED OUT 1");
                 removeCookie("session_token")
                 navigate("/login?i=0")
             } else if (response.status === "success") {
@@ -86,12 +113,13 @@ function Rooms() {
 		})
         
         socket.on("refresh_data", async (response) => {
-            console.log("REFRESH", selectedRoomCount);
+            console.log("REFRESH");
+            if (document.visibilityState == "hidden") return
             await getRoomData()
             
             setSelectedRoomCount(value => {
                 if (value && roomData) {
-                    console.log("RECIEVED")
+                    // console.log("RECIEVED")
                     markAsRead(roomData[value - 1])
                 } 
                 return value
@@ -106,6 +134,7 @@ function Rooms() {
 	}, [socket])
 
     const markAsRead = (obj) => {
+        if (document.visibilityState == "hidden") return
         socket.emit("mark_as_read", { 
             session_token: session_token,
             room_id: obj._id,
@@ -114,7 +143,7 @@ function Rooms() {
                 removeCookie("session_token")
                 navigate("/login?i=0")
             } else {
-                console.log("MARK AS READ", data)
+                // console.log("MARK AS READ", data)
                 await getRoomData()
             }
         })
@@ -133,7 +162,7 @@ function Rooms() {
                 removeCookie("session_token")
                 navigate("/login?i=0")
             } else {
-                console.log("SEND", data)
+                // console.log("SEND", data)
                 await getRoomData()
             }
         })
@@ -149,6 +178,7 @@ function Rooms() {
         }
         
         try {
+            console.log(session_token);
             const response = await axios.get("http://localhost:3000/api/chat/get-all", {
                 headers: {
                     "session-token": session_token
@@ -205,6 +235,7 @@ function Rooms() {
                                         return (
                                         <MessageContainer 
                                             key={_index} 
+                                            msg_id={messageOrDateObj._id}
                                             side={messageOrDateObj.from._id === userObj._id ? "right" : "left"} 
                                             msg={messageOrDateObj.text} 
                                             name={messageOrDateObj.from._id === userObj._id ? "You" : messageOrDateObj.from.username} 

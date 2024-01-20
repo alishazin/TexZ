@@ -54,8 +54,13 @@
     background-color: #363231;
 }
 
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container.left {
+    margin-left: 20px;
+}
+
 .navbar-page-content-container.three .chat-container .msg-container .single-message-container.right {
     margin-left: auto;
+    margin-right: 20px;
 }
 
 .navbar-page-content-container.three .chat-container .msg-container .single-message-container.right .opaque-area {

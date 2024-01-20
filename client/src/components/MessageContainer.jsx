@@ -1,12 +1,13 @@
 import "../styles/components/messagecontainer.css"
 import { Icon } from '@iconify/react'
 
-function MessageContainer({ side, msg, name, date, time, read_by_data, setPopupObj }) {
+function MessageContainer({ side, msg_id, msg, name, date, time, read_by_data, setPopupObj }) {
 
     const handleInfoClick = () => {
         setPopupObj({
             state: true,
-            data: read_by_data
+            data: read_by_data,
+            msg_id: msg_id
         })
     }
 

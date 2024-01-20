@@ -18,6 +18,7 @@ function initialize(io, UserModel, RoomModel) {
             for (let roomObj of userChatData.roomData) {
                 allRoomIds.push(roomObj._id.toString())
             }
+            console.log("JOINING");
             socket.join(allRoomIds)
         }
     
