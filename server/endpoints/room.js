@@ -93,6 +93,15 @@ function roomEndpoint(app, UserModel, RoomModel) {
 
         return res.status(200).send()
     })
+    
+    app.use("/api/room/:room_code/generate-roomcode", roomMiddlewares.verifyRoomParticipation(app, UserModel, RoomModel, ['admin']))
+    app.post("/api/room/:room_code/generate-roomcode", async (req, res) => {
+
+        res.locals.roomObj.room_id = new mongoose.Types.ObjectId()
+        await res.locals.roomObj.save()
+
+        return res.status(200).send()
+    })
 
 }
 

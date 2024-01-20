@@ -123,6 +123,25 @@ function initialize(io, UserModel, RoomModel) {
             callback({status: "success"})
 
         })
+        
+        // socket.on("generate_new_roomcode", async (requestData, callback) => {
+            
+        //     const { room_id } = requestData
+            
+        //     const [user, roomObj, response] = await roomMiddlewares.verifyRoomParticipationSocket(requestData, UserModel, RoomModel, ['admin'])
+
+        //     if (response.status !== "success") {
+        //         return callback(response)
+        //     }
+
+        //     roomObj.room_id = new mongoose.Types.ObjectId()
+        //     await roomObj.save()
+
+        //     socket.to(room_id).emit("refresh_data", {})
+            
+        //     callback({status: "success"})
+
+        // })
     
     })
 

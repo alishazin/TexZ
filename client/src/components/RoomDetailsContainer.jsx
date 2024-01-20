@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"
 import TertiaryButton from "./TertiaryButton"
 import ParticipantItem from "./ParticipantItem"
 import ToggleButton from "./ToggleButton"
+import axios from "axios"
 
 function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescription, roomCode, isAdmin, participants, adminUser, setPopupObj, getRoomData, socket }) {
     
@@ -73,6 +74,27 @@ function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescript
         }
     }
 
+    const generateNewRoomCode = async function () {
+        if (!session_token) {
+            navigate("/login?i=0")
+            return;
+        }
+        
+        try {
+            await axios.post(`http://localhost:3000/api/room/${roomId}/generate-roomcode`, {}, {
+                headers: {
+                    "session-token": session_token
+                }
+            })
+        } catch(err) {
+            if (err.response.status === 401) {
+                removeCookie("session_token")
+                navigate("/login?i=0")
+            }
+            console.log(err);
+        }
+    }
+
     return (
         <div className="room-details-container">
             <div className="top-section">
@@ -109,7 +131,16 @@ function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescript
                         <Icon onClick={() => navigator.clipboard.writeText(roomCode)} className="copy-icon" icon="fluent:copy-32-regular" />
                     </div>
                     <div className="right-area">
-                        <TertiaryButton text={"Generate New"} disabled={false} /> 
+                        <TertiaryButton text={"Generate New"} disabled={false} onClick={() => setPopupObj({
+                            state: true,
+                            text: `Read the consequences carefully before generating new room code.`,
+                            confirmation_text: "generate new",
+                            button_text: "Generate",
+                            callback: async () => {
+                                await generateNewRoomCode()
+                                await getRoomData()
+                            }
+                        })} /> 
                     </div>
                 </div>
                 <div className="info">Generating a new room code will result in making the older one invalid. Previously shared room code will no longer be valid.</div>
