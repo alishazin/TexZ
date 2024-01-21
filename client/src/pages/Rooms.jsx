@@ -270,7 +270,7 @@ function Rooms() {
                                             room_id={roomData[selectedRoomCount-1]._id}
                                             msg_id={messageOrDateObj._id}
                                             side={messageOrDateObj.from._id === userObj._id ? "right" : "left"} 
-                                            msg={"This message is deleted by the admin"} 
+                                            msg={"This message was deleted by admin"} 
                                             date={formatDate(messageOrDateObj.dateObj)}
                                             time={formatTime(messageOrDateObj.dateObj)} 
                                         />)

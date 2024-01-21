@@ -51,7 +51,7 @@ function MessageContainer({ type, room_id, isAdmin, side, msg_id, msg, name, dat
                 <div className="box"><Icon onClick={handleInfoClick} icon="material-symbols:info-outline" className="icon" /></div>
             </div>}
             <div className="opaque-area">
-                <div className="msg-area">{msg}</div>
+                <div className="msg-area">{type === "deleted_msg" && <Icon style={{marginRight: "7px", transform: "translateY(1px)"}} icon="icomoon-free:blocked" />}{msg}</div>
                 <div className="details-area">
                     <div className="name">{name}</div>
                     <div className="date">{date}</div>
