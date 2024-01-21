@@ -148,9 +148,9 @@ function Rooms() {
     
 	}, [socket])
 
-    const scrollToLastMsg = () => {
+    const scrollToLastMsg = (behavior) => {
         setTimeout(() => {
-            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+            messagesEndRef.current?.scrollIntoView({ behavior: behavior })
         }, 100)
     }
 
@@ -189,7 +189,7 @@ function Rooms() {
                 await getRoomData()
                 setSendMsgField("")
                 setSendMsgLoading(false)
-                scrollToLastMsg()
+                scrollToLastMsg("smooth")
             }
         })
         
@@ -367,7 +367,7 @@ function Rooms() {
                                         setSendMsgField("")
                                         markAsRead(obj)
                                         setDetailsWidget(false)
-                                        scrollToLastMsg()
+                                        scrollToLastMsg("instant")
                                     }}
                                     roomName={obj.name} 
                                     roomDescription={obj.description} 
