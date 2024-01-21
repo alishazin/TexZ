@@ -36,6 +36,7 @@ function Rooms() {
     const [rightSwiperState, setRightSwiperState] = useState(false)
     const [detailsWidget, setDetailsWidget] = useState(false)  
     const [sendMsgField, setSendMsgField] = useState("")  
+    const [sendMsgLoading, setSendMsgLoading] = useState(false)  
     const [popupObj, setPopupObj] = useState({
         state: false,
         text: "",
@@ -164,8 +165,10 @@ function Rooms() {
 
     const handleSendMsg = async (e) => {
         e.preventDefault()
+        if (!sendMsgField.trim() || sendMsgLoading) return;
         unreadMsgRecord.current[selectedRoomCount] = null
 
+        setSendMsgLoading(true)
         socket.emit("send_message", { 
             session_token: session_token,
             room_id: roomData[selectedRoomCount-1]._id,
@@ -177,10 +180,11 @@ function Rooms() {
             } else {
                 // console.log("SEND", data)
                 await getRoomData()
+                setSendMsgField("")
+                setSendMsgLoading(false)
             }
         })
         
-        setSendMsgField("")
 
     }
 
@@ -291,8 +295,11 @@ function Rooms() {
                             </div>
                             <div className="send-msg-here-container">
                                 <form className="send-msg-here-box" onSubmit={handleSendMsg}>
-                                    <input autoComplete="off" onChange={e => setSendMsgField(e.target.value)} name="message" placeholder="Type your message here" value={sendMsgField} />
-                                    <button className="send-icon-container">
+                                    <input autoComplete="off" onChange={e => {
+                                            if (!sendMsgLoading)
+                                                setSendMsgField(e.target.value)
+                                        }} name="message" placeholder="Type your message here" value={sendMsgField} />
+                                    <button className={`send-icon-container ${sendMsgLoading ? "loading" : ""}`}>
                                         <Icon icon="tabler:send" className="icon" />
                                     </button>
                                 </form>
@@ -341,6 +348,7 @@ function Rooms() {
                                             prevSelectedRoomCount.current = prev
                                             return _index + 1
                                         })
+                                        setSendMsgField("")
                                         markAsRead(obj)
                                         setDetailsWidget(false)
                                     }}

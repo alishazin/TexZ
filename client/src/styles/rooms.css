@@ -1,3 +1,13 @@
+/* Loading button animation */
+@keyframes load {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+}
+
 #root {
     overflow: hidden;
 }
@@ -199,7 +209,9 @@
     background-color: #FD7753;
     cursor: pointer;
     border: none;
-
+    overflow: hidden;
+    position: relative;
+    
     display: flex;
     align-items: center;
     justify-content: center;
@@ -209,13 +221,40 @@
     font-size: 24px;
     color: #fff;
     transition: transform 0.2s;
+    z-index: 1;
 }
 
-.navbar-page-content-container.three .chat-container .send-msg-here-container .send-msg-here-box .send-icon-container:hover .icon {
+
+.navbar-page-content-container.three .chat-container .send-msg-here-container .send-msg-here-box .send-icon-container.loading {
+    cursor: wait;
+}
+
+.navbar-page-content-container.three .chat-container .send-msg-here-container .send-msg-here-box .send-icon-container.loading::before {
+    z-index: 0;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background: repeating-linear-gradient(90deg, 
+        transparent, 
+        transparent 0.4rem, 
+        rgb(46, 42, 41, 0.3) 0.4rem, 
+        rgb(46, 42, 41, 0.3) 0.8rem
+    );
+    animation-name: load;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+
+.navbar-page-content-container.three .chat-container .send-msg-here-container .send-msg-here-box .send-icon-container:not(.loading):hover .icon {
     transform: translateX(2px) translateY(-2px);
 }
 
-.navbar-page-content-container.three .chat-container .send-msg-here-container .send-msg-here-box .send-icon-container:active {
+.navbar-page-content-container.three .chat-container .send-msg-here-container .send-msg-here-box .send-icon-container.loading:active {
     opacity: 0.9;
 }
 
