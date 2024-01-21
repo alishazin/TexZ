@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react'
 import { useCookies } from "react-cookie"
 import { useNavigate } from "react-router-dom"
 
-function MessageContainer({ type, room_id, isAdmin, side, msg_id, msg, name, date, time, read_by_data, setPopupObj, setDeletePopupObj, socket, getRoomData }) {
+function MessageContainer({ type, room_id, isAdmin, side, msg_id, msg, name, date, time, read_by_data, setPopupObj, setDeletePopupObj, socket, getRoomData, isLast, messagesEndRef }) {
 
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
     
@@ -45,7 +45,7 @@ function MessageContainer({ type, room_id, isAdmin, side, msg_id, msg, name, dat
     }
 
     return (
-        <div className={`single-message-container ${side} ${type === "deleted_msg" ? "deleted" : ""}`}>
+        <div ref={isLast ? messagesEndRef : null}  className={`single-message-container ${side} ${type === "deleted_msg" ? "deleted" : ""}`}>
             {type === "msg" && side === "right" && <div className="transparent-area">
                 <div className="box"><Icon onClick={handleDeleteClick} icon="material-symbols:delete-outline" className="icon" /></div>
                 <div className="box"><Icon onClick={handleInfoClick} icon="material-symbols:info-outline" className="icon" /></div>

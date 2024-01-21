@@ -53,7 +53,8 @@ function Rooms() {
     const lastRefresh = useRef(new Date().getTime())
     const prevSelectedRoomCount = useRef(null)
     const unreadMsgRecord = useRef({})
-    
+    const messagesEndRef = useRef()
+
     const navigate = useNavigate()
     const session_token = cookies.session_token
 
@@ -147,6 +148,12 @@ function Rooms() {
     
 	}, [socket])
 
+    const scrollToLastMsg = () => {
+        setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+        }, 100)
+    }
+
     const markAsRead = (obj) => {
         if (document.visibilityState == "hidden") return
         socket.emit("mark_as_read", { 
@@ -182,6 +189,7 @@ function Rooms() {
                 await getRoomData()
                 setSendMsgField("")
                 setSendMsgLoading(false)
+                scrollToLastMsg()
             }
         })
         
@@ -265,6 +273,8 @@ function Rooms() {
                                             setDeletePopupObj={setPopupObj}
                                             socket={socket}
                                             getRoomData={getRoomData}
+                                            isLast={messageOrDateObj.isLast}
+                                            messagesEndRef={messagesEndRef}
                                         />)
                                     } else if (messageOrDateObj.type === "deleted_msg") {
                                         return (
@@ -276,7 +286,9 @@ function Rooms() {
                                             side={messageOrDateObj.from._id === userObj._id ? "right" : "left"} 
                                             msg={"This message was deleted by admin"} 
                                             date={formatDate(messageOrDateObj.dateObj)}
-                                            time={formatTime(messageOrDateObj.dateObj)} 
+                                            time={formatTime(messageOrDateObj.dateObj)}
+                                            isLast={messageOrDateObj.isLast}
+                                            messagesEndRef={messagesEndRef} 
                                         />)
                                     } else if (messageOrDateObj.type === "date") {
                                         return (
@@ -288,7 +300,11 @@ function Rooms() {
                                         />)
                                     } else if (messageOrDateObj.type === "unread") {
                                         return (
-                                            <UnreadMsgContainer key={_index} />
+                                            <UnreadMsgContainer 
+                                                key={_index} 
+                                                isLast={messageOrDateObj.isLast}
+                                                messagesEndRef={messagesEndRef}  
+                                            />
                                         )
                                     }
                                 })}
@@ -351,6 +367,7 @@ function Rooms() {
                                         setSendMsgField("")
                                         markAsRead(obj)
                                         setDetailsWidget(false)
+                                        scrollToLastMsg()
                                     }}
                                     roomName={obj.name} 
                                     roomDescription={obj.description} 

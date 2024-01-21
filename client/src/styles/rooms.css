@@ -158,9 +158,9 @@
 
 .navbar-page-content-container.three .chat-container .msg-container {
     background: transparent;
-    height: calc(100%);
+    height: calc(100% - 70px);
     overflow: auto;
-    padding: 10px 0 70px;
+    padding: 10px 0 0;
 }
 
 .navbar-page-content-container.three .chat-container .msg-container {
@@ -173,7 +173,6 @@
 
 .navbar-page-content-container.three .chat-container .send-msg-here-container {
     height: 70px;
-    position: absolute;
     bottom: 0;
     width: 100%;
 

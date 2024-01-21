@@ -68,6 +68,8 @@ function addDateStamps(data, userId, unreadMsgRecord, selectedRoomCount) {
 
     let prevDateString = null
     let unreadDivUsed = false
+    let count = 0
+    let unreadCountLast = null
 
     for (let messageObj of data) {
 
@@ -81,14 +83,19 @@ function addDateStamps(data, userId, unreadMsgRecord, selectedRoomCount) {
                 monthName: getMonthNameShort[dateCurrent.getMonth()],
                 type: "date"
             })
+
+            count++
         }
         
         if (messageObj.type === "msg" && (unreadMsgRecord.current[selectedRoomCount] === messageObj._id || (messageObj.from._id !== userId && !messageObj.read_by.includes(userId) && !unreadDivUsed))) {
+            unreadCountLast = count
             unreadMsgRecord.current[selectedRoomCount] = messageObj._id
             unreadDivUsed = true
             returnData.push({
                 type: "unread"
             })
+            
+            count++
         }
         
         returnData.push({
@@ -96,6 +103,14 @@ function addDateStamps(data, userId, unreadMsgRecord, selectedRoomCount) {
         })
 
         prevDateString = dateStringCurrent
+        
+        count++
+    }
+
+    if (unreadCountLast !== null) {
+        returnData[unreadCountLast].isLast = true
+    } else if (returnData.length > 0) {
+        returnData[returnData.length - 1].isLast = true
     }
 
     return returnData
