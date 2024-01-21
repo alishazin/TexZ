@@ -91,6 +91,12 @@ function Rooms() {
             })
         }
     }, [visibilityState])
+
+    useEffect(() => {
+        if (!detailsWidget) {
+            scrollToLastMsg("instant")
+        }
+    }, [detailsWidget])
     
     useEffect(() => {
         lastRefresh.current = new Date().getTime()
@@ -130,7 +136,10 @@ function Rooms() {
         
         socket.on("refresh_data", async (response) => {
             // console.log("REFRESH");
-            await getRoomData()
+            if (response.special === "recieve_msg")
+                await getRoomData(true)
+            else
+                await getRoomData()
             
             setSelectedRoomCount(value => {
                 if (value && roomData) {
@@ -196,7 +205,7 @@ function Rooms() {
 
     }
 
-    const getRoomData = async function() {
+    const getRoomData = async function(scrollToEnd = false) {
         if (!session_token) {
             navigate("/login?i=0")
             return;
@@ -210,6 +219,9 @@ function Rooms() {
             })
             setUserObj(response.data.userData)
             setRoomData(response.data.roomData)
+            
+            if (scrollToEnd)
+                scrollToLastMsg("smooth")
         } catch(err) {
             if (err.response.status === 401) {
                 removeCookie("session_token")

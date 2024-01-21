@@ -48,7 +48,7 @@ function initialize(io, UserModel, RoomModel) {
                 { $push: { messages: newMessage } }
             )
     
-            socket.to(room_id).emit("refresh_data", {})
+            socket.to(room_id).emit("refresh_data", {special: "recieve_msg"})
     
             callback({status: "success"})
     
