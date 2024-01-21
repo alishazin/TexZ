@@ -2,10 +2,15 @@
 function getUnreadMsgCount(data, userId) {
     let count = 0
 
-    for (let msgObj of data.messages) {
+    const reversed = [...data.messages].reverse()
 
-        if (msgObj.from._id !== userId && !msgObj.read_by.includes(userId))
-            count++
+    for (let msgObj of reversed) {
+
+        if (msgObj.type === "msg" && msgObj.from._id !== userId)
+            if (!msgObj.read_by.includes(userId))
+                count++
+            else
+                return count
 
     }
 

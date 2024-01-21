@@ -55,6 +55,7 @@ function initialize(io, UserModel, RoomModel) {
             }
 
             roomObj.messages.push({
+                type: "msg",
                 text: text,
                 from: user._id,
                 timestamp: new Date(),
@@ -102,16 +103,18 @@ function initialize(io, UserModel, RoomModel) {
             
             for (let msgObj of roomObj.messages) {
                 
-                const readByIds = []
-                for (let read_by_obj of msgObj.read_by) {
-                    readByIds.push(read_by_obj._id.toString())
-                }
-                if (!readByIds.includes(user._id.toString()) && msgObj.from.toString() !== user._id.toString()) {
-                    readByIds.push(user._id.toString())
-                    msgObj.read_by.push({
-                        _id: user._id,
-                        timestamp: new Date()
-                    })
+                if (msgObj.type === "msg") {
+                    const readByIds = []
+                    for (let read_by_obj of msgObj.read_by) {
+                        readByIds.push(read_by_obj._id.toString())
+                    }
+                    if (!readByIds.includes(user._id.toString()) && msgObj.from.toString() !== user._id.toString()) {
+                        readByIds.push(user._id.toString())
+                        msgObj.read_by.push({
+                            _id: user._id,
+                            timestamp: new Date()
+                        })
+                    }
                 }
             }
             
@@ -136,16 +139,28 @@ function initialize(io, UserModel, RoomModel) {
 
             const msgObj = utils.getMsgFromRoomObjById(roomObj, msg_id)
 
-            if (msgObj.from.toString() !== user._id.toString()) {
-                // user is not the msg sender
+            if (msgObj.from.toString() === user._id.toString()) {
+                // user is the msg sender
+                await RoomModel.findOneAndUpdate(
+                    { _id: roomObj._id },
+                    { $pull: { messages: { _id: msg_id } } },
+                    { safe: true, multi: false }
+                );
+            } else if (roomObj.admin.toString() === user._id.toString()) {
+                // user is the room admin
+                await RoomModel.findOneAndUpdate(
+                    { "messages._id": msg_id },
+                    { $set: { 
+                        "messages.$.type": "deleted_msg", 
+                        "messages.$.timestamp" : new Date() 
+                    }},
+                    { safe: true, multi: false }
+                );
+            } else {
+                // user is neither the admin nor the admin
                 return callback({status: "unexpected_error"})
+                
             }
-            
-            await RoomModel.findOneAndUpdate(
-                { _id: roomObj._id },
-                { $pull: { messages: { _id: msg_id } } },
-                { safe: true, multi: false }
-            );
             
             socket.to(room_id).emit("refresh_data", {})
             return callback({status: "success"})

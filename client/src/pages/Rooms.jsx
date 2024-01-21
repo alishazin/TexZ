@@ -58,7 +58,6 @@ function Rooms() {
 
     
     useEffect(() => {
-        // console.log("INITIALIZE");
         document.title = "Rooms"
         socket = io.connect("http://localhost:3000", {query: `session_token=${session_token}`})
         
@@ -82,10 +81,8 @@ function Rooms() {
         if (visibilityState) {
             setSelectedRoomCount(value => {
                 if (value && roomData) {
-                    // console.log("in room")
                     markAsRead(roomData[value - 1])
                 } else {
-                    // console.log("outside room")
                     getRoomData()
                 }
                 return value
@@ -94,12 +91,11 @@ function Rooms() {
     }, [visibilityState])
     
     useEffect(() => {
-        // console.log("ROOM DATA CHANGES");
         lastRefresh.current = new Date().getTime()
 
         if (readByPopupObj.state === true) {
             for (let msgObj of roomData[selectedRoomCount - 1].messages) {
-                if (msgObj._id === readByPopupObj.msg_id) {
+                if (msgObj.type === "msg" && msgObj._id === readByPopupObj.msg_id) {
                     setReadByPopupObj(prev => ({
                         ...prev,
                         data: msgObj.read_by_data,
@@ -107,8 +103,8 @@ function Rooms() {
                     return 
                 }
             }
-            
-            // if ready_bu opened msg is deleted
+
+            // if ready_by opened msg is deleted
             setReadByPopupObj({
                 state: false,
                 data: null,
@@ -247,10 +243,12 @@ function Rooms() {
                         <div className="chat-container">
                             <div className="msg-container">
                                 {addDateStamps(roomData[selectedRoomCount-1].messages, userObj._id, unreadMsgRecord, selectedRoomCount).map((messageOrDateObj, _index) => {
-                                    if (messageOrDateObj.type === "message") {
+                                    if (messageOrDateObj.type === "msg") {
                                         return (
                                         <MessageContainer 
                                             key={_index} 
+                                            type={messageOrDateObj.type}
+                                            isAdmin={roomData[selectedRoomCount-1].admin._id === userObj._id} 
                                             room_id={roomData[selectedRoomCount-1]._id}
                                             msg_id={messageOrDateObj._id}
                                             side={messageOrDateObj.from._id === userObj._id ? "right" : "left"} 
@@ -263,6 +261,18 @@ function Rooms() {
                                             setDeletePopupObj={setPopupObj}
                                             socket={socket}
                                             getRoomData={getRoomData}
+                                        />)
+                                    } else if (messageOrDateObj.type === "deleted_msg") {
+                                        return (
+                                        <MessageContainer 
+                                            key={_index} 
+                                            type={messageOrDateObj.type}
+                                            room_id={roomData[selectedRoomCount-1]._id}
+                                            msg_id={messageOrDateObj._id}
+                                            side={messageOrDateObj.from._id === userObj._id ? "right" : "left"} 
+                                            msg={"This message is deleted by the admin"} 
+                                            date={formatDate(messageOrDateObj.dateObj)}
+                                            time={formatTime(messageOrDateObj.dateObj)} 
                                         />)
                                     } else if (messageOrDateObj.type === "date") {
                                         return (

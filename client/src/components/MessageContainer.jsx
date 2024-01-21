@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react'
 import { useCookies } from "react-cookie"
 import { useNavigate } from "react-router-dom"
 
-function MessageContainer({ room_id, side, msg_id, msg, name, date, time, read_by_data, setPopupObj, setDeletePopupObj, socket, getRoomData }) {
+function MessageContainer({ type, room_id, isAdmin, side, msg_id, msg, name, date, time, read_by_data, setPopupObj, setDeletePopupObj, socket, getRoomData }) {
 
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
     
@@ -45,8 +45,8 @@ function MessageContainer({ room_id, side, msg_id, msg, name, date, time, read_b
     }
 
     return (
-        <div className={`single-message-container ${side}`}>
-            {side === "right" && <div className="transparent-area">
+        <div className={`single-message-container ${side} ${type === "deleted_msg" ? "deleted" : ""}`}>
+            {type === "msg" && side === "right" && <div className="transparent-area">
                 <div className="box"><Icon onClick={handleDeleteClick} icon="material-symbols:delete-outline" className="icon" /></div>
                 <div className="box"><Icon onClick={handleInfoClick} icon="material-symbols:info-outline" className="icon" /></div>
             </div>}
@@ -58,8 +58,9 @@ function MessageContainer({ room_id, side, msg_id, msg, name, date, time, read_b
                     <div className="time">{time}</div>
                 </div>
             </div>
-            {side === "left" && <div className="transparent-area">
-                <Icon onClick={handleInfoClick} icon="material-symbols:info-outline" className="icon" />
+            {type === "msg" && side === "left" && <div className="transparent-area">
+                {isAdmin && <div className="box"><Icon onClick={handleDeleteClick} icon="material-symbols:delete-outline" className="icon" /></div>}
+                <div className="box"><Icon onClick={handleInfoClick} icon="material-symbols:info-outline" className="icon" /></div>
             </div>}
         </div>
     )

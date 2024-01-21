@@ -3,6 +3,10 @@ const mongoose = require("mongoose");
 function initialize() {
 
     const messageSchema = mongoose.Schema({
+        type: {
+            type: String,
+            required: true,
+        },
         text: {
             type: String,
             trim: true,

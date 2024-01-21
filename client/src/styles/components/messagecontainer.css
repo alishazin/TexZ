@@ -54,6 +54,10 @@
     background-color: #363231;
 }
 
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container.left.deleted .opaque-area {
+    background-color: rgb(54, 50, 49, 0.5);
+}
+
 .navbar-page-content-container.three .chat-container .msg-container .single-message-container.left {
     margin-left: 20px;
 }
@@ -67,6 +71,10 @@
     background-color: #4E2D25;
 }
 
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container.right.deleted .opaque-area {
+    background-color: rgb(78, 45, 37, 0.5);
+}
+
 .navbar-page-content-container.three .chat-container .msg-container .single-message-container .opaque-area .msg-area {
     min-height: 40px;
     max-height: fit-content;
@@ -77,6 +85,10 @@
     color: #fff;
     padding: 10px;
     font-weight: 400;
+}
+
+.navbar-page-content-container.three .chat-container .msg-container .single-message-container.deleted .opaque-area .msg-area {
+    color: rgb(255, 255, 255, 0.5);
 }
 
 .navbar-page-content-container.three .chat-container .msg-container .single-message-container .opaque-area .details-area {

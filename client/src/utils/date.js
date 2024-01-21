@@ -83,7 +83,7 @@ function addDateStamps(data, userId, unreadMsgRecord, selectedRoomCount) {
             })
         }
         
-        if (unreadMsgRecord.current[selectedRoomCount] === messageObj._id || (messageObj.from._id !== userId && !messageObj.read_by.includes(userId) && !unreadDivUsed)) {
+        if (messageObj.type === "msg" && (unreadMsgRecord.current[selectedRoomCount] === messageObj._id || (messageObj.from._id !== userId && !messageObj.read_by.includes(userId) && !unreadDivUsed))) {
             unreadMsgRecord.current[selectedRoomCount] = messageObj._id
             unreadDivUsed = true
             returnData.push({
@@ -92,8 +92,7 @@ function addDateStamps(data, userId, unreadMsgRecord, selectedRoomCount) {
         }
         
         returnData.push({
-            ...messageObj,
-            type: "message"
+            ...messageObj
         })
 
         prevDateString = dateStringCurrent

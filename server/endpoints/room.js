@@ -152,33 +152,51 @@ function chatEndpoint(app, UserModel, RoomModel) {
 
             if (roomObj.messages) {
                 for (let messageObj of roomObj.messages) {
+
                     const msgUserObj = await utils.getUserWithId(messageObj.from, UserModel)
+                    
+                    if (messageObj.type === "msg") {         
 
-                    const allReadByData = []
-                    const readByIds = []
-                    for (let read_by_obj of messageObj.read_by) {
-                        const msgUserObj = await utils.getUserWithId(read_by_obj._id, UserModel)
-                        allReadByData.push({
-                            _id: msgUserObj._id,
-                            name: _.startCase(msgUserObj.username),
-                            timestamp: dateUtils.getFormattedStamp(read_by_obj.timestamp)
+                        const allReadByData = []
+                        const readByIds = []
+                        for (let read_by_obj of messageObj.read_by) {
+                            const msgUserObj = await utils.getUserWithId(read_by_obj._id, UserModel)
+                            allReadByData.push({
+                                _id: msgUserObj._id,
+                                name: _.startCase(msgUserObj.username),
+                                timestamp: dateUtils.getFormattedStamp(read_by_obj.timestamp)
+                            })
+                            readByIds.push(read_by_obj._id)
+                        }
+
+                        messageDetails.push({
+                            _id: messageObj._id,
+                            type: messageObj.type,
+                            text: messageObj.text,
+                            from: {
+                                _id: msgUserObj._id.toString(),
+                                username: _.startCase(msgUserObj.username),
+                                email: msgUserObj.email,
+                            },
+                            stamp: dateUtils.getFormattedStamp(messageObj.timestamp),
+                            dateObj: messageObj.timestamp,
+                            read_by: readByIds,
+                            read_by_data: allReadByData
                         })
-                        readByIds.push(read_by_obj._id)
-                    }
+                    
+                    } else if (messageObj.type === "deleted_msg") {
 
-                    messageDetails.push({
-                        _id: messageObj._id,
-                        text: messageObj.text,
-                        from: {
-                            _id: msgUserObj._id.toString(),
-                            username: _.startCase(msgUserObj.username),
-                            email: msgUserObj.email,
-                        },
-                        stamp: dateUtils.getFormattedStamp(messageObj.timestamp),
-                        dateObj: messageObj.timestamp,
-                        read_by: readByIds,
-                        read_by_data: allReadByData
-                    })
+                        messageDetails.push({
+                            _id: messageObj._id,
+                            type: messageObj.type,
+                            from: {
+                                _id: msgUserObj._id.toString()
+                            },
+                            stamp: dateUtils.getFormattedStamp(messageObj.timestamp),
+                            dateObj: messageObj.timestamp
+                        })
+
+                    }
                 }
             }
 

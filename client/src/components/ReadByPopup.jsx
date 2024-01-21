@@ -7,10 +7,8 @@ function ReadByPopup({ popupObj, setPopupObj, userObj }) {
     const closePopup = () => {
         setPopupObj({
             state: false,
-            text: "",
-            confirmation_text: "",
-            button_text: "",
-            callback: async () => {}
+            data: null,
+            msg_id: null,
         })
     }
 
