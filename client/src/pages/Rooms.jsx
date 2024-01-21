@@ -38,6 +38,8 @@ function Rooms() {
     const [sendMsgField, setSendMsgField] = useState("")  
     const [sendMsgLoading, setSendMsgLoading] = useState(false)  
     const [scrollDownVisible, setScrollDownVisible] = useState(false);
+    const [scrollNewVisible, setScrollNewVisible] = useState(false);
+
     const [popupObj, setPopupObj] = useState({
         state: false,
         text: "",
@@ -317,11 +319,12 @@ function Rooms() {
                                         />)
                                     } else if (messageOrDateObj.type === "unread") {
                                         return (
-                                            <UnreadMsgContainer 
-                                                key={_index} 
-                                                isLast={messageOrDateObj.isLast}
-                                                messagesEndRef={messagesEndRef}  
-                                            />
+                                        <UnreadMsgContainer 
+                                            key={_index} 
+                                            isLast={messageOrDateObj.isLast}
+                                            messagesEndRef={messagesEndRef} 
+                                            setScrollNewVisible={setScrollNewVisible}
+                                        />
                                         )
                                     }
                                 })}
@@ -338,6 +341,7 @@ function Rooms() {
                                 </form>
                             </div>
                             {!unreadMsgRecord.current[selectedRoomCount] && scrollDownVisible && <div className="scroll-down-btn" onClick={() => scrollToLastMsg("smooth")}><Icon className="icon" icon="teenyicons:double-caret-down-outline" /></div>}
+                            {!scrollNewVisible && unreadMsgRecord.current[selectedRoomCount] && <div className="new-msg-btn" onClick={() => scrollToLastMsg("smooth")}>New <Icon className="icon" icon="ph:caret-up-down-bold" /></div>}
                         </div>
                     </>}
                     {(!detailsWidget && !selectedRoomCount) && <>
