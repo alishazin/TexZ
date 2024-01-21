@@ -8,6 +8,15 @@
     }
 }
 
+@keyframes arrow-move {
+    0% {
+        transform: translateY(1px);
+    }
+    100% {
+        transform: translateY(-1px);
+    }
+}
+
 #root {
     overflow: hidden;
 }
@@ -18,6 +27,7 @@
     /* background-color: #1a1717; */
     width: calc(100% - 300px - 200px);
     min-height: 100vh;
+    position: relative;
 }
 
 .content .right-container {
@@ -163,9 +173,42 @@
     padding: 10px 0 0;
 }
 
+.navbar-page-content-container.three .chat-container .scroll-down-btn {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    font-size: 17px;
+    background-color: #2E2A29;
+    color: rgb(224, 246, 202, 1);
+    border: 1px solid rgb(224, 246, 202, 1);
+    left: calc(50% - 20px);
+    bottom: 70px;
+    text-align: center;
+    cursor: pointer;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-page-content-container.three .chat-container .scroll-down-btn:hover {
+    background-color: rgb(52, 47, 46);
+}
+
+.navbar-page-content-container.three .chat-container .scroll-down-btn .icon {
+    animation-name: arrow-move;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
 .navbar-page-content-container.three .chat-container .msg-container {
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
     scrollbar-width: none;  /* Firefox */
+    position: relative;
 }
 .navbar-page-content-container.three .chat-container .msg-container::-webkit-scrollbar { 
     display: none;  /* Safari and Chrome */
@@ -314,5 +357,8 @@
     .navbar-page-content-container.three .chat-container .send-msg-here-container .send-msg-here-box {
         width: 100%;
         border-radius: 0;
+    }
+    .navbar-page-content-container.three .chat-container .scroll-down-btn {
+        bottom: 60px;
     }
 }

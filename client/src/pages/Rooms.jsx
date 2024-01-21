@@ -37,6 +37,7 @@ function Rooms() {
     const [detailsWidget, setDetailsWidget] = useState(false)  
     const [sendMsgField, setSendMsgField] = useState("")  
     const [sendMsgLoading, setSendMsgLoading] = useState(false)  
+    const [scrollDownVisible, setScrollDownVisible] = useState(false);
     const [popupObj, setPopupObj] = useState({
         state: false,
         text: "",
@@ -58,6 +59,11 @@ function Rooms() {
     const navigate = useNavigate()
     const session_token = cookies.session_token
 
+    const toggleVisible = (e) => {
+        setScrollDownVisible(
+            e.target.scrollHeight - (e.target.scrollTop + e.target.clientHeight) > 100
+        );
+    };
     
     useEffect(() => {
         document.title = "Rooms"
@@ -135,23 +141,22 @@ function Rooms() {
 		})
         
         socket.on("refresh_data", async (response) => {
-            // console.log("REFRESH");
-            if (response.special === "recieve_msg")
-                await getRoomData(true)
-            else
+            if (response.special === "recieve_msg") {
                 await getRoomData()
+                setSelectedRoomCount(value => {
+                    if (value && roomData) {
+                        markAsRead(roomData[value - 1])
+                    } 
+                    return value
+                })
+            }
+            else {
+                await getRoomData()
+            }
             
-            setSelectedRoomCount(value => {
-                if (value && roomData) {
-                    // console.log("RECIEVED")
-                    markAsRead(roomData[value - 1])
-                } 
-                return value
-            })
 		})
         
         socket.on("refresh_data_after_read", async (response) => {
-            // console.log("REFRESH AFTER READ");
             await getRoomData()
 		})
     
@@ -265,7 +270,7 @@ function Rooms() {
                             <div className="room-description">{roomData[selectedRoomCount-1].description}</div>
                         </div>
                         <div className="chat-container">
-                            <div className="msg-container">
+                            <div className="msg-container" onScroll={toggleVisible}>
                                 {addDateStamps(roomData[selectedRoomCount-1].messages, userObj._id, unreadMsgRecord, selectedRoomCount).map((messageOrDateObj, _index) => {
                                     if (messageOrDateObj.type === "msg") {
                                         return (
@@ -325,13 +330,14 @@ function Rooms() {
                                 <form className="send-msg-here-box" onSubmit={handleSendMsg}>
                                     <input autoComplete="off" onChange={e => {
                                             if (!sendMsgLoading)
-                                                setSendMsgField(e.target.value)
-                                        }} name="message" placeholder="Type your message here" value={sendMsgField} />
+                                            setSendMsgField(e.target.value)
+                                    }} name="message" placeholder="Type your message here" value={sendMsgField} />
                                     <button className={`send-icon-container ${sendMsgLoading ? "loading" : ""}`}>
                                         <Icon icon="tabler:send" className="icon" />
                                     </button>
                                 </form>
                             </div>
+                            {!unreadMsgRecord.current[selectedRoomCount] && scrollDownVisible && <div className="scroll-down-btn" onClick={() => scrollToLastMsg("smooth")}><Icon className="icon" icon="teenyicons:double-caret-down-outline" /></div>}
                         </div>
                     </>}
                     {(!detailsWidget && !selectedRoomCount) && <>
