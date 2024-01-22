@@ -79,15 +79,32 @@ function roomEndpoint(app, UserModel, RoomModel) {
         
         // check if user exist
         
-        if (user.rooms.includes(room._id)) {
-            return res.status(400).send({err_msg: "You have already joined the room"})
+        // if (user.rooms.includes(room._id)) {
+        //     return res.status(400).send({err_msg: "You have already joined the room"})
+        // }
+
+        let pastJoined = false
+        
+        for (let embRoom of user.rooms) {
+            if (embRoom._id.toString() === room._id.toString()) {
+                if (!embRoom.is_removed && !embRoom.has_left) {
+                    return res.status(400).send({err_msg: "You have already joined the room"})
+                } else {
+                    embRoom.is_removed = false
+                    embRoom.has_left = false
+                    pastJoined = true
+                    break
+                }
+            }
         }
 
         room.markModified("participants")
         room.participants.push(user._id)
         await room.save()
 
-        user.rooms.push({_id: room._id, is_removed: false, has_left: false})
+        if (!pastJoined)
+            user.rooms.push({_id: room._id, is_removed: false, has_left: false})
+
         user.markModified("rooms")
         await user.save()
 
