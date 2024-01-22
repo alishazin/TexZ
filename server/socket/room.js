@@ -168,11 +168,15 @@ function initialize(io, UserModel, RoomModel) {
             socket.leave(room_id)
             console.log("Leave", io.sockets.adapter.rooms);
 
+            // Removed from roomObj.participants
+
             await RoomModel.findOneAndUpdate(
                 { _id: roomObj._id },
                 { $pull: { participants: user._id }},
                 { safe: true, multi: false }
             )
+
+            // Set from userObj.rooms.$.has_left = true
 
             await UserModel.findOneAndUpdate(
                 { "_id": user._id, "rooms._id": roomObj._id },
@@ -180,9 +184,12 @@ function initialize(io, UserModel, RoomModel) {
                 { safe: true, multi: false }
             )
 
+            // Add info message
+
             const infoObj = {
                 type: "info_leave",
                 from: user._id,
+                timestamp: new Date()
             }
 
             await RoomModel.findOneAndUpdate(

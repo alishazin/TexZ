@@ -166,6 +166,7 @@ function Rooms() {
 	}, [socket])
 
     const scrollToLastMsg = (behavior) => {
+        console.log(messagesEndRef.current);
         setTimeout(() => {
             messagesEndRef.current?.scrollIntoView({ behavior: behavior })
         }, 100)
@@ -328,10 +329,28 @@ function Rooms() {
                                         />)
                                     } else if (messageOrDateObj.type === "info_leave") {
                                         return (
-                                        <InfoContainer 
+                                        <InfoContainer
+                                            key={_index} 
                                             content={`${messageOrDateObj.from.username} has left the room`}
-                                        />
-                                        )
+                                            isLast={messageOrDateObj.isLast}
+                                            messagesEndRef={messagesEndRef}
+                                        />)
+                                    } else if (messageOrDateObj.type === "info_join") {
+                                        return (
+                                        <InfoContainer 
+                                            key={_index}
+                                            content={`${messageOrDateObj.from.username} has joined the room`}
+                                            isLast={messageOrDateObj.isLast}
+                                            messagesEndRef={messagesEndRef}
+                                        />)
+                                    } else if (messageOrDateObj.type === "info_create") {
+                                        return (
+                                        <InfoContainer 
+                                            key={_index}
+                                            content={`${messageOrDateObj.from.username} has created the room`}
+                                            isLast={messageOrDateObj.isLast}
+                                            messagesEndRef={messagesEndRef}
+                                        />)
                                     }
                                 })}
                             </div>

@@ -55,6 +55,19 @@ function roomEndpoint(app, UserModel, RoomModel) {
         user.markModified("rooms")
         await user.save()
 
+        // Add info message
+        
+        const infoObj = {
+            type: "info_create",
+            from: user._id,
+            timestamp: new Date()
+        }
+
+        await RoomModel.findOneAndUpdate(
+            { _id: room._id },
+            { $push: { messages: infoObj } }
+        )
+
         res.status(200).send({
             name: room.name,
             description: room.description,
@@ -76,12 +89,6 @@ function roomEndpoint(app, UserModel, RoomModel) {
         if (!room) {
             return res.status(400).send({err_msg: "Room code is invalid"})
         }
-        
-        // check if user exist
-        
-        // if (user.rooms.includes(room._id)) {
-        //     return res.status(400).send({err_msg: "You have already joined the room"})
-        // }
 
         let pastJoined = false
         
@@ -104,6 +111,19 @@ function roomEndpoint(app, UserModel, RoomModel) {
 
         if (!pastJoined)
             user.rooms.push({_id: room._id, is_removed: false, has_left: false})
+
+        // Add info message
+        
+        const infoObj = {
+            type: "info_join",
+            from: user._id,
+            timestamp: new Date()
+        }
+
+        await RoomModel.findOneAndUpdate(
+            { _id: room._id },
+            { $push: { messages: infoObj } }
+        )
 
         user.markModified("rooms")
         await user.save()
@@ -213,7 +233,7 @@ function chatEndpoint(app, UserModel, RoomModel) {
                             dateObj: messageObj.timestamp
                         })
 
-                    } else if (messageObj.type === "info_leave") {
+                    } else if (["info_leave", "info_join", "info_create"].includes(messageObj.type)) {
 
                         messageDetails.push({
                             _id: messageObj._id,

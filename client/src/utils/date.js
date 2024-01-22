@@ -73,18 +73,13 @@ function addDateStamps(data, userId, unreadMsgRecord, selectedRoomCount) {
 
     for (let messageObj of data) {
 
-        if (messageObj.type === "info_leave") {
-            returnData.push({
-                ...messageObj
-            })
-            count++
-            continue
-        }
-
         const dateCurrent = new Date(messageObj.dateObj)
         const dateStringCurrent = new Date(messageObj.dateObj).toDateString()
         
-        if (prevDateString !== dateStringCurrent) {
+        if (
+            !["info_leave", "info_join", "info_create"].includes(messageObj.type) && 
+            prevDateString !== dateStringCurrent
+        ) {
             returnData.push({
                 dayName: getDayNameShort[dateCurrent.getDay()],
                 dateNum: dateCurrent.getDate(),
@@ -95,7 +90,17 @@ function addDateStamps(data, userId, unreadMsgRecord, selectedRoomCount) {
             count++
         }
         
-        if (messageObj.type === "msg" && (unreadMsgRecord.current[selectedRoomCount] === messageObj._id || (messageObj.from._id !== userId && !messageObj.read_by.includes(userId) && !unreadDivUsed))) {
+        if (
+            messageObj.type === "msg" && 
+            (
+                unreadMsgRecord.current[selectedRoomCount] === messageObj._id || 
+                (
+                    messageObj.from._id !== userId && 
+                    !messageObj.read_by.includes(userId) && 
+                    !unreadDivUsed
+                )
+            )
+        ) {
             unreadCountLast = count
             unreadMsgRecord.current[selectedRoomCount] = messageObj._id
             unreadDivUsed = true
@@ -115,6 +120,7 @@ function addDateStamps(data, userId, unreadMsgRecord, selectedRoomCount) {
         count++
     }
 
+    console.log(returnData[returnData.length - 1]);
     if (unreadCountLast !== null) {
         returnData[unreadCountLast].isLast = true
     } else if (returnData.length > 0) {
