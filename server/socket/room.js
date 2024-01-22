@@ -135,7 +135,7 @@ function initialize(io, UserModel, RoomModel) {
                 
                 // user is the room admin
                 await RoomModel.findOneAndUpdate(
-                    { "messages._id": msg_id },
+                    { "_id": roomObj._id, "messages._id": msg_id },
                     { $set: { 
                         "messages.$.type": "deleted_msg", 
                         "messages.$.timestamp" : new Date() 
@@ -166,15 +166,19 @@ function initialize(io, UserModel, RoomModel) {
             }
 
             socket.leave(room_id)
+            console.log("Leave", io.sockets.adapter.rooms);
 
-            // await RoomModel.findOneAndUpdate(
-            //     { "messages._id": msg_id },
-            //     { $set: { 
-            //         "messages.$.type": "deleted_msg", 
-            //         "messages.$.timestamp" : new Date() 
-            //     }},
-            //     { safe: true, multi: false }
-            // )
+            await RoomModel.findOneAndUpdate(
+                { "_id": roomObj._id, "participants._id": user._id },
+                { $set: { "participants.$.is_removed": true }},
+                { safe: true, multi: false }
+            )
+
+            await UserModel.findOneAndUpdate(
+                { "_id": user._id },
+                { $pull: { rooms: roomObj._id } },
+                { safe: true, multi: false }
+            )
 
             socket.to(room_id).emit("refresh_data", {})
             return callback({status: "success"})

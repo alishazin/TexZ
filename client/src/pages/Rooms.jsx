@@ -366,6 +366,7 @@ function Rooms() {
                             getRoomData={getRoomData}
                             socket={socket}
                             roomData={roomData}
+                            setSelectedRoomCount={setSelectedRoomCount}
                         />
                     }
                 </div>

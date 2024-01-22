@@ -50,7 +50,7 @@ async function getRoomWithIdAndUser(id, userObj, RoomModel, allowed_users) {
     if (allowed_users.includes("admin"))
         orQuery.push({ admin: userObj._id })
     if (allowed_users.includes("participant"))
-        orQuery.push({ "participants._id": userObj._id })
+        orQuery.push({ $and: [{'participants._id': userObj._id}, {'participants.is_removed': false}] })
 
     try {
         const roomObj = await RoomModel.findOne({ _id: id, $or: orQuery})
