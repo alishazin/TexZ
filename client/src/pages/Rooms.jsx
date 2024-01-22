@@ -69,7 +69,6 @@ function Rooms() {
     
     useEffect(() => {
         document.title = "Rooms"
-        console.log(session_token);
         socket = io.connect("http://localhost:3000", {query: `session_token=${session_token}`})
         
         setInterval(async () => {
@@ -162,11 +161,25 @@ function Rooms() {
         socket.on("refresh_data_after_read", async (response) => {
             await getRoomData()
 		})
+        
+        socket.on("refresh_data_after_removal", async (response) => {
+            
+            setUserObj(async (value) => {
+                console.log("value", value);
+                if (response.participant_id === value?._id) {
+                    setDetailsWidget(false)
+                    setSelectedRoomCount(null)
+                }
+                await getRoomData()
+                return value
+            })
+            
+
+		})
     
 	}, [socket])
 
     const scrollToLastMsg = (behavior) => {
-        console.log(messagesEndRef.current);
         setTimeout(() => {
             messagesEndRef.current?.scrollIntoView({ behavior: behavior })
         }, 100)
@@ -348,6 +361,14 @@ function Rooms() {
                                         <InfoContainer 
                                             key={_index}
                                             content={`${messageOrDateObj.from.username} has created the room`}
+                                            isLast={messageOrDateObj.isLast}
+                                            messagesEndRef={messagesEndRef}
+                                        />)
+                                    } else if (messageOrDateObj.type === "info_remove") {
+                                        return (
+                                        <InfoContainer 
+                                            key={_index}
+                                            content={`${messageOrDateObj.from.username} was removed by the admin`}
                                             isLast={messageOrDateObj.isLast}
                                             messagesEndRef={messagesEndRef}
                                         />)

@@ -168,7 +168,7 @@ function initialize(io, UserModel, RoomModel) {
             socket.leave(room_id)
             console.log("Leave", io.sockets.adapter.rooms);
 
-            // Removed from roomObj.participants
+            // Remove from roomObj.participants
 
             await RoomModel.findOneAndUpdate(
                 { _id: roomObj._id },
@@ -198,6 +198,62 @@ function initialize(io, UserModel, RoomModel) {
             )
 
             socket.to(room_id).emit("refresh_data", {})
+            return callback({status: "success"})
+
+        })
+        
+        socket.on("remove_participant", async (requestData, callback) => {
+            
+            const { room_id, participant_id } = requestData
+            
+            const [user, roomObj, response] = await roomMiddlewares.verifyRoomParticipationSocket(requestData, UserModel, RoomModel, ['admin'])
+
+            if (response.status !== "success") {
+                return callback(response)
+            }
+
+            let found
+
+            for (let participant_id_ of roomObj.participants) {
+                if (participant_id_.toString() === participant_id) {
+                    found = true
+                    break
+                }
+            }
+
+            if (!found)
+                return callback(response)
+
+            // Remove from roomObj.participants
+
+            await RoomModel.findOneAndUpdate(
+                { _id: roomObj._id },
+                { $pull: { participants: participant_id }},
+                { safe: true, multi: false }
+            )
+
+            // Set from userObj.rooms.$.is_removed = true
+
+            await UserModel.findOneAndUpdate(
+                { "_id": participant_id, "rooms._id": roomObj._id },
+                { $set: { "rooms.$.is_removed": true } },
+                { safe: true, multi: false }
+            )
+
+            // Add info message
+
+            const infoObj = {
+                type: "info_remove",
+                from: user._id,
+                timestamp: new Date()
+            }
+
+            await RoomModel.findOneAndUpdate(
+                { _id: roomObj._id },
+                { $push: { messages: infoObj } }
+            )
+
+            socket.to(room_id).emit("refresh_data_after_removal", {participant_id: participant_id})
             return callback({status: "success"})
 
         })

@@ -15,7 +15,6 @@ function ChangePassword() {
     
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
     const [userObj, setUserObj] = useState(null)
-    console.log(userObj);
 
     const [allDisabled, setAllDisabled] = useState(false)
     const [buttonDisabled, setButtonDisabled] = useState(true)

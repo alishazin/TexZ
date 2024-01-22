@@ -59,7 +59,6 @@ function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescript
                     removeCookie("session_token")
                     navigate("/login?i=0")
                 } else {
-                    console.log("EDIT", data)
                     await getRoomData()
                     setEditButtonLoadingState(false)
                     setEditState(false)
@@ -142,7 +141,7 @@ function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescript
                 <h2>Participants</h2>
                 <ParticipantItem name={adminUser.username} isAdmin={isAdmin} adminIcon={true} />
                 {participants.map((participantObj, _index) => (
-                    <ParticipantItem key={_index} name={participantObj.username} isAdmin={isAdmin} setPopupObj={setPopupObj} getRoomData={getRoomData} />
+                    <ParticipantItem key={_index} id={participantObj._id} name={participantObj.username} isAdmin={isAdmin} setPopupObj={setPopupObj} getRoomData={getRoomData} room_id={roomId} socket={socket} />
                 ))}
             </div>
             {isAdmin &&

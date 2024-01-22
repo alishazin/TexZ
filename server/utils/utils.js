@@ -146,7 +146,7 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
                         dateObj: messageObj.timestamp
                     })
 
-                } else if (["info_leave", "info_join", "info_create"].includes(messageObj.type)) {
+                } else if (["info_leave", "info_join", "info_create", "info_remove"].includes(messageObj.type)) {
 
                     messageDetails.push({
                         _id: messageObj._id,
