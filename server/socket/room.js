@@ -154,6 +154,21 @@ function initialize(io, UserModel, RoomModel) {
             return callback({status: "success"})
 
         })
+
+        socket.on("disconnect", (reason) => {
+            console.log("disconect: ", reason);
+            console.log(io.sockets.adapter.rooms);
+        });
+
+        socket.on("disconnecting", (reason) => {
+            console.log("disconnecting", socket.rooms);
+            for (const room of socket.rooms) {
+                console.log(room, socket.id);
+                if (room !== socket.id) {
+                    console.log("user has left", room);
+                }
+            }
+        });
             
     })
 

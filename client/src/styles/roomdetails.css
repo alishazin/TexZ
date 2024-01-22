@@ -230,6 +230,8 @@
 
 .navbar-page-content-container.three .room-details-container .dismiss-container .btn-area {
     width: 73px;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .navbar-page-content-container.three .room-details-container .allow-container {

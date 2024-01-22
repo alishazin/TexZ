@@ -145,7 +145,7 @@ function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescript
                     <ParticipantItem key={_index} name={participantObj.username} isAdmin={isAdmin} setPopupObj={setPopupObj} getRoomData={getRoomData} />
                 ))}
             </div>
-            {isAdmin && <>
+            {isAdmin &&
             <div className="roomcode-container">
                 <h2>Room Code</h2>
                 <div className="content-box">
@@ -167,9 +167,10 @@ function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescript
                     </div>
                 </div>
                 <div className="info">Generating a new room code will result in making the older one invalid. Previously shared room code will no longer be valid.</div>
-            </div>
+            </div>}
             <div className="dangerzone-container">
                 <h2>Danger Zone <Icon className="icon" icon="solar:danger-triangle-outline" /></h2>
+                {isAdmin ? <>
                 <div className="dismiss-container">
                     <div className="text">Dismiss the room<br/><span>( this change is irreversible )</span></div>
                     <div className="btn-area">
@@ -182,8 +183,24 @@ function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescript
                         <ToggleButton disabled={toggleDisabled} state={allowParicipants} handleClick={toggleAllowJoin}  />
                     </div>
                 </div>
+                </> :
+                <div className="dismiss-container">
+                    <div className="text">Leave the room<br/><span>( Your messages won't be deleted )</span></div>
+                    <div className="btn-area">
+                        <TertiaryButton text={"Leave"} disabled={false} onClick={() => setPopupObj({
+                            state: true,
+                            text: `You will no longer be able to access this room. But its possible to join the room in the future.`,
+                            confirmation_text: "i understand",
+                            button_text: "Leave the Room",
+                            callback: async () => {
+                                // await generateNewRoomCode()
+                                // await getRoomData()
+                            }
+                        })} />
+                    </div>
+                </div>
+                }
             </div>
-            </>}
         </div>
     )
 }
