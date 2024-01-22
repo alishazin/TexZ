@@ -155,6 +155,32 @@ function initialize(io, UserModel, RoomModel) {
 
         })
 
+        socket.on("leave_room", async (requestData, callback) => {
+            
+            const { room_id } = requestData
+            
+            const [user, roomObj, response] = await roomMiddlewares.verifyRoomParticipationSocket(requestData, UserModel, RoomModel, ['participant'])
+
+            if (response.status !== "success") {
+                return callback(response)
+            }
+
+            socket.leave(room_id)
+
+            // await RoomModel.findOneAndUpdate(
+            //     { "messages._id": msg_id },
+            //     { $set: { 
+            //         "messages.$.type": "deleted_msg", 
+            //         "messages.$.timestamp" : new Date() 
+            //     }},
+            //     { safe: true, multi: false }
+            // )
+
+            socket.to(room_id).emit("refresh_data", {})
+            return callback({status: "success"})
+
+        })
+
         socket.on("disconnect", (reason) => {
             console.log("disconect: ", reason);
             console.log(io.sockets.adapter.rooms);

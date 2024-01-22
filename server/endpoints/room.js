@@ -84,7 +84,7 @@ function roomEndpoint(app, UserModel, RoomModel) {
         }
 
         room.markModified("participants")
-        room.participants.push(user._id)
+        room.participants.push({_id: user._id, is_removed: false})
         await room.save()
 
         user.rooms.push(room._id)
@@ -129,7 +129,7 @@ function chatEndpoint(app, UserModel, RoomModel) {
             .select("name description admin participants room_id allow_join messages")
 
         result.push(
-            ...await RoomModel.find({ 'participants': user._id })
+            ...await RoomModel.find({ $and : [{'participants._id': user._id}, {'participants.is_removed': false}] })
             .select("name description admin participants messages")
         )
 
@@ -139,8 +139,8 @@ function chatEndpoint(app, UserModel, RoomModel) {
             
             const participantsDetails = []
 
-            for (let participant_id of roomObj.participants) {
-                const userObj = await utils.getUserWithId(participant_id, UserModel)
+            for (let participantObj of roomObj.participants) {
+                const userObj = await utils.getUserWithId(participantObj._id, UserModel)
                 participantsDetails.push({
                     _id: userObj._id.toString(),
                     username: _.startCase(userObj.username),

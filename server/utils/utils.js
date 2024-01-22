@@ -50,7 +50,7 @@ async function getRoomWithIdAndUser(id, userObj, RoomModel, allowed_users) {
     if (allowed_users.includes("admin"))
         orQuery.push({ admin: userObj._id })
     if (allowed_users.includes("participant"))
-        orQuery.push({ participants: userObj._id })
+        orQuery.push({ "participants._id": userObj._id })
 
     try {
         const roomObj = await RoomModel.findOne({ _id: id, $or: orQuery})
@@ -79,7 +79,7 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
         .select("name description admin participants room_id allow_join messages")
 
     result.push(
-        ...await RoomModel.find({ 'participants': user._id })
+        ...await RoomModel.find({ $and : [{'participants._id': user._id}, {'participants.is_removed': false}] })
         .select("name description admin participants messages")
     )
 
@@ -89,8 +89,8 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
         
         const participantsDetails = []
 
-        for (let participant_id of roomObj.participants) {
-            const userObj = await getUserWithId(participant_id, UserModel)
+        for (let participantObj of roomObj.participants) {
+            const userObj = await getUserWithId(participantObj._id, UserModel)
             participantsDetails.push({
                 _id: userObj._id.toString(),
                 username: _.startCase(userObj.username),

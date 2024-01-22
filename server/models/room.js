@@ -29,6 +29,17 @@ function initialize() {
         }
     })
 
+    const participantSchema = mongoose.Schema({
+        _id : {
+            type: mongoose.Types.ObjectId,
+            required: true
+        },
+        is_removed: {
+            type: Boolean,
+            required: true
+        }
+    })
+
     const roomSchema = mongoose.Schema({
         name: {
             type: String,
@@ -53,7 +64,7 @@ function initialize() {
             required: true
         }, // not added in participants
         participants: {
-            type: [mongoose.Types.ObjectId]
+            type: [participantSchema]
         },
         messages: {
             type: [messageSchema],
