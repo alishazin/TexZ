@@ -2,6 +2,22 @@ const mongoose = require("mongoose");
 
 function initialize() {
 
+    const embeddedRoomSchema = mongoose.Schema({
+        _id: {
+            type: mongoose.Types.ObjectId,
+            required: true
+        },
+        is_removed: {
+            type: Boolean,
+            required: true
+        },
+        has_left: {
+            type: Boolean,
+            required: true
+        },
+        // any one will be true, or neither
+    })
+
     const userSchema = mongoose.Schema({
         email: {
             type: String,
@@ -49,7 +65,7 @@ function initialize() {
             required: false
         },
         rooms: {
-            type: [mongoose.Types.ObjectId]
+            type: [embeddedRoomSchema]
         }
     })
 

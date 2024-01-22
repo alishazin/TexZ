@@ -69,6 +69,7 @@ function Rooms() {
     
     useEffect(() => {
         document.title = "Rooms"
+        console.log(session_token);
         socket = io.connect("http://localhost:3000", {query: `session_token=${session_token}`})
         
         setInterval(async () => {
@@ -324,6 +325,11 @@ function Rooms() {
                                             isLast={messageOrDateObj.isLast}
                                             messagesEndRef={messagesEndRef} 
                                             setScrollNewVisible={setScrollNewVisible}
+                                        />)
+                                    } else if (messageOrDateObj.type === "info_leave") {
+                                        return (
+                                        <InfoContainer 
+                                            content={`${messageOrDateObj.from.username} has left the room`}
                                         />
                                         )
                                     }

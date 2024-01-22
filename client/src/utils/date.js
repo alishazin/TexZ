@@ -73,6 +73,14 @@ function addDateStamps(data, userId, unreadMsgRecord, selectedRoomCount) {
 
     for (let messageObj of data) {
 
+        if (messageObj.type === "info_leave") {
+            returnData.push({
+                ...messageObj
+            })
+            count++
+            continue
+        }
+
         const dateCurrent = new Date(messageObj.dateObj)
         const dateStringCurrent = new Date(messageObj.dateObj).toDateString()
         

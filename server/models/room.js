@@ -10,14 +10,14 @@ function initialize() {
         text: {
             type: String,
             trim: true,
-            required: true,
+            required: false,
         },
         from: {
             type: mongoose.Types.ObjectId,
             required: true
         },
         timestamp: {
-            required: true,
+            required: false,
             type: Date,
         },
         read_by: {
@@ -26,17 +26,6 @@ function initialize() {
                 user_id: mongoose.Types.ObjectId,
                 timestamp: Date
             }]
-        }
-    })
-
-    const participantSchema = mongoose.Schema({
-        _id : {
-            type: mongoose.Types.ObjectId,
-            required: true
-        },
-        is_removed: {
-            type: Boolean,
-            required: true
         }
     })
 
@@ -64,7 +53,7 @@ function initialize() {
             required: true
         }, // not added in participants
         participants: {
-            type: [participantSchema]
+            type: [mongoose.Types.ObjectId]
         },
         messages: {
             type: [messageSchema],

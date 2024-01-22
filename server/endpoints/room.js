@@ -51,7 +51,7 @@ function roomEndpoint(app, UserModel, RoomModel) {
 
         await room.save()
 
-        user.rooms.push(room._id)
+        user.rooms.push({_id: room._id, is_removed: false, has_left: false})
         user.markModified("rooms")
         await user.save()
 
@@ -84,10 +84,10 @@ function roomEndpoint(app, UserModel, RoomModel) {
         }
 
         room.markModified("participants")
-        room.participants.push({_id: user._id, is_removed: false})
+        room.participants.push(user._id)
         await room.save()
 
-        user.rooms.push(room._id)
+        user.rooms.push({_id: room._id, is_removed: false, has_left: false})
         user.markModified("rooms")
         await user.save()
 
@@ -129,7 +129,7 @@ function chatEndpoint(app, UserModel, RoomModel) {
             .select("name description admin participants room_id allow_join messages")
 
         result.push(
-            ...await RoomModel.find({ $and : [{'participants._id': user._id}, {'participants.is_removed': false}] })
+            ...await RoomModel.find({ 'participants': user._id })
             .select("name description admin participants messages")
         )
 
@@ -139,8 +139,8 @@ function chatEndpoint(app, UserModel, RoomModel) {
             
             const participantsDetails = []
 
-            for (let participantObj of roomObj.participants) {
-                const userObj = await utils.getUserWithId(participantObj._id, UserModel)
+            for (let participant_id of roomObj.participants) {
+                const userObj = await utils.getUserWithId(participant_id, UserModel)
                 participantsDetails.push({
                     _id: userObj._id.toString(),
                     username: _.startCase(userObj.username),
@@ -196,6 +196,17 @@ function chatEndpoint(app, UserModel, RoomModel) {
                             dateObj: messageObj.timestamp
                         })
 
+                    } else if (messageObj.type === "info_leave") {
+
+                        messageDetails.push({
+                            _id: messageObj._id,
+                            type: messageObj.type,
+                            from: {
+                                _id: msgUserObj._id.toString(),
+                                username: _.startCase(msgUserObj.username),
+                            }
+                        })
+    
                     }
                 }
             }

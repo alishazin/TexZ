@@ -50,7 +50,7 @@ async function getRoomWithIdAndUser(id, userObj, RoomModel, allowed_users) {
     if (allowed_users.includes("admin"))
         orQuery.push({ admin: userObj._id })
     if (allowed_users.includes("participant"))
-        orQuery.push({ $and: [{'participants._id': userObj._id}, {'participants.is_removed': false}] })
+        orQuery.push({ participants: userObj._id })
 
     try {
         const roomObj = await RoomModel.findOne({ _id: id, $or: orQuery})
@@ -79,7 +79,7 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
         .select("name description admin participants room_id allow_join messages")
 
     result.push(
-        ...await RoomModel.find({ $and : [{'participants._id': user._id}, {'participants.is_removed': false}] })
+        ...await RoomModel.find({ 'participants': user._id })
         .select("name description admin participants messages")
     )
 
@@ -89,8 +89,8 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
         
         const participantsDetails = []
 
-        for (let participantObj of roomObj.participants) {
-            const userObj = await getUserWithId(participantObj._id, UserModel)
+        for (let participant_id of roomObj.participants) {
+            const userObj = await getUserWithId(participant_id, UserModel)
             participantsDetails.push({
                 _id: userObj._id.toString(),
                 username: _.startCase(userObj.username),
@@ -144,6 +144,17 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
                         },
                         stamp: dateUtils.getFormattedStamp(messageObj.timestamp),
                         dateObj: messageObj.timestamp
+                    })
+
+                } else if (messageObj.type === "info_leave") {
+
+                    messageDetails.push({
+                        _id: messageObj._id,
+                        type: messageObj.type,
+                        from: {
+                            _id: msgUserObj._id.toString(),
+                            username: _.startCase(msgUserObj.username),
+                        }
                     })
 
                 }

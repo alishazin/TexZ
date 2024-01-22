@@ -169,15 +169,25 @@ function initialize(io, UserModel, RoomModel) {
             console.log("Leave", io.sockets.adapter.rooms);
 
             await RoomModel.findOneAndUpdate(
-                { "_id": roomObj._id, "participants._id": user._id },
-                { $set: { "participants.$.is_removed": true }},
+                { _id: roomObj._id },
+                { $pull: { participants: user._id }},
                 { safe: true, multi: false }
             )
 
             await UserModel.findOneAndUpdate(
-                { "_id": user._id },
-                { $pull: { rooms: roomObj._id } },
+                { "_id": user._id, "rooms._id": roomObj._id },
+                { $set: { "rooms.$.has_left": true } },
                 { safe: true, multi: false }
+            )
+
+            const infoObj = {
+                type: "info_leave",
+                from: user._id,
+            }
+
+            await RoomModel.findOneAndUpdate(
+                { _id: roomObj._id },
+                { $push: { messages: infoObj } }
             )
 
             socket.to(room_id).emit("refresh_data", {})
