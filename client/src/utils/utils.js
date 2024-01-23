@@ -17,6 +17,17 @@ function getUnreadMsgCount(data, userId) {
     return count
 }
 
+function getRoomIndexById(roomData, id) {
+    let count = 0
+    for (let roomObj of roomData) {
+        if (roomObj._id === id) {
+            return count
+        } 
+        count++
+    }
+}
+
 export {
     getUnreadMsgCount,
+    getRoomIndexById
 }

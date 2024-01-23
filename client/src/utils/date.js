@@ -77,7 +77,6 @@ function addDateStamps(data, userId, unreadMsgRecord, selectedRoomCount) {
         const dateStringCurrent = new Date(messageObj.dateObj).toDateString()
         
         if (
-            !["info_leave", "info_join", "info_create", "info_remove"].includes(messageObj.type) && 
             prevDateString !== dateStringCurrent
         ) {
             returnData.push({
