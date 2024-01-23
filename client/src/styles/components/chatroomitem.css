@@ -2,15 +2,15 @@
     min-height: 70px;
     width: 100%;
     position: relative;
-    cursor: pointer;
-
+    
     display: flex;
     justify-content: flex-start;
     align-items: stretch;
     border-bottom: 1px solid rgb(255, 255, 255, 0.3);
 }
 
-.chatroomitem-container:not(.current):hover {
+.chatroomitem-container:not(.current):not(.past):hover {
+    cursor: pointer;
     background-color: rgb(255, 255, 255, 0.04);
 }
 

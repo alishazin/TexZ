@@ -184,6 +184,20 @@ function initialize(io, UserModel, RoomModel) {
                 { safe: true, multi: false }
             )
 
+            // Add roomObj.past_rooms
+
+            await UserModel.findOneAndUpdate(
+                { _id: user._id },
+                { $push: { past_rooms: {
+                    _id: roomObj._id,
+                    name: roomObj.name,
+                    description: roomObj.description,
+                    removed_or_left: "left",
+                    timestamp: new Date()
+                } }},
+                { safe: true, multi: false }
+            )
+
             // Add info message
 
             const infoObj = {
@@ -240,6 +254,20 @@ function initialize(io, UserModel, RoomModel) {
                 { safe: true, multi: false }
             )
 
+            // Add roomObj.past_rooms
+
+            await UserModel.findOneAndUpdate(
+                { _id: participant_id },
+                { $push: { past_rooms: {
+                    _id: roomObj._id,
+                    name: roomObj.name,
+                    description: roomObj.description,
+                    removed_or_left: "removed",
+                    timestamp: new Date()
+                } }},
+                { safe: true, multi: false }
+            )
+
             // Add info message
 
             const infoObj = {
@@ -276,5 +304,11 @@ function initialize(io, UserModel, RoomModel) {
     })
 
 }
+
+/*
+1. Add timestamp to user.room (to see when they left or got removed)
+2. Sort the data before sending to frontend
+3. add a field to returnResultObj, to differentiate removed or left group
+*/
 
 module.exports = {initialize: initialize}

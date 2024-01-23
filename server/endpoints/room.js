@@ -100,6 +100,15 @@ function roomEndpoint(app, UserModel, RoomModel) {
                     embRoom.is_removed = false
                     embRoom.has_left = false
                     pastJoined = true
+
+                    // Remove from past_room
+
+                    await UserModel.findOneAndUpdate(
+                        { _id: user._id },
+                        { $pull: { past_rooms: { _id: embRoom._id} }},
+                        { safe: true, multi: false }
+                    )
+
                     break
                 }
             }
@@ -241,7 +250,9 @@ function chatEndpoint(app, UserModel, RoomModel) {
                             from: {
                                 _id: msgUserObj._id.toString(),
                                 username: _.startCase(msgUserObj.username),
-                            }
+                            },
+                            stamp: dateUtils.getFormattedStamp(messageObj.timestamp),
+                            dateObj: messageObj.timestamp
                         })
     
                     }
@@ -263,6 +274,18 @@ function chatEndpoint(app, UserModel, RoomModel) {
                 messages: messageDetails,
                 room_id: roomObj.room_id ? roomObj.room_id : null,
                 allow_join: roomObj.allow_join ? roomObj.allow_join : null
+            })
+        }
+
+        for (let pastRoomObj of user.past_rooms) {
+            returnResult.push({
+                _id: pastRoomObj._id,
+                name: pastRoomObj.name,
+                // description: pastRoomObj.description,
+                description: pastRoomObj.removed_or_left === "left" ? "You left the room" : "You were removed from the room",
+                stamp: dateUtils.getFormattedStamp(pastRoomObj.timestamp),
+                dateObj: pastRoomObj.timestamp,
+                past: true
             })
         }
 

@@ -59,7 +59,6 @@ function initialize() {
             type: [messageSchema],
             required: true
         }
-        
     })
 
     const Room = mongoose.model("Room", roomSchema)

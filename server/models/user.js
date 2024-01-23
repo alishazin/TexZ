@@ -18,6 +18,30 @@ function initialize() {
         // any one will be true, or neither
     })
 
+    const pastRoomSchema = mongoose.Schema({
+        _id: {
+            type: mongoose.Types.ObjectId,
+            required: true
+        },
+        name: {
+            type: String,
+            required: true
+        },
+        description: {
+            type: String,
+            required: true
+        },
+        removed_or_left: {
+            type: String,
+            required: true,
+            enum: ["removed", "left"]
+        },
+        timestamp: {
+            type: Date,
+            required: true
+        }
+    })
+
     const userSchema = mongoose.Schema({
         email: {
             type: String,
@@ -66,6 +90,10 @@ function initialize() {
         },
         rooms: {
             type: [embeddedRoomSchema]
+        },
+        past_rooms: {
+            type: [pastRoomSchema],
+            required: true
         }
     })
 

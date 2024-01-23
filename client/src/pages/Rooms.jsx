@@ -19,7 +19,7 @@ import LoadingChatRoomItem from "../components/LoadingChatRoomItem"
 import Popup from "../components/Popup"
 import io from "socket.io-client"
 import UnreadMsgContainer from "../components/UnreadMsg.jsx"
-import { formatDate, formatTime, addDateStamps } from "../utils/date.js"
+import { formatDate, formatTime, addDateStamps, sortChatByTime } from "../utils/date.js"
 import { getUnreadMsgCount } from "../utils/utils.js"
 import ReadByPopup from "../components/ReadByPopup.jsx"
 
@@ -423,27 +423,55 @@ function Rooms() {
                     </div>
                     {roomData ? <>
                         <div className="content-container">
-                            {roomData.map((obj, _index) => (
-                                <ChatRoomItem 
-                                    key={_index} 
-                                    current={selectedRoomCount === _index + 1} 
-                                    onClick={() => {
-                                        unreadMsgRecord.current[prevSelectedRoomCount.current] = null
-                                        setSelectedRoomCount(prev => {
-                                            prevSelectedRoomCount.current = prev
-                                            return _index + 1
-                                        })
-                                        setSendMsgField("")
-                                        markAsRead(obj)
-                                        setDetailsWidget(false)
-                                        scrollToLastMsg("instant")
-                                    }}
-                                    roomName={obj.name} 
-                                    roomDescription={obj.description} 
-                                    timeLastMsg={obj.messages.length ? obj.messages[obj.messages.length - 1].stamp : ""} 
-                                    unreadMsgCount={getUnreadMsgCount(obj, userObj._id)} 
-                                />
-                            ))}
+                            {sortChatByTime(roomData).map((obj, _index) => {
+                                if (obj.past) {
+                                    return (
+                                    <ChatRoomItem 
+                                        key={obj._index} 
+                                        current={selectedRoomCount === obj._index + 1} 
+                                        onClick={() => {
+                                            // unreadMsgRecord.current[prevSelectedRoomCount.current] = null
+                                            // setSelectedRoomCount(prev => {
+                                            //     prevSelectedRoomCount.current = prev
+                                            //     return _index + 1
+                                            // })
+                                            // setSendMsgField("")
+                                            // markAsRead(obj)
+                                            // setDetailsWidget(false)
+                                            // scrollToLastMsg("instant")
+                                        }}
+                                        roomName={obj.name} 
+                                        roomDescription={obj.description} 
+                                        timeLastMsg={obj.stamp} 
+                                        unreadMsgCount={0} 
+                                        past={true}
+                                    />
+                                    )
+                                } else {
+                                    return (
+                                    <ChatRoomItem 
+                                        key={obj._index} 
+                                        current={selectedRoomCount === obj._index + 1} 
+                                        onClick={() => {
+                                            unreadMsgRecord.current[prevSelectedRoomCount.current] = null
+                                            setSelectedRoomCount(prev => {
+                                                prevSelectedRoomCount.current = prev
+                                                return obj._index + 1
+                                            })
+                                            setSendMsgField("")
+                                            markAsRead(obj)
+                                            setDetailsWidget(false)
+                                            scrollToLastMsg("instant")
+                                        }}
+                                        roomName={obj.name} 
+                                        roomDescription={obj.description}
+                                        timeLastMsg={obj.messages.length ? obj.messages[obj.messages.length - 1].stamp : ""} 
+                                        unreadMsgCount={getUnreadMsgCount(obj, userObj._id)}
+                                        past={false} 
+                                    />
+                                    )
+                                }
+                            })}
                         </div>
                     </> : <>
                         <div className="loading-content-container">

@@ -154,7 +154,9 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
                         from: {
                             _id: msgUserObj._id.toString(),
                             username: _.startCase(msgUserObj.username),
-                        }
+                        },
+                        stamp: dateUtils.getFormattedStamp(messageObj.timestamp),
+                        dateObj: messageObj.timestamp
                     })
 
                 }
@@ -176,6 +178,17 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
             messages: messageDetails,
             room_id: roomObj.room_id ? roomObj.room_id : null,
             allow_join: roomObj.room_id ? roomObj.allow_join : null
+        })
+    }
+
+    for (let pastRoomObj of user.past_rooms) {
+        returnResult.push({
+            _id: pastRoomObj._id,
+            name: pastRoomObj.name,
+            // description: pastRoomObj.description,
+            description: pastRoomObj.removed_or_left === "left" ? "You left the room" : "You were removed from the room",
+            stamp: dateUtils.getFormattedStamp(pastRoomObj.timestamp),
+            past: true
         })
     }
 

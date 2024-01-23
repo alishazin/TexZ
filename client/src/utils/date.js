@@ -129,8 +129,27 @@ function addDateStamps(data, userId, unreadMsgRecord, selectedRoomCount) {
     return returnData
 }
 
+function sortChatByTime(data) {
+    
+    let count = 0
+    for (let chatObj of data) {
+        chatObj._index = count
+        if (chatObj.past)
+            chatObj.lastTimestamp = chatObj.dateObj
+        else
+            chatObj.lastTimestamp = chatObj.messages.length ? chatObj.messages[chatObj.messages.length - 1].dateObj : null
+        count++
+    }
+
+    data.sort((a, b) => new Date(b.lastTimestamp).getTime() - new Date(a.lastTimestamp).getTime());
+
+    return data
+
+}
+
 export {
     getFormattedDate as formatDate,
     getFormattedTime as formatTime,
-    addDateStamps
+    addDateStamps,
+    sortChatByTime
 }
