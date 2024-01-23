@@ -8,7 +8,7 @@ import ParticipantItem from "./ParticipantItem"
 import ToggleButton from "./ToggleButton"
 import axios from "axios"
 
-function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescription, roomCode, allowJoin, isAdmin, participants, adminUser, setPopupObj, getRoomData, socket, setSelectedRoomCount }) {
+function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescription, roomCode, allowJoin, isAdmin, participants, adminUser, setPopupObj, getRoomData, socket, setSelectedRoomId }) {
     
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
     const [editState, setEditState] = useState(false)
@@ -202,7 +202,7 @@ function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescript
                                             navigate("/login?i=0")
                                         } else {
                                             setDetailsWidget(false)
-                                            setSelectedRoomCount(null)
+                                            setSelectedRoomId(null)
                                             await getRoomData()
                                             res()
                                         }

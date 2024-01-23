@@ -30,7 +30,7 @@ function Rooms() {
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
     const [visibilityState, setVisibilityState] = useState(true)
     const [roomData, setRoomData] = useState(null)
-    const [selectedRoomCount, setSelectedRoomCount] = useState(null)
+    const [selectedRoomId, setSelectedRoomId] = useState(null)
     const [userObj, setUserObj] = useState(null)
     const [navbarState, setNavbarState] = useState(false)
     const [rightSwiperState, setRightSwiperState] = useState(false)
@@ -89,7 +89,7 @@ function Rooms() {
 
     useEffect(() => {
         if (visibilityState) {
-            setSelectedRoomCount(value => {
+            setSelectedRoomId(value => {
                 if (value && roomData) {
                     markAsRead(roomData[getRoomIndexById(roomData,value)])
                 } else {
@@ -110,7 +110,7 @@ function Rooms() {
         lastRefresh.current = new Date().getTime()
 
         if (readByPopupObj.state === true) {
-            for (let msgObj of roomData[getRoomIndexById(roomData, selectedRoomCount)].messages) {
+            for (let msgObj of roomData[getRoomIndexById(roomData, selectedRoomId)].messages) {
                 if (msgObj.type === "msg" && msgObj._id === readByPopupObj.msg_id) {
                     setReadByPopupObj(prev => ({
                         ...prev,
@@ -145,7 +145,7 @@ function Rooms() {
         socket.on("refresh_data", async (response) => {
             if (response.special === "recieve_msg") {
                 await getRoomData()
-                setSelectedRoomCount(value => {
+                setSelectedRoomId(value => {
                     if (value && roomData) {
                         markAsRead(roomData[getRoomIndexById(roomData,value)])
                     } 
@@ -168,7 +168,7 @@ function Rooms() {
                 console.log("value", value);
                 if (response.participant_id === value?._id) {
                     setDetailsWidget(false)
-                    setSelectedRoomCount(null)
+                    setSelectedRoomId(null)
                 }
                 await getRoomData()
                 return value
@@ -195,7 +195,6 @@ function Rooms() {
                 removeCookie("session_token")
                 navigate("/login?i=0")
             } else {
-                // console.log("MARK AS READ", data)
                 await getRoomData()
             }
         })
@@ -204,20 +203,18 @@ function Rooms() {
     const handleSendMsg = async (e) => {
         e.preventDefault()
         if (!sendMsgField.trim() || sendMsgLoading) return;
-        unreadMsgRecord.current[selectedRoomCount] = null
+        unreadMsgRecord.current[selectedRoomId] = null
 
         setSendMsgLoading(true)
         socket.emit("send_message", { 
             session_token: session_token,
-            // room_id: roomData[selectedRoomCount-1]._id,
-            room_id: selectedRoomCount,
+            room_id: selectedRoomId,
             text: sendMsgField
         }, async function (data) {
             if (data.status !== "success") {
                 removeCookie("session_token")
                 navigate("/login?i=0")
             } else {
-                // console.log("SEND", data)
                 await getRoomData()
                 setSendMsgField("")
                 setSendMsgLoading(false)
@@ -282,22 +279,21 @@ function Rooms() {
                     <NavBar instance={1} />
                 </div>
                 <div className="navbar-page-content-container three">
-                    {(!detailsWidget && selectedRoomCount) && <>
+                    {(!detailsWidget && selectedRoomId) && <>
                         <div className="top-area">
-                            <div className="room-name" onClick={() => setDetailsWidget(true)}>{roomData[getRoomIndexById(roomData, selectedRoomCount)].name}</div>
-                            <div className="room-description">{roomData[getRoomIndexById(roomData, selectedRoomCount)].description}</div>
+                            <div className="room-name" onClick={() => setDetailsWidget(true)}>{roomData[getRoomIndexById(roomData, selectedRoomId)].name}</div>
+                            <div className="room-description">{roomData[getRoomIndexById(roomData, selectedRoomId)].description}</div>
                         </div>
                         <div className="chat-container">
                             <div className="msg-container" onScroll={toggleVisible}>
-                                {addDateStamps(roomData[getRoomIndexById(roomData, selectedRoomCount)].messages, userObj._id, unreadMsgRecord, selectedRoomCount).map((messageOrDateObj, _index) => {
+                                {addDateStamps(roomData[getRoomIndexById(roomData, selectedRoomId)].messages, userObj._id, unreadMsgRecord, selectedRoomId).map((messageOrDateObj, _index) => {
                                     if (messageOrDateObj.type === "msg") {
                                         return (
                                         <MessageContainer 
                                             key={_index} 
                                             type={messageOrDateObj.type}
-                                            isAdmin={roomData[getRoomIndexById(roomData, selectedRoomCount)].admin._id === userObj._id} 
-                                            // room_id={roomData[selectedRoomCount-1]._id}
-                                            room_id={selectedRoomCount}
+                                            isAdmin={roomData[getRoomIndexById(roomData, selectedRoomId)].admin._id === userObj._id} 
+                                            room_id={selectedRoomId}
                                             msg_id={messageOrDateObj._id}
                                             side={messageOrDateObj.from._id === userObj._id ? "right" : "left"} 
                                             msg={messageOrDateObj.text} 
@@ -317,8 +313,7 @@ function Rooms() {
                                         <MessageContainer 
                                             key={_index} 
                                             type={messageOrDateObj.type}
-                                            // room_id={roomData[selectedRoomCount-1]._id}
-                                            room_id={selectedRoomCount}
+                                            room_id={selectedRoomId}
                                             msg_id={messageOrDateObj._id}
                                             side={messageOrDateObj.from._id === userObj._id ? "right" : "left"} 
                                             msg={"This message was deleted by admin"} 
@@ -389,11 +384,11 @@ function Rooms() {
                                     </button>
                                 </form>
                             </div>
-                            {!unreadMsgRecord.current[selectedRoomCount] && scrollDownVisible && <div className="scroll-down-btn" onClick={() => scrollToLastMsg("smooth")}><Icon className="icon" icon="teenyicons:double-caret-down-outline" /></div>}
-                            {!scrollNewVisible && unreadMsgRecord.current[selectedRoomCount] && <div className="new-msg-btn" onClick={() => scrollToLastMsg("smooth")}>New <Icon className="icon" icon="ph:caret-up-down-bold" /></div>}
+                            {!unreadMsgRecord.current[selectedRoomId] && scrollDownVisible && <div className="scroll-down-btn" onClick={() => scrollToLastMsg("smooth")}><Icon className="icon" icon="teenyicons:double-caret-down-outline" /></div>}
+                            {!scrollNewVisible && unreadMsgRecord.current[selectedRoomId] && <div className="new-msg-btn" onClick={() => scrollToLastMsg("smooth")}>New <Icon className="icon" icon="ph:caret-up-down-bold" /></div>}
                         </div>
                     </>}
-                    {(!detailsWidget && !selectedRoomCount) && <>
+                    {(!detailsWidget && !selectedRoomId) && <>
                         <div className="empty-selected-container">
                             <img className="logo" src={LogoImg2} />
                             <div className="text"><span>"</span>Create a room and start texzing<span>"</span></div>
@@ -402,21 +397,20 @@ function Rooms() {
                     </>}
                     {detailsWidget && 
                         <RoomDetailsContainer 
-                            isAdmin={roomData[getRoomIndexById(roomData, selectedRoomCount)].admin._id === userObj._id} 
+                            isAdmin={roomData[getRoomIndexById(roomData, selectedRoomId)].admin._id === userObj._id} 
                             setDetailsWidget={setDetailsWidget} 
-                            // roomId={roomData[selectedRoomCount-1]._id}
-                            roomId={selectedRoomCount}
-                            roomName={roomData[getRoomIndexById(roomData, selectedRoomCount)].name} 
-                            roomDescription={roomData[getRoomIndexById(roomData, selectedRoomCount)].description}
-                            roomCode={roomData[getRoomIndexById(roomData, selectedRoomCount)].room_id} 
-                            allowJoin={roomData[getRoomIndexById(roomData, selectedRoomCount)].allow_join} 
-                            participants={roomData[getRoomIndexById(roomData, selectedRoomCount)].participants} 
-                            adminUser={roomData[getRoomIndexById(roomData, selectedRoomCount)].admin} 
+                            roomId={selectedRoomId}
+                            roomName={roomData[getRoomIndexById(roomData, selectedRoomId)].name} 
+                            roomDescription={roomData[getRoomIndexById(roomData, selectedRoomId)].description}
+                            roomCode={roomData[getRoomIndexById(roomData, selectedRoomId)].room_id} 
+                            allowJoin={roomData[getRoomIndexById(roomData, selectedRoomId)].allow_join} 
+                            participants={roomData[getRoomIndexById(roomData, selectedRoomId)].participants} 
+                            adminUser={roomData[getRoomIndexById(roomData, selectedRoomId)].admin} 
                             setPopupObj={setPopupObj}
                             getRoomData={getRoomData}
                             socket={socket}
                             roomData={roomData}
-                            setSelectedRoomCount={setSelectedRoomCount}
+                            setSelectedRoomId={setSelectedRoomId}
                         />
                     }
                 </div>
@@ -432,7 +426,7 @@ function Rooms() {
                                     return (
                                     <ChatRoomItem 
                                         key={obj._index} 
-                                        current={selectedRoomCount === obj._id} 
+                                        current={selectedRoomId === obj._id} 
                                         onClick={() => {}}
                                         roomName={obj.name} 
                                         roomDescription={obj.description} 
@@ -445,12 +439,11 @@ function Rooms() {
                                     return (
                                     <ChatRoomItem 
                                         key={obj._index} 
-                                        current={selectedRoomCount === obj._id} 
+                                        current={selectedRoomId === obj._id} 
                                         onClick={() => {
                                             unreadMsgRecord.current[prevSelectedRoomCount.current] = null
-                                            setSelectedRoomCount(prev => {
+                                            setSelectedRoomId(prev => {
                                                 prevSelectedRoomCount.current = prev
-                                                // return obj._index + 1
                                                 return obj._id
                                             })
                                             setSendMsgField("")

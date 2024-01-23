@@ -31,7 +31,7 @@ function ParticipantItem({ name, id, isAdmin, adminIcon, setPopupObj, getRoomDat
                             navigate("/login?i=0")
                         } else {
                             // setDetailsWidget(false)
-                            // setSelectedRoomCount(null)
+                            // setSelectedRoomId(null)
                             await getRoomData()
                             res()
                         }
