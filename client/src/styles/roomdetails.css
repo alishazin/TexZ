@@ -189,6 +189,10 @@
     transform: rotateX(180deg) rotateY(180deg);
 }
 
+.navbar-page-content-container.three .room-details-container .roomcode-container .content-box .left-area .copy-icon:active {
+    color: #FF5757;
+}
+
 .navbar-page-content-container.three .room-details-container .roomcode-container .content-box .right-area {
     width: 115px;
 }

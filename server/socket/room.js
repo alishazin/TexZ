@@ -305,10 +305,4 @@ function initialize(io, UserModel, RoomModel) {
 
 }
 
-/*
-1. Add timestamp to user.room (to see when they left or got removed)
-2. Sort the data before sending to frontend
-3. add a field to returnResultObj, to differentiate removed or left group
-*/
-
 module.exports = {initialize: initialize}

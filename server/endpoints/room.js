@@ -281,7 +281,6 @@ function chatEndpoint(app, UserModel, RoomModel) {
             returnResult.push({
                 _id: pastRoomObj._id,
                 name: pastRoomObj.name,
-                // description: pastRoomObj.description,
                 description: pastRoomObj.removed_or_left === "left" ? "You left the room" : "You were removed from the room",
                 stamp: dateUtils.getFormattedStamp(pastRoomObj.timestamp),
                 dateObj: pastRoomObj.timestamp,

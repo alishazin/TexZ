@@ -350,7 +350,13 @@ function Rooms() {
                                         return (
                                         <InfoContainer 
                                             key={_index}
-                                            content={`${messageOrDateObj.from.username} has joined the room`}
+                                            content={`
+                                                ${messageOrDateObj.from._id === userObj._id ? 
+                                                    "You have joined the room" :
+                                                    `${messageOrDateObj.from.username} has joined the room`
+                                                }
+                                                
+                                            `}
                                             isLast={messageOrDateObj.isLast}
                                             messagesEndRef={messagesEndRef}
                                         />)
@@ -358,7 +364,13 @@ function Rooms() {
                                         return (
                                         <InfoContainer 
                                             key={_index}
-                                            content={`${messageOrDateObj.from.username} has created the room`}
+                                            content={`
+                                                ${messageOrDateObj.from._id === userObj._id ? 
+                                                    "You have created the room" :
+                                                    `${messageOrDateObj.from.username} has created the room`
+                                                }
+                                                
+                                            `}
                                             isLast={messageOrDateObj.isLast}
                                             messagesEndRef={messagesEndRef}
                                         />)
