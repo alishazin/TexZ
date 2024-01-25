@@ -1,0 +1,16 @@
+.navbar-page-content-container.settings {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 0;
+}
+
+.navbar-page-content-container.settings .option-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 80px;
+    padding: 0 20px;
+    border-bottom: 1px solid rgb(255, 255, 255, 0.3);
+}

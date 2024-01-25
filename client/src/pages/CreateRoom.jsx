@@ -8,7 +8,6 @@ import LogoImg from "../images/logo.png"
 import "../styles/navbarpage.css"
 import "../styles/createroom.css"
 import { Icon } from '@iconify/react'
-import useScreenSize from "../hooks/useScreenSize"
 import SecondaryButton from "../components/SecondaryButton"
 import Textfield2 from "../components/Textfield2"
 import Checkbox from "../components/Checkbox"
@@ -24,7 +23,6 @@ function CreateRoom() {
     const [errorMsg, setErrorMsg] = useState("")    
     const [buttonDisabled, setButtonDisabled] = useState(true)
     
-    const screenSize = useScreenSize();
     const navigate = useNavigate()
     const session_token = cookies.session_token
 

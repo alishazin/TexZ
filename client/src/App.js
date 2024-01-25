@@ -8,6 +8,7 @@ import VerifyEmail from "./pages/VerifyEmail"
 import ForgotPassword from "./pages/ForgotPassword"
 import ResetPassword from "./pages/ResetPassword";
 import ChangePassword from "./pages/ChangePassword";
+import Settings from "./pages/Settings";
 
 function App() {
 	return (
@@ -17,6 +18,7 @@ function App() {
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/login" element={<LogIn />} />
                     <Route path="/rooms" element={<Rooms />} />
+                    <Route path="/settings" element={<Settings />} />
                     <Route path="/create-room" element={<CreateRoom />} />
                     <Route path="/join-room" element={<JoinRoom />} />
                     <Route path="/verify-email/:verification_token" element={<VerifyEmail />} />

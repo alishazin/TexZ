@@ -25,7 +25,7 @@ function NavBar({ instance }) {
             <div className="side-bar"></div>
             <span>Join a Room</span>
         </Link>
-        <Link className={`nav-item-container ${instance === 4 ? "active" : ""}`} to="/login">
+        <Link className={`nav-item-container ${instance === 4 ? "active" : ""}`} to="/settings">
             <Icon className="icon" icon="line-md:cog" />
             <span>Settings</span>
         </Link>

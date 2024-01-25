@@ -16,6 +16,7 @@ const instanceText = {
     "1": "Password changed successfully.",
     "2": "Password resetted successfully.",
     "3": "Reset password link expired.",
+    "4": "Logged Out.",
 }
 
 function LogIn() {

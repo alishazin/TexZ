@@ -9,7 +9,6 @@ import LogoImg2 from "../images/logo2.png"
 import "../styles/navbarpage.css"
 import "../styles/rooms.css"
 import { Icon } from '@iconify/react'
-import useScreenSize from "../hooks/useScreenSize"
 import ChatRoomItem from "../components/ChatRoomItem"
 import MessageContainer from "../components/MessageContainer"
 import InfoContainer from "../components/InfoContainer"
