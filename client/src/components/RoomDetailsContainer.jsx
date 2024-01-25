@@ -8,7 +8,7 @@ import ParticipantItem from "./ParticipantItem"
 import ToggleButton from "./ToggleButton"
 import axios from "axios"
 
-function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescription, roomCode, allowJoin, isAdmin, participants, adminUser, setPopupObj, getRoomData, socket, setSelectedRoomId }) {
+function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescription, roomCode, allowJoin, isAdmin, participants, adminUser, setPopupObj, getRoomData, socket, isDismissed, setSelectedRoomId }) {
     
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
     const [editState, setEditState] = useState(false)
@@ -125,7 +125,7 @@ function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescript
                 </div>
                 {!editState && 
                 <div className="right-area">
-                    <div className="room-name">{roomName} {isAdmin && <Icon onClick={() => setEditState(true)} className="edit-button" icon="material-symbols:edit-outline" />}</div>
+                    <div className="room-name">{roomName} {isAdmin && !isDismissed && <Icon onClick={() => setEditState(true)} className="edit-button" icon="material-symbols:edit-outline" />}</div>
                     <div className="room-description">{roomDescription}</div>
                 </div>
                 }
@@ -141,10 +141,10 @@ function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescript
                 <h2>Participants</h2>
                 <ParticipantItem name={adminUser.username} isAdmin={isAdmin} adminIcon={true} />
                 {participants.map((participantObj, _index) => (
-                    <ParticipantItem key={_index} id={participantObj._id} name={participantObj.username} isAdmin={isAdmin} setPopupObj={setPopupObj} getRoomData={getRoomData} room_id={roomId} socket={socket} />
+                    <ParticipantItem key={_index} id={participantObj._id} name={participantObj.username} isAdmin={isAdmin} setPopupObj={setPopupObj} getRoomData={getRoomData} room_id={roomId} socket={socket} isDismissed={isDismissed} />
                 ))}
             </div>
-            {isAdmin &&
+            {isAdmin && !isDismissed &&
             <div className="roomcode-container">
                 <h2>Room Code</h2>
                 <div className="content-box">
@@ -167,13 +167,37 @@ function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescript
                 </div>
                 <div className="info">Generating a new room code will result in making the older one invalid. Previously shared room code will no longer be valid.</div>
             </div>}
+            {!isDismissed && <>
             <div className="dangerzone-container">
                 <h2>Danger Zone <Icon className="icon" icon="solar:danger-triangle-outline" /></h2>
                 {isAdmin ? <>
                 <div className="dismiss-container">
                     <div className="text">Dismiss the room<br/><span>( this change is irreversible )</span></div>
                     <div className="btn-area">
-                        <TertiaryButton text={"Dismiss"} disabled={false} />
+                        <TertiaryButton text={"Dismiss"} disabled={false} onClick={() => setPopupObj({
+                            state: true,
+                            text: `No one will be able to send message or edit room details after dismissal.`,
+                            confirmation_text: "i understand",
+                            button_text: "Dismiss the Room",
+                            callback: async () => {
+                                return new Promise(res => {
+                                    socket.emit("dismiss_room", { 
+                                        session_token: session_token,
+                                        room_id: roomId
+                                    }, async function (data) {
+                                        if (data.status !== "success") {
+                                            removeCookie("session_token")
+                                            navigate("/login?i=0")
+                                        } else {
+                                            // setDetailsWidget(false)
+                                            // setSelectedRoomId(null)
+                                            await getRoomData()
+                                            res()
+                                        }
+                                    })
+                                })
+                            }
+                        })} />
                     </div>
                 </div>
                 <div className="allow-container">
@@ -214,6 +238,7 @@ function RoomDetailsContainer({ setDetailsWidget, roomId, roomName, roomDescript
                 </div>
                 }
             </div>
+            </>}
         </div>
     )
 }

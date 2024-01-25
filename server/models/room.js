@@ -58,6 +58,11 @@ function initialize() {
         messages: {
             type: [messageSchema],
             required: true
+        },
+        is_dismissed: {
+            type: Boolean,
+            required: true,
+            default: false
         }
     })
 

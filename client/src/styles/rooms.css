@@ -173,6 +173,10 @@
     padding: 10px 0 0;
 }
 
+.navbar-page-content-container.three .chat-container.large .msg-container {
+    height: 100%;
+}
+
 .navbar-page-content-container.three .chat-container .scroll-down-btn {
     position: absolute;
     width: 40px;
@@ -190,6 +194,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.navbar-page-content-container.three .chat-container.large .scroll-down-btn {
+    bottom: 10px;
 }
 
 .navbar-page-content-container.three .chat-container .scroll-down-btn:hover, .navbar-page-content-container.three .chat-container .new-msg-btn:hover {
@@ -222,6 +230,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.navbar-page-content-container.three .chat-container.large .new-msg-btn {
+    bottom: 10px;
 }
 
 .navbar-page-content-container.three .chat-container .new-msg-btn .icon {

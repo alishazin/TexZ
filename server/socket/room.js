@@ -35,6 +35,9 @@ function initialize(io, UserModel, RoomModel) {
                 return callback(response)
             }
 
+            if (roomObj.is_dismissed)
+                return callback({status: "room_dismissed"})
+
             const newMessage = {
                 type: "msg",
                 text: text,
@@ -63,6 +66,9 @@ function initialize(io, UserModel, RoomModel) {
             if (response.status !== "success") {
                 return callback(response)
             }
+
+            if (roomObj.is_dismissed)
+                return callback({status: "room_dismissed"})
 
             roomObj.name = room_name
             roomObj.description = room_description
@@ -165,6 +171,9 @@ function initialize(io, UserModel, RoomModel) {
                 return callback(response)
             }
 
+            if (roomObj.is_dismissed)
+                return callback({status: "room_dismissed"})
+
             socket.leave(room_id)
             console.log("Leave", io.sockets.adapter.rooms);
 
@@ -226,6 +235,9 @@ function initialize(io, UserModel, RoomModel) {
                 return callback(response)
             }
 
+            if (roomObj.is_dismissed)
+                return callback({status: "room_dismissed"})
+
             let found
 
             for (let participant_id_ of roomObj.participants) {
@@ -282,6 +294,45 @@ function initialize(io, UserModel, RoomModel) {
             )
 
             socket.to(room_id).emit("refresh_data_after_removal", {participant_id: participant_id})
+            return callback({status: "success"})
+
+        })
+        
+        socket.on("dismiss_room", async (requestData, callback) => {
+            
+            const { room_id } = requestData
+            
+            const [user, roomObj, response] = await roomMiddlewares.verifyRoomParticipationSocket(requestData, UserModel, RoomModel, ['admin'])
+
+            if (response.status !== "success") {
+                return callback(response)
+            }
+
+            if (roomObj.is_dismissed)
+                return callback({status: "room_dismissed"})
+
+            // Set is_dismissed = true
+
+            await RoomModel.findOneAndUpdate(
+                { _id: roomObj._id },
+                { $set: { is_dismissed: true }},
+                { safe: true, multi: false }
+            )
+
+            // Add info message
+
+            const infoObj = {
+                type: "info_dismiss",
+                from: user._id,
+                timestamp: new Date()
+            }
+
+            await RoomModel.findOneAndUpdate(
+                { _id: roomObj._id },
+                { $push: { messages: infoObj } }
+            )
+
+            socket.to(room_id).emit("refresh_data", {})
             return callback({status: "success"})
 
         })

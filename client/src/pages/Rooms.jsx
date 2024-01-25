@@ -284,7 +284,7 @@ function Rooms() {
                             <div className="room-name" onClick={() => setDetailsWidget(true)}>{roomData[getRoomIndexById(roomData, selectedRoomId)].name}</div>
                             <div className="room-description">{roomData[getRoomIndexById(roomData, selectedRoomId)].description}</div>
                         </div>
-                        <div className="chat-container">
+                        <div className={`chat-container ${roomData[getRoomIndexById(roomData, selectedRoomId)].is_dismissed ? "large" : ""}`}>
                             <div className="msg-container" onScroll={toggleVisible}>
                                 {addDateStamps(roomData[getRoomIndexById(roomData, selectedRoomId)].messages, userObj._id, unreadMsgRecord, selectedRoomId).map((messageOrDateObj, _index) => {
                                     if (messageOrDateObj.type === "msg") {
@@ -382,9 +382,18 @@ function Rooms() {
                                             isLast={messageOrDateObj.isLast}
                                             messagesEndRef={messagesEndRef}
                                         />)
+                                    } else if (messageOrDateObj.type === "info_dismiss") {
+                                        return (
+                                        <InfoContainer 
+                                            key={_index}
+                                            content={`Admin has dismissed the room`}
+                                            isLast={messageOrDateObj.isLast}
+                                            messagesEndRef={messagesEndRef}
+                                        />)
                                     }
                                 })}
                             </div>
+                            {!roomData[getRoomIndexById(roomData, selectedRoomId)].is_dismissed && 
                             <div className="send-msg-here-container">
                                 <form className="send-msg-here-box" onSubmit={handleSendMsg}>
                                     <input autoComplete="off" onChange={e => {
@@ -396,6 +405,7 @@ function Rooms() {
                                     </button>
                                 </form>
                             </div>
+                            }
                             {!unreadMsgRecord.current[selectedRoomId] && scrollDownVisible && <div className="scroll-down-btn" onClick={() => scrollToLastMsg("smooth")}><Icon className="icon" icon="teenyicons:double-caret-down-outline" /></div>}
                             {!scrollNewVisible && unreadMsgRecord.current[selectedRoomId] && <div className="new-msg-btn" onClick={() => scrollToLastMsg("smooth")}>New <Icon className="icon" icon="ph:caret-up-down-bold" /></div>}
                         </div>
@@ -421,7 +431,7 @@ function Rooms() {
                             setPopupObj={setPopupObj}
                             getRoomData={getRoomData}
                             socket={socket}
-                            roomData={roomData}
+                            isDismissed={roomData[getRoomIndexById(roomData, selectedRoomId)].is_dismissed}
                             setSelectedRoomId={setSelectedRoomId}
                         />
                     }

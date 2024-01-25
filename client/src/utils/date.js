@@ -62,7 +62,7 @@ function getFormattedTime(date) {
     
 }
 
-function addDateStamps(data, userId, unreadMsgRecord, selectedRoomId) {
+function addDateStamps(data, userId, unreadMsgRecord, selectedRoomCount) {
 
     const returnData = []
 
@@ -92,7 +92,7 @@ function addDateStamps(data, userId, unreadMsgRecord, selectedRoomId) {
         if (
             messageObj.type === "msg" && 
             (
-                unreadMsgRecord.current[selectedRoomId] === messageObj._id || 
+                unreadMsgRecord.current[selectedRoomCount] === messageObj._id || 
                 (
                     messageObj.from._id !== userId && 
                     !messageObj.read_by.includes(userId) && 
@@ -101,7 +101,7 @@ function addDateStamps(data, userId, unreadMsgRecord, selectedRoomId) {
             )
         ) {
             unreadCountLast = count
-            unreadMsgRecord.current[selectedRoomId] = messageObj._id
+            unreadMsgRecord.current[selectedRoomCount] = messageObj._id
             unreadDivUsed = true
             returnData.push({
                 type: "unread"

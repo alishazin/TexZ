@@ -76,11 +76,11 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
     }
 
     const result = await RoomModel.find({ 'admin': user._id })
-        .select("name description admin participants room_id allow_join messages")
+        .select("name description admin participants room_id allow_join messages is_dismissed")
 
     result.push(
         ...await RoomModel.find({ 'participants': user._id })
-        .select("name description admin participants messages")
+        .select("name description admin participants messages is_dismissed")
     )
 
     const returnResult = []
@@ -146,7 +146,7 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
                         dateObj: messageObj.timestamp
                     })
 
-                } else if (["info_leave", "info_join", "info_create", "info_remove"].includes(messageObj.type)) {
+                } else if (["info_leave", "info_join", "info_create", "info_remove", "info_dismiss"].includes(messageObj.type)) {
 
                     messageDetails.push({
                         _id: messageObj._id,
@@ -177,7 +177,8 @@ async function getUsersChatData(UserModel, RoomModel, session_token) {
             participants: participantsDetails,
             messages: messageDetails,
             room_id: roomObj.room_id ? roomObj.room_id : null,
-            allow_join: roomObj.room_id ? roomObj.allow_join : null
+            allow_join: roomObj.room_id ? roomObj.allow_join : null,
+            is_dismissed: roomObj.is_dismissed
         })
     }
 

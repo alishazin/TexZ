@@ -85,7 +85,7 @@ function roomEndpoint(app, UserModel, RoomModel) {
 
         // room_code validation
         
-        const room = await RoomModel.findOne({room_id: room_code, allow_join: true})
+        const room = await RoomModel.findOne({room_id: room_code, allow_join: true, is_dismissed: false})
         if (!room) {
             return res.status(400).send({err_msg: "Room code is invalid"})
         }
@@ -143,6 +143,9 @@ function roomEndpoint(app, UserModel, RoomModel) {
     app.use("/api/room/:room_code/generate-roomcode", roomMiddlewares.verifyRoomParticipation(app, UserModel, RoomModel, ['admin']))
     app.post("/api/room/:room_code/generate-roomcode", async (req, res) => {
 
+        if (res.locals.roomObj.is_dismissed) 
+            return res.status(401).send({err_msg: "Room is dismissed"})
+
         res.locals.roomObj.room_id = new mongoose.Types.ObjectId()
         await res.locals.roomObj.save()
 
@@ -153,6 +156,9 @@ function roomEndpoint(app, UserModel, RoomModel) {
     app.post("/api/room/:room_code/toggle-allowjoin", async (req, res) => {
 
         const { allow_join } = req.body
+
+        if (res.locals.roomObj.is_dismissed) 
+            return res.status(401).send({err_msg: "Room is dismissed"})
 
         res.locals.roomObj.allow_join = allow_join
         await res.locals.roomObj.save()
@@ -172,11 +178,11 @@ function chatEndpoint(app, UserModel, RoomModel) {
         const user = res.locals.user
 
         const result = await RoomModel.find({ 'admin': user._id })
-            .select("name description admin participants room_id allow_join messages")
+            .select("name description admin participants room_id allow_join messages is_dismissed")
 
         result.push(
             ...await RoomModel.find({ 'participants': user._id })
-            .select("name description admin participants messages")
+            .select("name description admin participants messages is_dismissed")
         )
 
         const returnResult = []
@@ -242,7 +248,7 @@ function chatEndpoint(app, UserModel, RoomModel) {
                             dateObj: messageObj.timestamp
                         })
 
-                    } else if (["info_leave", "info_join", "info_create", "info_remove"].includes(messageObj.type)) {
+                    } else if (["info_leave", "info_join", "info_create", "info_remove", "info_dismiss"].includes(messageObj.type)) {
 
                         messageDetails.push({
                             _id: messageObj._id,
@@ -273,7 +279,8 @@ function chatEndpoint(app, UserModel, RoomModel) {
                 participants: participantsDetails,
                 messages: messageDetails,
                 room_id: roomObj.room_id ? roomObj.room_id : null,
-                allow_join: roomObj.allow_join ? roomObj.allow_join : null
+                allow_join: roomObj.allow_join ? roomObj.allow_join : null,
+                is_dismissed: roomObj.is_dismissed
             })
         }
 

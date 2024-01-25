@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react'
 import { useCookies } from "react-cookie"
 import { useNavigate } from "react-router-dom"
 
-function ParticipantItem({ name, id, isAdmin, adminIcon, setPopupObj, getRoomData, room_id, socket }) {
+function ParticipantItem({ name, id, isAdmin, adminIcon, setPopupObj, getRoomData, room_id, socket, isDismissed }) {
 
     const [cookies, setCookie, removeCookie] = useCookies(["session_token"])
 
@@ -42,9 +42,9 @@ function ParticipantItem({ name, id, isAdmin, adminIcon, setPopupObj, getRoomDat
     }
 
     return (
-        <form className={`participant-item ${(!isAdmin) || !(isAdmin && !adminIcon) ? "single" : ""}`} onSubmit={handleSubmit}>
+        <form className={`participant-item ${(isDismissed) || (!isAdmin) || !(isAdmin && !adminIcon) ? "single" : ""}`} onSubmit={handleSubmit}>
             <span className="name">{adminIcon && <Icon className="admin-icon" icon="eos-icons:admin-outlined" />}{name}</span>
-            {(isAdmin && !adminIcon) && <QuaternaryButton text="Remove" disabled={false} />}
+            {(isAdmin && !adminIcon && !isDismissed) && <QuaternaryButton text="Remove" disabled={false} />}
         </form>
     )
 }
