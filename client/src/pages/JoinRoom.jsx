@@ -24,7 +24,7 @@ function JoinRoom() {
     const session_token = cookies.session_token
 
     useEffect(() => {
-        document.title = "Create Room"
+        document.title = "Join Room"
         validateSession()
     }, [])
 
