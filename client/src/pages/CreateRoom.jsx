@@ -38,7 +38,8 @@ function CreateRoom() {
 
     const validateSession = async function() {
         if (!session_token) {
-            navigate("/login?i=0")
+            console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+            // navigate("/login?i=0")
             return;
         }
         
@@ -49,8 +50,9 @@ function CreateRoom() {
             setUserObj(response.data)
         } catch(err) {
             if (err.response.status === 401) {
-                removeCookie("session_token")
-                navigate("/login?i=0")
+                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                // removeCookie("session_token")
+                // navigate("/login?i=0")
             }
             console.log(err);
         }

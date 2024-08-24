@@ -9,12 +9,15 @@ import ForgotPassword from "./pages/ForgotPassword"
 import ResetPassword from "./pages/ResetPassword";
 import ChangePassword from "./pages/ChangePassword";
 import Settings from "./pages/Settings";
+import { Redirecter } from "./pages/Redirecter";
 
 function App() {
 	return (
 		<>
             <BrowserRouter>
                 <Routes>
+                    <Route path="/" element={<Redirecter />} />
+                    <Route path="/signup" element={<SignUp />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/login" element={<LogIn />} />
                     <Route path="/rooms" element={<Rooms />} />
